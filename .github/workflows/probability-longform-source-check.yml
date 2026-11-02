@@ -1,0 +1,69 @@
+name: Probability Long-form Source Validation (NO RENDER)
+
+on:
+  push:
+    branches: [feature/probability-longform-episode-01]
+    paths:
+      - 'production/probability-longform/**'
+      - 'studio/src/episodes/probability-longform/**'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/probability-longform-source-check.yml'
+  pull_request:
+    branches: [feature/2p5d-locked-subject-v3]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install dependencies (NO VIDEO)
+        run: npm ci
+      - name: Typecheck all compositions without rendering
+        run: npx tsc --noEmit
+      - name: Validate long-form manuscript and camera invariant
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('..')
+          manifest=json.loads((root/'production/probability-longform/episode-manifest.json').read_text())
+          shots=manifest['shots']
+          assert manifest['totalSeconds']==230
+          assert manifest['totalFrames']==6900
+          assert manifest['fps']==30
+          assert manifest['format']=='1920x1080 landscape 16:9'
+          assert len(shots)==27, f'Expected 27 shots, got {len(shots)}'
+          previous=0
+          for i,sh in enumerate(shots):
+              assert sh['startFrame']==previous, f'Timeline gap at {i}:{sh["id"]}'
+              assert sh['endFrame']-sh['startFrame']==sh['durationFrames']
+              assert sh['durationFrames']>0
+              previous=sh['endFrame']
+              assert sh['voice'].strip(), f'No narration at {sh["id"]}'
+          assert previous==6900
+          assert manifest['render']['authorized'] is False, 'No export approved'
+          source=(Path('src/episodes/probability-longform/shots.tsx')).read_text()
+          assert 'camT(x,y,zoom,960,540)' in source, 'Whole-world camera missing'
+          assert '<WorldCamera id={id} t={t} len={len}>{physical}</WorldCamera>' in source
+          assert "probabilityLongform01" in Path('src/episodes/index.ts').read_text()
+          ids=set(s['id'] for s in shots)
+          for id in ids:
+              assert id in source, f'Missing staged sequence {id}'
+          assert 'ONE_ACTIVE' not in ids or manifest['powerRule']
+          print('VALIDATED: 27 contiguous shots, 6900 frames at 30fps, entire-world camera, NO VIDEO RENDER')
+          PY

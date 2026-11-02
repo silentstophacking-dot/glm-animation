@@ -10,5 +10,6 @@ import { referenceCharacterCast } from './probability-control/reference-cast';
 import { probability2p5dCafe } from './probability-control/depth25-cafe';
 import { probability2p5dCafeV2 } from './probability-control/depth25-cafe-v2';
 import { probability2p5dCafeLocked } from './probability-control/depth25-cafe-locked';
+import { probabilityLongform01 } from './probability-longform/episode';
 
-export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin, referenceStyleCoin, referenceCharacterCast, probability2p5dCafe, probability2p5dCafeV2, probability2p5dCafeLocked];
+export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin, referenceStyleCoin, referenceCharacterCast, probability2p5dCafe, probability2p5dCafeV2, probability2p5dCafeLocked, probabilityLongform01];
