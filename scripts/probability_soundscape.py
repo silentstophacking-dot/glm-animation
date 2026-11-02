@@ -243,6 +243,10 @@ def main():
 
     # Scene ambience always corresponds to an actual story space.
     for shot in manifest["shots"]:
+        # The last image freezes before impact. No ambient sound restarts
+        # over the final spoken line; that silence is the actual payoff.
+        if shot["id"] == "PRE_IMPACT":
+            continue
         start=shot["startSec"]
         duration=shot["endSec"]-start
         stage=shot["stage"]
