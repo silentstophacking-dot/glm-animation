@@ -1,0 +1,59 @@
+name: SVG 2.5D Camera Proof V2
+
+on:
+  push:
+    branches: [feature/2p5d-cafe-polish-v2]
+    paths:
+      - 'studio/src/episodes/probability-control/depth25-cafe-v2.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/probability-2p5d-v2.yml'
+  pull_request:
+    branches: [feature/probability-2p5d-parallax]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install original project
+        run: npm ci
+      - name: Typecheck sample episodes, original 2.5D, and polished scene
+        run: npx tsc --noEmit
+      - name: Render complete 6.5-second V2 with improved camera and acting
+        run: |
+          mkdir -p out/depth25-v2
+          npx remotion render src/index.ts Probability2p5dCafeV2 out/depth25-v2/2p5d-polished-v2.mp4 --codec=h264 --scale=0.7 --concurrency=2
+      - name: Render four review keyframes
+        run: |
+          for frame in 12 75 135 186; do
+            npx remotion still src/index.ts Probability2p5dCafeV2 out/depth25-v2/frame-${frame}.png --frame=${frame} --scale=0.5
+          done
+      - name: Upload iPhone video only — no pictures in ZIP
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WATCH-2P5D-POLISHED-V2-VIDEO-ONLY
+          path: studio/out/depth25-v2/2p5d-polished-v2.mp4
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload review pictures separately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2P5D-V2-PICTURES-ONLY
+          path: studio/out/depth25-v2/frame-*.png
+          if-no-files-found: warn
+          retention-days: 14
