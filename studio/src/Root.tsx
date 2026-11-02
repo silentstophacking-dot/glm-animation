@@ -4,6 +4,7 @@ import './engine/fonts';
 import { STUDIO } from './studio.config';
 import { EPISODES } from './episodes';
 import { CastSheet } from './CastSheet';
+import { ProbabilityControl, ProbabilityControlBoard, TOTAL_FRAMES, SHOTS } from './episodes/probability-control';
 
 // Every episode gets two compositions: <Id> (the film) and <Id>Board (one frame per shot, at its key frame, for the
 // storyboard). Cast renders the cast sheet.
@@ -19,6 +20,11 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} {...common} />
         </React.Fragment>
       ))}
+      {/* Independent portrait episode: leave all existing landscape compositions unchanged. */}
+      <Composition id="ProbabilityControl" component={ProbabilityControl}
+        durationInFrames={TOTAL_FRAMES} fps={30} width={1080} height={1920} />
+      <Composition id="ProbabilityControlBoard" component={ProbabilityControlBoard}
+        durationInFrames={SHOTS.length} fps={30} width={1080} height={1920} />
       <Composition id="Cast" component={CastSheet} durationInFrames={1} {...common} />
     </>
   );
