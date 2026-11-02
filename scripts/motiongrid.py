@@ -43,7 +43,13 @@ try:
     font = ImageFont.truetype('arial.ttf', 22)
 except OSError:
     font = ImageFont.load_default(22)
-W, H, cols = 480, 270, 6
+# Respect composition orientation: keep landscape sample behavior unchanged.
+probe = subprocess.run(
+    ['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries',
+     'stream=width,height', '-of', 'csv=p=0', video],
+    capture_output=True, text=True, check=True).stdout.strip()
+native_w, native_h = map(int, probe.split(',')[:2])
+W, H, cols = (270, 480, 5) if native_h > native_w else (480, 270, 6)
 for name, frames in jobs:
     rows = (len(frames) + cols - 1) // cols
     sheet = Image.new('RGB', (cols * W, rows * H))
