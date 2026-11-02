@@ -1,52 +1,62 @@
-# WHAT IF YOU COULD CONTROL PROBABILITY?
-**Episode 01 — Storyboard & production brief**  
-**Approved ending:** Dark twist (freeze before the truck hits)  
-**Visual style:** original, cinematic 2D SVG stick-figure animation, dark indigo, teal probability HUD, gold successes, red warning  
-**Master composition:** `ProbabilityControl` | **1080 × 1920** | **30 fps** | **39 seconds** (1,170 frames)  
-**Storyboard composition:** `ProbabilityControlBoard` | 10 key frames  
+# Episode 01: WHAT IF YOU COULD CONTROL PROBABILITY?
+**Approved:** dark, pre-impact truck freeze ending  
+**Status:** stage 4-5, original-skill storyboard awaiting render and visual review  
+**Composition:** `ProbabilityControl` / `ProbabilityControlBoard`  
+**39 seconds | 1170 frames | 30 fps | portrait 1080 × 1920**  
+**Original codebase:** kelano86/what-if-animation, MIT license
 
-## The one rule
-The character may set the probability of **one specific event** at a time. Choosing a new event immediately overwrites the old setting. Guaranteeing escape is **not** the same as guaranteeing survival. The final truck shot ends *before* impact: no gore and no implied confirmed outcome beyond the danger.
+## The rule that makes the ending work
+The hero can control **exactly one event's probability at a time**. Selecting a new event deletes the previous guarantee. An escape can be certain while being safe is not. This is a fictional power; the only mathematical fact used is 1% = 1/100, which is not proof of actual supernatural probability manipulation.
 
-## Locked scene list
+## Storyboard / 19 shots (about 28 cuts a minute)
 
-| Time | Frames | Shot | Story and composition | Intended voiceover |
-|---|---:|---|---|---|
-| 00:00–00:03 | 0–89 | Hook | Huge death-chance meter counts down to zero. Red BIG MISTAKE warning, character below. | “He made his chance of dying zero. Big mistake.” |
-| 00:03–00:06 | 90–179 | Coin | Gold coin rotates and bounces. 100% HEADS HUD. | “Imagine controlling probability. A coin flip? Always heads.” |
-| 00:06–00:09 | 180–269 | Lottery | Digits spin until all four are sevens. The character celebrates. | “Winning the lottery? Guaranteed.” |
-| 00:09–00:13 | 270–389 | Rule | Two probability cards: the second replaces the first. Red rule panel. | “But there’s a rule. Only one probability at a time.” |
-| 00:13–00:16 | 390–479 | Protection | Character inside a shield, death meter descends to 0%. | “So he sets his chance of dying to zero.” |
-| 00:16–00:22 | 480–659 | Collapse | Night city, rain, pavement splits, camera holds as character drops underground. | “That night, the street suddenly collapses beneath him.” |
-| 00:22–00:27 | 660–809 | Buried | Cramped underground frame with concrete slabs. Death chance still 0%. | “He’s buried under concrete. But somehow, he’s alive.” |
-| 00:27–00:32 | 810–959 | Choice | Escape chance rises from 1% to 100%. Old 0% protection visibly crossed out. | “His escape chance is one percent. He makes it one hundred. And loses his protection.” |
-| 00:32–00:35 | 960–1049 | Escape | Concrete scatters. Figure launched out. “HE’S FREE!” reads clearly. | “The rubble blasts him out. He’s free!” |
-| 00:35–00:39 | 1050–1169 | Payoff | Truck approaches on road; freeze before collision. Final three-line caption. | “Straight into a truck’s path. He guaranteed escape. Not survival.” |
+| Shot | Frames | Time | Angle | Read / action | Planned spoken line |
+|---|---:|---|---|---|---|
+| S1 | 0–59 | 0–2s | Extreme macro UI | Death probability falls from 100% to 0 | He made his chance of dying zero. |
+| S2 | 60–119 | 2–4s | Medium character | Pip smiles; ominous warning | Big mistake. |
+| S3 | 120–179 | 4–6s | High macro | Spinning gold coin | What if you could control probability? |
+| S4 | 180–239 | 6–8s | Low medium | Heads again and reaction | A coin flip? Always heads. |
+| S5 | 240–299 | 8–10s | Lottery insert | Digits spin | Winning the lottery? |
+| S6 | 300–359 | 10–12s | Medium reaction | Big win, Pip celebrates | Every single time. |
+| S7 | 360–419 | 12–14s | Wide title | Power title card | But here's the catch. |
+| S8 | 420–479 | 14–16s | Schematic insert | New selection erases old | Only one probability can change at once. |
+| S9 | 480–539 | 16–18s | Low medium | Shielded character, 0% | So he makes dying impossible. |
+| S10 | 540–599 | 18–20s | Rainy city wide | Quiet walk past streetlights | That night, he walks home. |
+| S11 | 600–674 | 20–22.5s | Low wide | Road fractures | Suddenly, the street gives way. |
+| S12 | 675–734 | 22.5–24.5s | High moving | Character falls into hole | He drops straight into darkness. |
+| S13 | 735–809 | 24.5–27s | Trapped close | Rubble encloses Pip; death = 0 | Buried under concrete. Still alive. |
+| S14 | 810–869 | 27–29s | Top-down schematic | Exactly 1 of 100 squares lit | His chance of escaping? One percent. |
+| S15 | 870–929 | 29–31s | UI insert | Escape 100%, protection crossed out | He changes it to one hundred. His protection disappears. |
+| S16 | 930–989 | 31–33s | Low medium | Rubble levitates | The rubble begins to move. |
+| S17 | 990–1049 | 33–35s | Wide high-angle | Debris launches Pip onto street | It launches him into the street. |
+| S18 | 1050–1109 | 35–37s | Tracking low | Oncoming headlights rush closer | Right into an oncoming truck. |
+| S19 | 1110–1169 | 37–39s | Freeze | **No impact shown.** Clear warning conclusion. | He guaranteed his escape. Not his survival. |
 
-**Narration status:** script locked; **voice track not yet recorded or timed**. The current render is a **silent motion previsualization**, not a finished narrated episode. Adjust the clip timings only after recording/reviewing the voice.  
-**Sound design plan:** simple original tick on edits, gold coin impact, lottery hit, rain and rumble, blast, truck approach, abrupt silence on freeze. No paid audio services required for visual preview.  
-**Story principle:** fun use → clear limitation → attempt to cheat → consequence.  
+## Genuine skill integration
+- **Formula:** premise, escalating wins, consequence, and dark final turn from `references/formula.md`
+- **One rig:** the real `Hero` component with `LOOKS.pipHood`, `poseAt`, `faceAt`, original lighting filters
+- **Shared engine:** `defineEpisode`, `Episode`, `Board`, time segments, `LookDef`, `fx`, film grain/vignette
+- **Shot vocabulary:** alternating wide, macro, insert, low, high, and close, with camera motion via `camT` and `kf`
+- **Reusable kit:** `NightSky`, `Bokeh`, `Schematic`, `CountUp`-style HUD, `HudChip`, `FocusRings`, `DrawOn`; new sets/props in `engine/sets/probability.tsx`
+- **Script metadata:** `episode.json` and provisional `words.json` for the native planner
+- **Plan:** `scripts/plan.py` creates shot list and `timeline.json`
+- **Storyboard:** `scripts/stills.mjs` and `scripts/board.py`, patched to preserve aspect ratio for portrait
+- **Animation / sound / master:** pending storyboard review, narration and sound. Existing `motiongrid.py`, `mixcheck.py`, `master.py` are preserved for subsequent stages.
 
-## Production / review checklist
-- [x] Preserve Rewind and CopyPaste original source files and landscape compositions
-- [x] Independent vertical component with a consistent 2D character and color palette
-- [x] Ten shot keyframes available as a Remotion storyboard composition
-- [ ] TypeScript / Remotion compilation verified in GitHub Actions
-- [ ] Ten keyframe stills visually reviewed for readability and continuity
-- [ ] Low-resolution silent motion preview reviewed for cuts and pace
-- [ ] Revisions to character action, truck staging and visual detail
-- [ ] Record/sync narration, add audio, inspect final vertical export
-- [ ] Full-resolution 1080 × 1920 mastered MP4
+## Audio truthfulness and the remaining gates
+The current `words.json` contains **editorially estimated timestamps**, NOT timestamps from synthesized speech. These are used solely to make the first storyboard and to list provisional lines. The original `voice.py` will overwrite them when actual permitted voice audio and an ElevenLabs API key are supplied, or we can align manually to an original narration track. No ElevenLabs key is stored in the repo or supplied to Actions, and there is no invented cost report.
 
-## Rendering
-From `studio/`:
-```bash
-npm ci
-npx tsc --noEmit
-npx remotion render src/index.ts ProbabilityControl out/probability-preview.mp4 --codec=h264 --scale=0.5 --concurrency=2
-npx remotion still src/index.ts ProbabilityControlBoard out/storyboard-01.png --frame=0 --scale=0.35
-```
-Run the GitHub workflow `Probability Animation Preview` for automated compilation, contact stills, silent video and downloadable artifacts. It is intentionally separate from the existing `Test Animation Render` workflow.
+The `sound` section describes events for the original `sfx.py` but sound is **not generated yet**. Do not run `sfx.py` without authorisation for a connected service. Do not master until a legitimate voice and sound mix exists; `master.py` expects real audio for the -14 LUFS pass.
 
-## Notes
-This is fictional probability manipulation, not a claim about real-world physics. No image/video generation or ElevenLabs key is required for this draft. The preview exports at **540 × 960** for faster iteration; the registered composition is still **1080 × 1920** for the final master.
+## Board gate (required before a video master)
+1. Trigger the `Probability Skill Storyboard` GitHub workflow on this feature branch.
+2. Run `scripts/plan.py`, TypeScript check, `scripts/stills.mjs`, then `scripts/board.py`.
+3. Download the 19 individual stills and a contact sheet from the artifact. Check every panel using `references/look.md` 11-point checklist: legibility on phone, camera variation, light sources, pose, continuity, crowding.
+4. Re-render failed stills before authorising the video render.
+5. After visual approval, render a low-res motion preview, inspect it with `motiongrid.py`, then arrange narration, audio events and mastering.
+
+## Preserved
+- `Rewind` and `CopyPaste` assets, scripts and their original compositions
+- Original `studio/src/studio.config.ts` landscape dimensions for both sample episodes
+- Original `test-render.yml` workflow on the main branch
+- The previous standalone prototype `studio/src/episodes/probability-control.tsx` remains available as a rollback reference but is no longer the registered composition
