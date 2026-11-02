@@ -1,0 +1,20 @@
+
+{
+  "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "openrouter": {
+      "env": ["OPENROUTER_API_KEY"],
+      "models": {
+        "glm-free": {
+          "name": "GLM 5.3 Flash Free",
+          "modelID": "z-ai/glm-5.3-flash:free",
+          "capabilities": {
+            "tools": true,
+            "input": ["text"],
+            "output": ["text"]
+          }
+        }
+      }
+    }
+  }
+}
