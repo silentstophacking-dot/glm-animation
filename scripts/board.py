@@ -31,7 +31,15 @@ def font(size, bold=True):
 
 
 head, body, note = font(34), font(28), font(23, False)
-W, H, CAP, PAD = 960, 540, 160, 24
+# Fit to source aspect ratio, preserving original landscape storyboard behavior.
+sample = next(src.glob('*.png'), None)
+if sample is not None:
+    with Image.open(sample) as im:
+        source_width, source_height = im.size
+else:
+    source_width, source_height = 16, 9
+W, H = (420, 746) if source_height > source_width else (960, 540)
+CAP, PAD = 160, 24
 n = len(tl['shots'])
 rows = (n + cols - 1) // cols
 sheet = Image.new('RGB', (cols * W + (cols + 1) * PAD, rows * (H + CAP + PAD) + PAD + 90), (20, 17, 26))
