@@ -45,11 +45,20 @@ jobs:
           for frame in 31 92 131; do
             npx remotion still src/index.ts RewindGradeCoin out/rewind-grade-coin/shot-${frame}.png --frame=${frame} --scale=0.5
           done
-      - name: Upload video and three review stills
+      - name: Upload VIDEO ONLY (no pictures in this ZIP)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rewind-grade-coin-proof
-          path: studio/out/rewind-grade-coin/
+          name: WATCH-ME-coin-proof-VIDEO-ONLY
+          path: studio/out/rewind-grade-coin/coin-proof.mp4
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload storyboard pictures separately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coin-proof-storyboard-PICTURES-ONLY
+          path: studio/out/rewind-grade-coin/shot-*.png
           if-no-files-found: warn
           retention-days: 14
