@@ -51,7 +51,7 @@ const Actor:React.FC<{t:number;x:number;y:number;s:number;mode?:'smug'|'happy'|'
     look={LOOKS.pipHood} rimId={light} shadow={falling?0:.28}/>;
 };
 
-const S1:React.FC<ShotProps>=({t})=>{
+export const S1:React.FC<ShotProps>=({t})=>{
   const airtime=clamp(t/45),land=clamp((t-39)/17);
   const x=430+kf(t,[[0,-40],[20,80],[43,165],[65,175]]);
   const y=t<=43?1190-570*Math.sin(Math.PI*clamp(t/87))-t*2:865+12*Math.sin((t-43)*.55)*Math.exp(-(t-43)/10);
@@ -85,7 +85,7 @@ const S1:React.FC<ShotProps>=({t})=>{
   </g>;
 };
 
-const S2:React.FC<ShotProps>=({t})=><g>
+export const S2:React.FC<ShotProps>=({t})=><g>
   <View cx={610+kf(t,[[0,55],[56,0]])} cy={1090} z={1.04+kf(t,[[0,0],[56,.13]])}>
     <ChanceRoom t={t}/>
     <ellipse cx={600} cy={1710} rx={188} ry={28} fill="#101320" opacity=".34"/>
@@ -103,7 +103,7 @@ const S2:React.FC<ShotProps>=({t})=><g>
   </g>
 </g>;
 
-const S3:React.FC<ShotProps>=({t})=>{
+export const S3:React.FC<ShotProps>=({t})=>{
   const value=Math.round(80*(1-smooth(t/45)));
   const activate=smooth((t-33)/14);
   return <g>
@@ -126,7 +126,7 @@ const S3:React.FC<ShotProps>=({t})=>{
   </g>;
 };
 
-const S4:React.FC<ShotProps>=({t})=>{
+export const S4:React.FC<ShotProps>=({t})=>{
   const x=320+250*smooth(t/69);
   const wob=Math.sin(t*.23);
   return <g>
@@ -148,7 +148,7 @@ const S4:React.FC<ShotProps>=({t})=>{
   </g>;
 };
 
-const S5:React.FC<ShotProps>=({t})=>{
+export const S5:React.FC<ShotProps>=({t})=>{
   const crack=smooth((t-7)/29);
   const pit=smooth((t-34)/31);
   const stumble=smooth((t-22)/35);
@@ -168,7 +168,7 @@ const S5:React.FC<ShotProps>=({t})=>{
   </g>;
 };
 
-const S6:React.FC<ShotProps>=({t})=>{
+export const S6:React.FC<ShotProps>=({t})=>{
   const gravity=smooth((t-10)/56);
   const fallY=270+1390*gravity;
   const spin=kf(t,[[0,-15],[78,72]]);
