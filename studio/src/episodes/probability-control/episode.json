@@ -54,7 +54,7 @@
       "id": "S1",
       "size": "macro UI",
       "set": "probability interface",
-      "key": 25,
+      "key": 55,
       "note": "Death chance counts down, warning"
     },
     {
@@ -68,7 +68,7 @@
       "id": "S3",
       "size": "macro high angle",
       "set": "coin scene",
-      "key": 40,
+      "key": 53,
       "note": "Spinning golden coin"
     },
     {
@@ -152,7 +152,7 @@
       "id": "S15",
       "size": "macro insert",
       "set": "probability interface",
-      "key": 35,
+      "key": 56,
       "note": "Protection overwritten"
     },
     {
@@ -173,7 +173,7 @@
       "id": "S18",
       "size": "low tracking",
       "set": "road with oncoming truck",
-      "key": 36,
+      "key": 47,
       "note": "Truck approaches"
     },
     {
