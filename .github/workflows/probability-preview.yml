@@ -1,0 +1,56 @@
+name: Probability Animation Preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'studio/src/episodes/probability-control.tsx'
+      - 'studio/src/Root.tsx'
+      - '.github/workflows/probability-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probability-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout the animation studio
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck all compositions
+        run: npx tsc --noEmit
+
+      - name: Render 540x960 silent motion preview
+        run: |
+          mkdir -p out/probability-control
+          npx remotion render src/index.ts ProbabilityControl out/probability-control/preview.mp4 --codec=h264 --scale=0.5 --concurrency=2
+
+      - name: Render five storyboard keyframes
+        run: |
+          for i in 0 3 5 7 9; do
+            npx remotion still src/index.ts ProbabilityControlBoard out/probability-control/board-$i.png --frame=$i --scale=0.35
+          done
+
+      - name: Upload video and storyboard stills
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-control-preview
+          path: studio/out/probability-control/
+          if-no-files-found: warn
