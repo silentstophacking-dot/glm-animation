@@ -1,0 +1,82 @@
+name: Probability Skill Storyboard
+
+on:
+  push:
+    branches:
+      - feature/probability-skill-pipeline
+    paths:
+      - 'studio/src/engine/**'
+      - 'studio/src/episodes/probability-control/**'
+      - 'studio/src/Root.tsx'
+      - 'scripts/board.py'
+      - '.github/workflows/probability-skill-board.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'studio/src/engine/**'
+      - 'studio/src/episodes/probability-control/**'
+      - 'studio/src/Root.tsx'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  storyboard:
+    name: Skill pipeline storyboard / typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install original skill requirements
+        run: |
+          python -m pip install --disable-pip-version-check numpy pillow
+          npm ci
+
+      - name: Generate original word-cued timeline / shot list
+        run: |
+          python ../scripts/plan.py probability-control
+          cp out/probability-control/shotlist.md /tmp/probability-shotlist.md
+
+      - name: Typecheck original samples and portrait skill episode
+        run: npx tsc --noEmit
+
+      - name: Render every storyboard still using the original script
+        run: node ../scripts/stills.mjs probability-control --scale 0.32
+
+      - name: Build original skill storyboard contact sheet
+        run: python ../scripts/board.py probability-control --cols 4
+
+      - name: Add source plan for inspection
+        run: |
+          cp /tmp/probability-shotlist.md out/probability-control/shotlist.md
+          cp src/episodes/probability-control/episode.json out/probability-control/episode-plan.json
+          cp src/episodes/probability-control/timeline.json out/probability-control/timeline.json
+
+      - name: Upload storyboard / cast and timeline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-skill-storyboard
+          path: studio/out/probability-control/
+          if-no-files-found: warn
+          retention-days: 14
