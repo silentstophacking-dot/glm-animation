@@ -2,10 +2,11 @@ name: Probability Motion Draft
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main, feature/probability-skill-pipeline]
+  pull_request:
+    branches: [main]
     paths:
       - 'production/probability-control/APPROVED.md'
+      - '.github/workflows/probability-motion-draft.yml'
 
 permissions:
   contents: read
