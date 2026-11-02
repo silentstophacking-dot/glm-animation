@@ -1,0 +1,47 @@
+
+name: GLM Connection Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  glm-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout animation project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install OpenCode
+        run: npm install --global @opencode/cli
+
+      - name: Let GLM inspect the project
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          set -euo pipefail
+          opencode run --standalone \
+            --model openrouter/z-ai/glm-5.3-flash:free \
+            "Read studio/package.json and studio/src/Root.tsx. Identify the animation framework, rendering tool, and composition registration file. Do not modify files or reveal secrets. Keep your answer brief." \
+            2>&1 | tee glm-test-output.txt
+          test -s glm-test-output.txt
+
+      - name: Upload GLM response
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glm-test-result
+          path: glm-test-output.txt
+          if-no-files-found: warn
+  
