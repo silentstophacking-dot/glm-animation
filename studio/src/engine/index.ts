@@ -20,3 +20,5 @@ export * from './sets/bedroom';
 export * from './sets/probability';
 
 export * from './sets/probability-environments';
+
+export * from './depth25';
