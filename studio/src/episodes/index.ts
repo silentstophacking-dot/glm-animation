@@ -8,5 +8,6 @@ import { rewindGradeCoin } from './probability-control/rewind-grade-coin';
 import { referenceStyleCoin } from './probability-control/reference-style-coin';
 import { referenceCharacterCast } from './probability-control/reference-cast';
 import { probability2p5dCafe } from './probability-control/depth25-cafe';
+import { probability2p5dCafeV2 } from './probability-control/depth25-cafe-v2';
 
-export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin, referenceStyleCoin, referenceCharacterCast, probability2p5dCafe];
+export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin, referenceStyleCoin, referenceCharacterCast, probability2p5dCafe, probability2p5dCafeV2];
