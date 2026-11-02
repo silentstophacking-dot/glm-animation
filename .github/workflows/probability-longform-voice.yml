@@ -1,0 +1,102 @@
+name: Probability Long-form Narration (AUDIO ONLY)
+
+on:
+  push:
+    branches: [feature/probability-longform-local-tts]
+    paths:
+      - 'scripts/probability_piper_voice.py'
+      - 'production/probability-longform/episode-manifest.json'
+      - '.github/workflows/probability-longform-voice.yml'
+  pull_request:
+    branches: [feature/probability-longform-episode-01]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthesize-narration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Get narration project
+        uses: actions/checkout@v4
+
+      - name: Set up Python for FREE offline TTS
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install audio-only Piper runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "piper-tts>=1.3,<2" numpy
+
+      - name: Download public voice model (Joe - source dataset CC0)
+        run: |
+          mkdir -p assets/piper-voices
+          python -m piper.download_voices en_US-joe-medium --data-dir assets/piper-voices
+          test -s assets/piper-voices/en_US-joe-medium.onnx
+          test -s assets/piper-voices/en_US-joe-medium.onnx.json
+
+      - name: Synthesize the complete 27-shot narration — AUDIO ONLY
+        run: |
+          python scripts/probability_piper_voice.py \
+            --voice-model assets/piper-voices/en_US-joe-medium.onnx \
+            --output out/probability-voice
+
+      - name: Confirm MP3 files are actually playable audio, not images/video
+        run: |
+          for file in out/probability-voice/*.mp3; do
+            ffprobe -v error -select_streams a:0 -show_entries stream=codec_name \
+              -of default=noprint_wrappers=1 "$file"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('out/probability-voice/timing-report.json').read_text())
+          assert r['scene_count']==27 and r['video_generated'] is False
+          for f in Path('out/probability-voice').glob('*.mp3'):
+              assert f.stat().st_size>5000, f'{f} empty'
+          assert not list(Path('out/probability-voice').rglob('*.mp4'))
+          print('27 narration segments; no video; MP3 outputs exist.')
+          PY
+
+      - name: Full narration in ONE MP3, no other files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-FULL-PROBABILITY-NARRATION-MP3-ONLY
+          path: out/probability-voice/Probability_Narration_Full.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Intro voice sample in ONE MP3, no other files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-INTRO-PROBABILITY-NARRATION-MP3-ONLY
+          path: out/probability-voice/Probability_Narration_Intro_30s.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Rough scene-aligned narration in ONE MP3
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EDITOR-PROBABILITY-ROUGH-ALIGNED-NARRATION-MP3-ONLY
+          path: out/probability-voice/Probability_Narration_230s_Rough_Aligned.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Voice timings and original 27 WAV scene stems, editor assets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EDITOR-VOICE-TIMINGS-AND-WAV-SEGMENTS
+          path: |
+            out/probability-voice/timing-report.json
+            out/probability-voice/per-shot/*.wav
+          if-no-files-found: warn
+          retention-days: 14
