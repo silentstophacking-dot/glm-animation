@@ -5,5 +5,7 @@ import { probabilityControl } from './probability-control/index';
 import { probabilityQualityTest } from './probability-control/quality-test';
 import { probabilityControlV2 } from './probability-control/full-v2';
 import { rewindGradeCoin } from './probability-control/rewind-grade-coin';
+import { referenceStyleCoin } from './probability-control/reference-style-coin';
+import { referenceCharacterCast } from './probability-control/reference-cast';
 
-export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin];
+export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin, referenceStyleCoin, referenceCharacterCast];
