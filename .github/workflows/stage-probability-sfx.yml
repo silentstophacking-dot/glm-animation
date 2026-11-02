@@ -1,0 +1,86 @@
+name: Stage Long-form Original SFX and Music into Feature Branch (AUDIO ONLY)
+
+on:
+  push:
+    branches: [feature/probability-longform-sound-design]
+    paths: ['.github/workflows/stage-probability-sfx.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  stage-original-stems:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out this sound-design feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/probability-longform-sound-design
+          persist-credentials: true
+
+      - name: Retrieve successful AUDIO ONLY soundscape run
+        uses: actions/download-artifact@v4
+        with:
+          repository: silentstophacking-dot/glm-animation
+          run-id: 41535046630
+          name: EDITOR-ORIGINAL-PROBABILITY-SFX-MUSIC-STEMS
+          path: out/staged-sfx
+          github-token: ${{ github.token }}
+
+      - name: Install audio encoder (no video tools invoked)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
+      - name: Produce 230s synchronized editable sound layers
+        run: |
+          mkdir -p studio/public/probability-longform
+          ffmpeg -hide_banner -loglevel error -y \
+            -i out/staged-sfx/effects.wav -c:a libmp3lame -b:a 144k \
+            studio/public/probability-longform/sfx.mp3
+          ffmpeg -hide_banner -loglevel error -y \
+            -i out/staged-sfx/ambient_music.wav -c:a libmp3lame -b:a 144k \
+            studio/public/probability-longform/music.mp3
+          cp out/staged-sfx/sound-cues.json \
+            production/probability-longform/sound-cues.json
+
+      - name: Confirm all three tracks share the original 230s start
+        run: |
+          python3 - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          p=Path('studio/public/probability-longform')
+          info=json.loads(Path('production/probability-longform/sound-cues.json').read_text())
+          assert info['event_count'] >= 70 and info['clip_seconds']==230
+          assert not info['video_generated']
+          for name in ('voice.mp3','sfx.mp3','music.mp3'):
+            path=p/name
+            assert path.stat().st_size>100000
+            dur=float(subprocess.check_output([
+              'ffprobe','-v','error','-show_entries','format=duration',
+              '-of','csv=p=0',str(path)]).decode())
+            assert 229.9 < dur < 230.2,(name,dur)
+            print(f'{name}: {dur:.3f} seconds ({path.stat().st_size} bytes)')
+          src=Path('studio/src/episodes/probability-longform/episode.tsx').read_text()
+          for name in ('voice.mp3','sfx.mp3','music.mp3'):
+            assert 'probability-longform/'+name in src
+          assert not list(Path('out/staged-sfx').rglob('*.mp4'))
+          print('All 3 audio sources validated; no video render.')
+          PY
+
+      - name: Persist original audio and exact cue schedule
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add studio/public/probability-longform/sfx.mp3 \
+            studio/public/probability-longform/music.mp3 \
+            production/probability-longform/sound-cues.json
+          if git diff --cached --quiet; then
+            echo "Already staged."
+          else
+            git commit -m "assets(audio): stage 230s original Probability SFX/music and cue sheet"
+            git push origin HEAD:feature/probability-longform-sound-design
+          fi

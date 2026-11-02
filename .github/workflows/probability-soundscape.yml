@@ -1,0 +1,100 @@
+name: Probability Long-form Original Soundscape (AUDIO ONLY)
+
+on:
+  push:
+    branches: [feature/probability-longform-sound-design]
+    paths:
+      - 'scripts/probability_soundscape.py'
+      - '.github/workflows/probability-soundscape.yml'
+  pull_request:
+    branches: [feature/probability-longform-local-tts]
+    paths:
+      - 'scripts/probability_soundscape.py'
+      - '.github/workflows/probability-soundscape.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  create-soundscape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out long-form with approved voice
+        uses: actions/checkout@v4
+
+      - name: Python for deterministic original effects
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install free DSP tools and FFmpeg — no video
+        run: |
+          python -m pip install numpy scipy
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          test -s studio/public/probability-longform/voice.mp3
+
+      - name: Generate original sound design and approved voice mix
+        run: |
+          python scripts/probability_soundscape.py \
+            --manifest production/probability-longform/episode-manifest.json \
+            --voice studio/public/probability-longform/voice.mp3 \
+            --output out/probability-soundscape
+
+      - name: Validate original sound, 230s mix, and no MP4
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('out/probability-soundscape')
+          d=json.loads((p/'sound-cues.json').read_text())
+          assert d['clip_seconds']==230 and not d['video_generated']
+          assert d['event_count']>45
+          assert d['finished_max_absolute_peak']<=.85
+          assert not list(p.glob('*.mp4'))
+          for file in ('Probability_Story_Sound_Mix.mp3','Probability_Opening_40s.mp3','Probability_Ending_45s.mp3'):
+            assert (p/file).stat().st_size>200000, file
+          print('Validated original AUDIO-ONLY soundtrack, no video render.')
+          PY
+          ffprobe -v error -show_entries format=duration -of csv=p=0 out/probability-soundscape/Probability_Story_Sound_Mix.mp3
+
+      - name: Full 3m50 audio story in ONE MP3
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-PROBABILITY-LONGFORM-AUDIO-STORY-MP3-ONLY
+          path: out/probability-soundscape/Probability_Story_Sound_Mix.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Intro sound preview MP3 only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-OPENING-40s-AUDIO-PREVIEW-ONLY
+          path: out/probability-soundscape/Probability_Opening_40s.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Ending sound preview MP3 only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-ENDING-45s-AUDIO-PREVIEW-ONLY
+          path: out/probability-soundscape/Probability_Ending_45s.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Sound stems and 70-plus cue locations for editing
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EDITOR-ORIGINAL-PROBABILITY-SFX-MUSIC-STEMS
+          path: |
+            out/probability-soundscape/effects.wav
+            out/probability-soundscape/ambient_music.wav
+            out/probability-soundscape/sound-cues.json
+          if-no-files-found: warn
+          retention-days: 14

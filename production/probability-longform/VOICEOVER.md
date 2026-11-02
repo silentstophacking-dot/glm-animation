@@ -2,7 +2,7 @@
 
 **Runtime:** 03:50, 1920×1080 landscape, 30 FPS; **27 story shots, 401 draft narration words**.
 
-**Status:** draft narration on the edit's assumed schedule; NO voice audio has been recorded, generated, or aligned. Start/end codes below are SCENE WINDOWS, not invented speech timestamps. The final timeline must be retimed against recorded speech.
+**Status:** user-approved Piper narration has been generated and staged at `studio/public/probability-longform/voice.mp3` for the entire 3:50 edit. All 27 scene starts and ends were measured from actual generated audio (`voice-timing.json`), with no narration crossing a shot cut. Start/end ranges below are scene windows; they are not phoneme-level word timings.
 
 **Delivery:** one storyteller voice; conversational and suspenseful. First two lines fast and serious, discovery sounds intrigued, lottery understated, the one-power rule deliberate, cave calm and claustrophobic, decision hushed, final freeze quiet. Avoid continuous fast voice or adding filler to meet a duration.
 
@@ -139,8 +139,8 @@ His escape was guaranteed. His survival wasn't. Controlling one probability does
 
 ## Recording and edit procedure
 
-1. Record a clean original narrator track in any accessible editor or recorder (iPhone supported).
-2. Align per-sentence starts and ends to recorded syllables, NOT the provisional scene windows.
-3. Trim/extend shot durations to the actual voice rather than speeding up the narrator to force a predetermined length.
-4. Link real audio cues to physically visible events, then check loudness and background sound balance.
-5. Only after a separate user request to render, generate a motion review and final MP4. Current stage explicitly forbids rendering.
+1. **Already complete:** approved 27-part narrator synthesized using free, offline Piper and staged as a 230-second voice file.
+2. **Already complete:** 27 actual audio intervals measured and checked; none crosses its planned shot cut. See `voice-timing.json`.
+3. **Already complete as a working sound edit:** 79 cue events synthesized from original procedural sound effects; independent SFX and music stems staged with `sound-cues.json`.
+4. **In progress:** fix scene staging revealed by source-only QA stills (fall, pinned legs and truck ground contact). Narrator need not be regenerated.
+5. Final loudness mastering and cinematic mix balancing occur after actual scene motion is judged. **A full video export is still on hold**; source validation and still-frame QA do not render a video.

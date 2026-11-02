@@ -6,7 +6,8 @@ import {longformShotMap} from './shots';
  * A 3:50 landscape (16:9) What If? animated film.
  * All 27 visual sequences exist in code. The approved Piper narrator
  * voice is mounted at studio/public/probability-longform/voice.mp3.
- * Source checkout must include the staged approved voice asset.
+ * The source branch stages approved voice and original provisional SFX/music
+ * in studio/public/probability-longform. No video render is authorized.
  *
  * IMPORTANT: Registering a composition does not render/export a video.
  * Do not add a video render workflow until the owner explicitly approves it.
@@ -44,7 +45,13 @@ export const longformTimeline:Timeline={
   ],
   // Approved English Piper voice. The 230s bed is timed to the 27 scene starts
   // from measured PCM and contains intentional quiet gaps for visual acting.
-  audio:{voice:'probability-longform/voice.mp3',voiceVol:0.86}
+  // Independent mastered stems can be muted, mixed or replaced without
+  // regenerating the approved original narration.
+  audio:{
+    voice:'probability-longform/voice.mp3',voiceVol:0.86,
+    sfx:'probability-longform/sfx.mp3',sfxVol:0.75,
+    music:'probability-longform/music.mp3',musicVol:0.66
+  }
 };
 
 export const probabilityLongform01=defineEpisode('ProbabilityLongform01',{

@@ -1,7 +1,7 @@
 {
   "project": "What If You Could Control Probability?",
   "version": "longform-episode-01-preproduction",
-  "status": "SCRIPT_AND_SOURCE_IN_PROGRESS__NO_RENDER_REQUESTED",
+  "status": "VOICE_APPROVED_SOUND_DESIGN_IN_PROGRESS_NO_VIDEO_RENDER",
   "format": "1920x1080 landscape 16:9",
   "fps": 30,
   "totalSeconds": 230,
@@ -15,9 +15,9 @@
   "powerRule": "Only one event's probability can be set. Setting a different target immediately removes the old guarantee.",
   "ending": "Freeze BEFORE truck collision; no injury impact shown.",
   "audio": {
-    "voice": "NOT RECORDED: timings are editorial placeholders, not phoneme alignment",
-    "sfx": "Planned only; original permitted/synthesized sources required",
-    "music": "Unselected; no music embedded"
+    "voice": "APPROVED: Piper en_US-joe-medium; staged studio/public/probability-longform/voice.mp3; 230.0s; measured timing production/probability-longform/voice-timing.json; 27 lines, no cross-cut",
+    "sfx": "Original code-synthesized SFX/audio bed under review; not yet attached to episode",
+    "music": "Original procedural subdued ambient bed under review; no commercial music"
   },
   "render": {
     "authorized": false,

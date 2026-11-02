@@ -1,0 +1,102 @@
+name: Long-form Probability Assembly QA — NO VIDEO EXPORT
+
+on:
+  push:
+    branches: [feature/probability-longform-sound-design]
+    paths:
+      - '.github/workflows/probability-longform-assembly-qa.yml'
+      - 'studio/src/episodes/probability-longform/shots.tsx'
+      - 'studio/src/episodes/probability-longform/episode.tsx'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-production-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout source with approved 230-second voice/SFX/music
+        uses: actions/checkout@v4
+
+      - name: Node for Remotion source checks
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install FFprobe to verify the three existing audio files
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
+      - name: Typecheck the longform and all original samples
+        run: npx tsc --noEmit
+
+      - name: Validate the full 3:50 assembled audio edit and one-camera geometry
+        run: |
+          python3 - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          m=json.loads(Path('../production/probability-longform/episode-manifest.json').read_text())
+          t=json.loads(Path('../production/probability-longform/voice-timing.json').read_text())
+          c=json.loads(Path('../production/probability-longform/sound-cues.json').read_text())
+          assert m['fps']==30 and m['totalFrames']==6900 and len(m['shots'])==27
+          assert m['render']['authorized'] is False
+          assert t['scene_count']==27 and t['scenes_crossing_next_cut']==0
+          assert len(t['shots'])==len(m['shots'])
+          assert c['clip_seconds']==230 and c['event_count']>=70
+          for shot,timing in zip(m['shots'],t['shots']):
+              assert shot['id']==timing['id']
+              assert timing['audio_start_sec']>=shot['startSec']
+              assert timing['audio_end_sec']<=shot['endSec']+.001
+          for name in ('voice.mp3','sfx.mp3','music.mp3'):
+              file=Path('public/probability-longform')/name
+              assert file.stat().st_size>100000
+              dur=float(subprocess.check_output(['ffprobe','-v','error',
+                  '-show_entries','format=duration','-of','csv=p=0',str(file)]))
+              assert 229.9<dur<230.2,(name,dur)
+          episode=Path('src/episodes/probability-longform/episode.tsx').read_text()
+          source=Path('src/episodes/probability-longform/shots.tsx').read_text()
+          assert 'camT(x,y,zoom,960,540)' in source
+          assert '<WorldCamera id={id} t={t} len={len}>{physical}</WorldCamera>' in source
+          for f in ('voice.mp3','sfx.mp3','music.mp3'):
+              assert f in episode
+          print('PASSED: 27 shots, 6900 frames, all 3 actual audio assets, NO VIDEO')
+          PY
+
+      - name: Inspect 8 key storyboard stills (NO MP4 RENDER)
+        run: |
+          mkdir -p out/longform-assembly-qa
+          for frame in 0 4 8 12 16 21 25 26; do
+            npx remotion still src/index.ts ProbabilityLongform01Board out/longform-assembly-qa/shot-${frame}.png --frame=${frame} --scale=0.45 --log=error
+          done
+
+      - name: Confirm each storyboard image exists and no MP4 was produced
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          directory=Path('out/longform-assembly-qa')
+          frames=list(directory.glob('*.png'))
+          assert len(frames)==8,(len(frames),frames)
+          assert all(f.stat().st_size>1500 for f in frames)
+          assert not list(directory.rglob('*.mp4'))
+          print('Eight source-check stills generated, no video.')
+          PY
+
+      - name: Upload stills for internal film composition review (not video)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EIGHT-LONGFORM-STILL-FRAMES-ONLY
+          path: studio/out/longform-assembly-qa/*.png
+          if-no-files-found: warn
+          retention-days: 14

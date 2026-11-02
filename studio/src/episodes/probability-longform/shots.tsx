@@ -46,7 +46,7 @@ const CAMERA:Record<LongformShotId,CameraSetup>={
   WALK_HOME:{a:[770,555,.88],b:[1210,553,.98]},
   SITE_WARNING:{a:[1110,570,.96],b:[1215,566,1.08]},
   CRACK:{a:[960,665,1.16],b:[975,758,1.36]},
-  FALL:{a:[975,570,.88],b:[980,990,1.08]},
+  FALL:{a:[975,690,.88],b:[980,1380,1.08]},
   TRAPPED:{a:[920,680,1.05],b:[947,666,1.24]},
   THE_LIMIT:{a:[955,667,1.23],b:[960,665,1.42]},
   NO_RESCUE:{a:[954,675,1.22],b:[974,670,1.36]},
@@ -146,9 +146,11 @@ const actorPose=(t:number,stage:Location,mode:Behavior,
      {f:117,p:{tilt:34,armR:{a:132,b:-10},armL:{a:140,b:-7}}},
      {f:205,p:{tilt:10,armR:{a:128,b:-8},armL:{a:135,b:0}}}];break;
    case 'fear':keys=[
-     {f:0,p:{tilt:20,headTilt:14,armL:{a:110,b:-14}}},
-     {f:85,p:{tilt:9,headTilt:-17,armR:{a:144,b:23}}},
-     {f:215,p:{tilt:3,headTilt:4}}];break;
+     {f:0,p:{tilt:34,headTilt:-17,armL:{a:115,b:-20},
+       armR:{a:52,b:-22},legL:{a:37,b:-24}}},
+     {f:85,p:{tilt:17,headTilt:14,armR:{a:156,b:-20},
+       armL:{a:106,b:-14}}},
+     {f:215,p:{tilt:29,headTilt:-11,armR:{a:120,b:-18}}}];break;
    case 'switch':keys=[
      {f:0,p:{tilt:24,armR:{a:64,b:-18}}},
      {f:72,p:{tilt:-4,armR:{a:146,b:-12},headTilt:13}},
@@ -372,15 +374,34 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
       x={atX} y={atY} s={id==='HEADLIGHTS'||id==='PRE_IMPACT'?1.06:1.1}/>;
    const truck=id==='HEADLIGHTS'||id==='PRE_IMPACT';
    const truckP=truck?(id==='PRE_IMPACT'?.92:smooth(t/Math.max(1,len))):0;
-   physical=<><StreetWorld t={id==='PRE_IMPACT'?0:t} rain
+   // Anchor the truck's wheels to the road, instead of its body origin.
+   const truckScale=.52+1.00*truckP;
+   const truckWheelY=770+175*truckP;
+   const truckBodyY=truckWheelY-363*truckScale;
+   physical=<>
+     {id==='FALL'?<g>
+       {/* Street-level fracture above a continuous underground cave.
+           One world-camera follows the fall, not the backdrop alone. */}
+       <CaveWorld t={t}/>
+       <defs><clipPath id="longformFallRoadEdge">
+         <path d="M-100 -100 H2020 V765 L1660 799 L1370 756
+           L1100 813 L820 771 L620 821 L340 766 L-100 810 Z"/>
+       </clipPath></defs>
+       <g clipPath="url(#longformFallRoadEdge)">
+         <StreetWorld t={t} rain crack={1} pit={1}/>
+       </g>
+       <path d="M-100 811 L340 766 L620 821 L820 771 L1100 813
+         L1370 756 L1660 799 L2020 765"
+         stroke="#8695A8" strokeWidth={13} fill="none" opacity=".73"/>
+     </g>:<StreetWorld t={id==='PRE_IMPACT'?0:t} rain
        crack={cracking?id==='CRACK'?smooth(t/190):1:0}
-       pit={pit?id==='FALL'?smooth((t-45)/120):1:0}/>
+       pit={pit?1:0}/>}
      {id==='NEAR_MISS'&&<g>
-       <g transform={'rotate('+(14+42*smooth((t-10)/140))+' 1130 330)'}>
-         <path d="M1130 330 V555" stroke="#7B7C87" strokeWidth={14}/>
-         <rect x={910} y={480} width={405} height={92}
+       <g transform={'rotate('+(8+48*smooth((t-10)/140))+' 1360 325)'}>
+         <path d="M1360 325 V555" stroke="#7B7C87" strokeWidth={14}/>
+         <rect x={1200} y={485} width={405} height={92}
            rx={11} fill="#E8B35D" stroke="#534657" strokeWidth={8}/>
-         {copy('KEEP OUT',1115,542,41,'#2F2940')}
+         {copy('KEEP OUT',1405,546,41,'#2F2940')}
        </g>
      </g>}
      {id==='SITE_WARNING'&&<g opacity={.82}>
@@ -393,8 +414,8 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
        <path d={'M'+(1520-540*truckP)+' '+(500+65*truckP)+
           ' L1000 1070 L1750 1070Z'}
          fill="#FFE6A2" opacity={.06+truckP*.15}/>
-       <ProbabilityTruck x={1470-430*truckP} y={360-160*truckP}
-         t={id==='PRE_IMPACT'?0:t} scale={.58+truckP*.85}/>
+       <ProbabilityTruck x={1470-430*truckP} y={truckBodyY}
+         t={id==='PRE_IMPACT'?0:t} scale={truckScale}/>
      </g>}
     </>;
     overlay=id==='NEAR_MISS'?<Card x={1380} y={90} width={410}
@@ -422,6 +443,16 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
     physical=<><CaveWorld t={t} opening={opening}/>
       <Person t={t} stage="cave" mode={mode}/>
       <CaveForeground t={t} opening={opening}/>
+      {/* Large slab is what pins his hips and legs. It rises only during
+          the guaranteed escape, and keeps world contact when the camera moves. */}
+      <g transform={'translate(0 '+(-150*opening)+')'}>
+        <path d="M640 847 L782 773 L1118 759 L1315 904
+          L1150 992 L805 958Z" fill="#647286"
+          stroke="#A6B5C4" strokeWidth={12}/>
+        <path d="M740 819 L1160 827 M1010 873 L1190 914"
+          stroke="#AAB8C6" strokeWidth={5} opacity=".28"/>
+        <path d="M698 882 L832 861" stroke="#334155" strokeWidth={9}/>
+      </g>
       {id==='RUBBLE_MOVES'&&<RockBurst t={t-90} x={1050} y={850} size={.54}/>}
     </>;
     overlay=id==='TRAPPED'?<SmallTitle title="BURIED UNDER CONCRETE." />:
