@@ -1,0 +1,71 @@
+name: Locked Subject 2.5D V3
+
+on:
+  push:
+    branches: [feature/2p5d-locked-subject-v3]
+    paths:
+      - 'studio/src/episodes/probability-control/depth25-cafe-locked.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/probability-2p5d-locked.yml'
+  pull_request:
+    branches: [feature/2p5d-cafe-polish-v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install Remotion dependencies
+        run: npm ci
+      - name: Typecheck original episodes and locked subject V3
+        run: npx tsc --noEmit
+      - name: Validate subject/table anchor invariant
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('src/episodes/probability-control/depth25-cafe-locked.tsx').read_text()
+          for item in ('<CharacterAndChair t={t}/>','<CafeTable t={t}/>','<PerspectiveFloor '):
+              assert item in src, item
+          assert src.count('camera={fixed}') >= 6, 'Character and floor are not pinned'
+          assert 'camera={camera}' not in src, 'Old moving camera remains'
+          assert src.count('camera={scenery}') == 3, 'Only backgrounds should parallax'
+          print('Subject/table/chair/floor locked; three scenic layers free to move.')
+          PY
+      - name: Render full 6.5-second pinned-subject scene
+        run: |
+          mkdir -p out/locked25
+          npx remotion render src/index.ts Probability2p5dCafeLocked out/locked25/Locked-2p5d-V3.mp4 --codec=h264 --scale=0.65 --concurrency=2
+      - name: Export four matching keyframes
+        run: |
+          for frame in 12 75 135 186; do
+            npx remotion still src/index.ts Probability2p5dCafeLocked out/locked25/frame-${frame}.png --frame=${frame} --scale=0.5
+          done
+      - name: Upload video separately for iPhone
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WATCH-LOCKED-SUBJECT-2P5D-V3-MP4-ONLY
+          path: studio/out/locked25/Locked-2p5d-V3.mp4
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload inspection images separately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LOCKED-2P5D-KEYFRAMES-ONLY
+          path: studio/out/locked25/frame-*.png
+          if-no-files-found: warn
+          retention-days: 14
