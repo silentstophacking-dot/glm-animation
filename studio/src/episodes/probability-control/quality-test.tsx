@@ -44,7 +44,7 @@ const Actor:React.FC<{t:number;x:number;y:number;s:number;mode?:'smug'|'happy'|'
     legL:falling?{a:48,b:-50}:stumble?{a:55,b:-46}:walking?{a:22*step,b:10*Math.max(0,-step)}:{a:7,b:0},
     legR:falling?{a:-45,b:45}:stumble?{a:-27,b:18}:walking?{a:-22*step,b:-10*Math.max(0,step)}:{a:-7,b:0},
     expr:(falling?'shock':stumble?'shock':trapped?'worried':happy?'happy':'smug') as typeof basePose.expr,
-    glint:mode==='smug'||happy?.11:0,
+    glint:(mode==='smug'||happy) ? .11 : 0,
     glintColor:P.gold
   };
   return <Hero pose={{...p,...faceAt(t,[[0,p.expr],[23,stumble?'shock':p.expr]])}}
