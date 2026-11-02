@@ -1,0 +1,407 @@
+{
+  "type": "original procedural sound design, AUDIO ONLY",
+  "clip_seconds": 230,
+  "event_count": 79,
+  "sound_effects_rms": 0.03074,
+  "narrator_rms": 0.12906,
+  "finished_max_absolute_peak": 0.83,
+  "copyright": "All sound effects and ambient music synthesized here from noise, sine waves and procedural envelopes.",
+  "video_generated": false,
+  "all_cues": [
+    {
+      "sec": 0,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 8,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 15,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 23,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 30,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 38,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 45,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 53,
+      "event": "city night air",
+      "gain": 0.28
+    },
+    {
+      "sec": 63,
+      "event": "city night air",
+      "gain": 0.28
+    },
+    {
+      "sec": 71,
+      "event": "city night air",
+      "gain": 0.28
+    },
+    {
+      "sec": 79,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 87,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 96,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 104,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 112,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 121,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 130,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 139,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 149,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 159,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 167,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 177,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 188,
+      "event": "interior room tone",
+      "gain": 0.35
+    },
+    {
+      "sec": 197,
+      "event": "muffled cave air",
+      "gain": 0.48
+    },
+    {
+      "sec": 205,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 213,
+      "event": "rain and distant traffic",
+      "gain": 0.55
+    },
+    {
+      "sec": 0.3,
+      "event": "opening underground collapse",
+      "gain": 0.8
+    },
+    {
+      "sec": 1.8,
+      "event": "falling dust",
+      "gain": 0.27
+    },
+    {
+      "sec": 8.4,
+      "event": "rock shifting by pinned hand",
+      "gain": 0.27999999999999997
+    },
+    {
+      "sec": 23.4,
+      "event": "probability interface appears",
+      "gain": 0.0935
+    },
+    {
+      "sec": 29.2,
+      "event": "setting selected",
+      "gain": 0.0495
+    },
+    {
+      "sec": 32.6,
+      "event": "first coin flick",
+      "gain": 0.46
+    },
+    {
+      "sec": 38.7,
+      "event": "coin landing",
+      "gain": 0.18
+    },
+    {
+      "sec": 42.0,
+      "event": "coin landing",
+      "gain": 0.153
+    },
+    {
+      "sec": 45.5,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 46.22,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 46.94,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 47.66,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 48.38,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 49.1,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 49.82,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 50.54,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 51.26,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 51.98,
+      "event": "coin landing",
+      "gain": 0.0756
+    },
+    {
+      "sec": 55.1,
+      "event": "lottery ticket slides",
+      "gain": 0.24
+    },
+    {
+      "sec": 64.2,
+      "event": "lottery numbers start",
+      "gain": 0.0528
+    },
+    {
+      "sec": 65.4,
+      "event": "lottery digit locks",
+      "gain": 0.07150000000000001
+    },
+    {
+      "sec": 65.73,
+      "event": "lottery digit locks",
+      "gain": 0.07150000000000001
+    },
+    {
+      "sec": 66.06,
+      "event": "lottery digit locks",
+      "gain": 0.07150000000000001
+    },
+    {
+      "sec": 66.39,
+      "event": "lottery digit locks",
+      "gain": 0.07150000000000001
+    },
+    {
+      "sec": 70.8,
+      "event": "lottery win confirmation",
+      "gain": 0.1045
+    },
+    {
+      "sec": 79.4,
+      "event": "one active setting warning",
+      "gain": 0.0847
+    },
+    {
+      "sec": 88.1,
+      "event": "protection setting",
+      "gain": 0.07150000000000001
+    },
+    {
+      "sec": 89.1,
+      "event": "0% protection activation",
+      "gain": 0.67
+    },
+    {
+      "sec": 95.1,
+      "event": "survival protection locks",
+      "gain": 0.11
+    },
+    {
+      "sec": 98.1,
+      "event": "falling sign passes his head",
+      "gain": 0.68
+    },
+    {
+      "sec": 99.3,
+      "event": "sign hits street",
+      "gain": 0.384
+    },
+    {
+      "sec": 113.0,
+      "event": "heavy truck past construction",
+      "gain": 0.10920000000000002
+    },
+    {
+      "sec": 121.7,
+      "event": "first street fissure",
+      "gain": 0.6240000000000001
+    },
+    {
+      "sec": 125.5,
+      "event": "second street fissure",
+      "gain": 0.8960000000000001
+    },
+    {
+      "sec": 126,
+      "event": "road begins giving way",
+      "gain": 0.75
+    },
+    {
+      "sec": 131.2,
+      "event": "character falls into sinkhole",
+      "gain": 0.9
+    },
+    {
+      "sec": 136,
+      "event": "underground rock impact",
+      "gain": 1.0
+    },
+    {
+      "sec": 139.7,
+      "event": "slab lands",
+      "gain": 0.7360000000000001
+    },
+    {
+      "sec": 140,
+      "event": "concrete debris settling",
+      "gain": 0.25
+    },
+    {
+      "sec": 160.1,
+      "event": "first failed rubble push",
+      "gain": 0.32000000000000006
+    },
+    {
+      "sec": 163.7,
+      "event": "second failed rubble push",
+      "gain": 0.30400000000000005
+    },
+    {
+      "sec": 167.9,
+      "event": "escape probability interface",
+      "gain": 0.09019999999999999
+    },
+    {
+      "sec": 177.3,
+      "event": "warning of unsafe override",
+      "gain": 0.055
+    },
+    {
+      "sec": 183,
+      "event": "consequences build",
+      "gain": 0.71
+    },
+    {
+      "sec": 190.0,
+      "event": "choice cursor",
+      "gain": 0.0682
+    },
+    {
+      "sec": 195.2,
+      "event": "escape set to 100 percent",
+      "gain": 0.0946
+    },
+    {
+      "sec": 197.2,
+      "event": "protection removed",
+      "gain": 0.12100000000000001
+    },
+    {
+      "sec": 198,
+      "event": "rubble pressure rises",
+      "gain": 1.0
+    },
+    {
+      "sec": 203.2,
+      "event": "slab splits upward",
+      "gain": 0.576
+    },
+    {
+      "sec": 206.0,
+      "event": "explosive release",
+      "gain": 1.0
+    },
+    {
+      "sec": 208.1,
+      "event": "character propelled upward",
+      "gain": 0.86
+    },
+    {
+      "sec": 213.1,
+      "event": "truck approaching character",
+      "gain": 0.17920000000000003
+    },
+    {
+      "sec": 219.2,
+      "event": "truck air and brakes",
+      "gain": 0.78
+    }
+  ]
+}
