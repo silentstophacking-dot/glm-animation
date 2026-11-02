@@ -1,0 +1,52 @@
+name: Rewind Grade Coin Proof
+
+on:
+  push:
+    branches:
+      - feature/rewind-grade-coin-proof
+    paths:
+      - 'studio/src/episodes/probability-control/rewind-grade-coin.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/rewind-grade-coin.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install original Remotion dependencies
+        run: npm ci
+      - name: Check all source including Rewind and new scene
+        run: npx tsc --noEmit
+      - name: Render 5 second portrait scene at 756x1344
+        run: |
+          mkdir -p out/rewind-grade-coin
+          npx remotion render src/index.ts RewindGradeCoin out/rewind-grade-coin/coin-proof.mp4 --codec=h264 --scale=0.7 --concurrency=2
+      - name: Render exact shot-key stills
+        run: |
+          for frame in 31 92 131; do
+            npx remotion still src/index.ts RewindGradeCoin out/rewind-grade-coin/shot-${frame}.png --frame=${frame} --scale=0.5
+          done
+      - name: Upload video and three review stills
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rewind-grade-coin-proof
+          path: studio/out/rewind-grade-coin/
+          if-no-files-found: warn
+          retention-days: 14
