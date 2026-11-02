@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           opencode run --standalone \
-            --model openrouter/z-ai/glm-5.3-flash:free \
+          --model opencode/glm-5.3-flash-free \
             "Read studio/package.json and studio/src/Root.tsx. Identify the animation framework, rendering tool, and composition registration file. Do not modify files or reveal secrets. Keep your answer brief." \
             2>&1 | tee glm-test-output.txt
           test -s glm-test-output.txt
