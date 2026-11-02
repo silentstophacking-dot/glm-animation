@@ -1,0 +1,425 @@
+{
+  "id": "ProbabilityControl",
+  "slug": "probability-control",
+  "topic": "What if you could control probability?",
+  "title": [
+    "WHAT IF YOU COULD",
+    "CONTROL PROBABILITY?"
+  ],
+  "fps": 30,
+  "end": "f:1170",
+  "script": [
+    {
+      "beat": "1 cold open / the consequence",
+      "text": "He made his chance of dying zero. Big mistake."
+    },
+    {
+      "beat": "2 the premise and the first demonstration",
+      "text": "What if you could control probability? A coin flip? Always heads."
+    },
+    {
+      "beat": "3 fun / escalating win",
+      "text": "Winning the lottery? Every single time."
+    },
+    {
+      "beat": "4 rule and an attempt to cheat",
+      "text": "But here's the catch. Only one probability can change at once. So he makes dying impossible."
+    },
+    {
+      "beat": "5 disaster, nobody powerful notices: the environment attacks",
+      "text": "That night, he walks home. Suddenly, the street gives way. He drops straight into darkness. Buried under concrete. Still alive."
+    },
+    {
+      "beat": "6 moral choice: escape versus guaranteed survival",
+      "text": "His chance of escaping? One percent. He changes it to one hundred. His protection disappears. The rubble begins to move. It launches him into the street."
+    },
+    {
+      "beat": "7 dark payoff (freeze before collision)",
+      "text": "Right into an oncoming truck. He guaranteed his escape. Not his survival."
+    }
+  ],
+  "science": [
+    {
+      "claim": "A 1% probability represents one outcome per 100 equally likely possibilities in this illustrative diagram.",
+      "working": "1% = 1/100 = 0.01. This is a mathematical definition, not a predictive guarantee or a claim that probabilities can be controlled.",
+      "source": "OpenStax Introductory Statistics 2e, Probability Topics (probabilities from 0 to 1)"
+    }
+  ],
+  "story_rule": "Only one event's chance may be set at once. The next edit overwrites the previous setting.",
+  "cast": [
+    "pipHood"
+  ],
+  "shots": [
+    {
+      "id": "S1",
+      "size": "macro UI",
+      "set": "probability interface",
+      "key": 25,
+      "note": "Death chance counts down, warning"
+    },
+    {
+      "id": "S2",
+      "size": "medium reaction",
+      "set": "studio / hero",
+      "key": 35,
+      "note": "Hero smug, big mistake"
+    },
+    {
+      "id": "S3",
+      "size": "macro high angle",
+      "set": "coin scene",
+      "key": 40,
+      "note": "Spinning golden coin"
+    },
+    {
+      "id": "S4",
+      "size": "low medium",
+      "set": "coin scene",
+      "key": 35,
+      "note": "Coin lands heads, delighted hero"
+    },
+    {
+      "id": "S5",
+      "size": "insert closeup",
+      "set": "lottery kiosk",
+      "key": 36,
+      "note": "Four lucky sevens spin"
+    },
+    {
+      "id": "S6",
+      "size": "medium reaction",
+      "set": "lottery kiosk",
+      "key": 30,
+      "note": "Big win, character celebrates"
+    },
+    {
+      "id": "S7",
+      "size": "wide title",
+      "set": "title scene",
+      "key": 40,
+      "note": "Power premise"
+    },
+    {
+      "id": "S8",
+      "size": "schematic insert",
+      "set": "probability interface",
+      "key": 38,
+      "note": "One active probability"
+    },
+    {
+      "id": "S9",
+      "size": "medium low angle",
+      "set": "studio / hero",
+      "key": 40,
+      "note": "Protection activated"
+    },
+    {
+      "id": "S10",
+      "size": "city establishing wide",
+      "set": "rainy street",
+      "key": 39,
+      "note": "Walking in lit street"
+    },
+    {
+      "id": "S11",
+      "size": "low angle wide",
+      "set": "rainy street",
+      "key": 52,
+      "note": "Pavement cracks"
+    },
+    {
+      "id": "S12",
+      "size": "top-down moving",
+      "set": "sinkhole",
+      "key": 36,
+      "note": "Character falls"
+    },
+    {
+      "id": "S13",
+      "size": "cramped closeup",
+      "set": "cave rubble",
+      "key": 49,
+      "note": "Trapped but alive"
+    },
+    {
+      "id": "S14",
+      "size": "schematic top-down",
+      "set": "escape odds board",
+      "key": 32,
+      "note": "One square out of one hundred"
+    },
+    {
+      "id": "S15",
+      "size": "macro insert",
+      "set": "probability interface",
+      "key": 35,
+      "note": "Protection overwritten"
+    },
+    {
+      "id": "S16",
+      "size": "low medium",
+      "set": "cave rubble",
+      "key": 38,
+      "note": "Stones shake and rise"
+    },
+    {
+      "id": "S17",
+      "size": "wide high-angle",
+      "set": "rainy street",
+      "key": 35,
+      "note": "Escape blast"
+    },
+    {
+      "id": "S18",
+      "size": "low tracking",
+      "set": "road with oncoming truck",
+      "key": 36,
+      "note": "Truck approaches"
+    },
+    {
+      "id": "S19",
+      "size": "freeze close",
+      "set": "street headlights",
+      "key": 40,
+      "note": "Dark payoff before collision"
+    }
+  ],
+  "edit": [
+    {
+      "shot": "S1",
+      "at": "f:0",
+      "look": "probability"
+    },
+    {
+      "shot": "S2",
+      "at": "f:60"
+    },
+    {
+      "shot": "S3",
+      "at": "f:120"
+    },
+    {
+      "shot": "S4",
+      "at": "f:180"
+    },
+    {
+      "shot": "S5",
+      "at": "f:240"
+    },
+    {
+      "shot": "S6",
+      "at": "f:300"
+    },
+    {
+      "shot": "S7",
+      "at": "f:360"
+    },
+    {
+      "shot": "S8",
+      "at": "f:420"
+    },
+    {
+      "shot": "S9",
+      "at": "f:480",
+      "look": "probability"
+    },
+    {
+      "shot": "S10",
+      "at": "f:540"
+    },
+    {
+      "shot": "S11",
+      "at": "f:600"
+    },
+    {
+      "shot": "S12",
+      "at": "f:675"
+    },
+    {
+      "shot": "S13",
+      "at": "f:735"
+    },
+    {
+      "shot": "S14",
+      "at": "f:810"
+    },
+    {
+      "shot": "S15",
+      "at": "f:870",
+      "look": "probability"
+    },
+    {
+      "shot": "S16",
+      "at": "f:930"
+    },
+    {
+      "shot": "S17",
+      "at": "f:990"
+    },
+    {
+      "shot": "S18",
+      "at": "f:1050"
+    },
+    {
+      "shot": "S19",
+      "at": "f:1110"
+    }
+  ],
+  "fx": [
+    {
+      "at": "f:40",
+      "kind": "flash",
+      "color": "#FF485E",
+      "o": 0.55
+    },
+    {
+      "at": "f:210",
+      "kind": "flash",
+      "color": "#FFE2A9",
+      "o": 0.55
+    },
+    {
+      "at": "f:334",
+      "kind": "flash",
+      "color": "#FFEBB8",
+      "o": 0.6
+    },
+    {
+      "at": "f:630",
+      "kind": "shake",
+      "amp": 18,
+      "len": 24
+    },
+    {
+      "at": "f:696",
+      "kind": "shake",
+      "amp": 12,
+      "len": 13
+    },
+    {
+      "at": "f:967",
+      "kind": "shake",
+      "amp": 16,
+      "len": 16
+    },
+    {
+      "at": "f:996",
+      "kind": "flash",
+      "color": "#FFF1D3",
+      "o": 0.7
+    },
+    {
+      "at": "f:1085",
+      "kind": "shake",
+      "amp": 6,
+      "len": 10
+    }
+  ],
+  "audio_plan": {
+    "voice": "Not recorded — future step: scripts/voice.py with an authorised ElevenLabs key, or supplied/licensed audio.",
+    "sound": "Original synthetic cues will be authored after storyboard approval; no paid API or existing sample audio reused.",
+    "music": "Original licensed track or original synthesized bed after animation review."
+  },
+  "sound": {
+    "clips": {
+      "coin": [
+        "original coin flip and metallic landing",
+        1
+      ],
+      "win": [
+        "short lottery chime",
+        0.8
+      ],
+      "switch": [
+        "electronic probability swap",
+        0.7
+      ],
+      "fracture": [
+        "concrete cracking sound",
+        1.1
+      ],
+      "fall": [
+        "short falling whoosh",
+        1.2
+      ],
+      "rubble": [
+        "moving concrete and dust",
+        1.1
+      ],
+      "truck": [
+        "approaching engine and tire noise",
+        1.5
+      ],
+      "end": [
+        "short bass sting ending abruptly",
+        1.3
+      ]
+    },
+    "events": [
+      [
+        "f:156",
+        "coin",
+        0.8
+      ],
+      [
+        "f:213",
+        "coin",
+        0.65
+      ],
+      [
+        "f:327",
+        "win",
+        0.72
+      ],
+      [
+        "f:447",
+        "switch",
+        0.55
+      ],
+      [
+        "f:511",
+        "switch",
+        0.6
+      ],
+      [
+        "f:620",
+        "fracture",
+        0.9
+      ],
+      [
+        "f:690",
+        "fall",
+        0.75
+      ],
+      [
+        "f:896",
+        "switch",
+        0.85
+      ],
+      [
+        "f:947",
+        "rubble",
+        0.75
+      ],
+      [
+        "f:999",
+        "rubble",
+        0.9
+      ],
+      [
+        "f:1077",
+        "truck",
+        0.8
+      ],
+      [
+        "f:1108",
+        "end",
+        0.85
+      ]
+    ],
+    "levels": {
+      "sfx_lu": -3,
+      "music_lu": -12
+    }
+  }
+}
