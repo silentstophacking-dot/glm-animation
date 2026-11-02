@@ -164,7 +164,7 @@
     {
       "id": "S1",
       "size": "macro UI",
-      "key": 25,
+      "key": 55,
       "len": 60,
       "first": 0,
       "line": "He made his chance of dying zero.",
@@ -182,7 +182,7 @@
     {
       "id": "S3",
       "size": "macro high angle",
-      "key": 40,
+      "key": 53,
       "len": 60,
       "first": 120,
       "line": "What if you could control probability?",
@@ -290,7 +290,7 @@
     {
       "id": "S15",
       "size": "macro insert",
-      "key": 35,
+      "key": 56,
       "len": 60,
       "first": 870,
       "line": "He changes it to one hundred. His protection disappears.",
@@ -317,7 +317,7 @@
     {
       "id": "S18",
       "size": "low tracking",
-      "key": 36,
+      "key": 47,
       "len": 60,
       "first": 1050,
       "line": "Right into an oncoming truck.",
