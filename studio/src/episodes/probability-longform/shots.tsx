@@ -395,7 +395,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
          stroke="#8695A8" strokeWidth={13} fill="none" opacity=".73"/>
      </g>:<StreetWorld t={id==='PRE_IMPACT'?0:t} rain
        crack={cracking?id==='CRACK'?smooth(t/190):1:0}
-       pit={pit?id==='FALL'?smooth((t-45)/120):1:0}/>}
+       pit={pit?1:0}/>}
      {id==='NEAR_MISS'&&<g>
        <g transform={'rotate('+(8+48*smooth((t-10)/140))+' 1360 325)'}>
          <path d="M1360 325 V555" stroke="#7B7C87" strokeWidth={14}/>
