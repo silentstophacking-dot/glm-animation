@@ -226,8 +226,9 @@ export const S18:React.FC<ShotProps>=({t})=><g>
  <ProbabilityStreet t={t} rain id="pc-night-final"/>
  {pip(t,[{f:0,p:{x:480,y:1280,scale:1.2,tilt:45,spin:20}},
   {f:54,p:{x:500,y:1400,tilt:-3,spin:0,armL:{a:130,b:10}}}],[[0,'shock']],'rimRed')}
- <g transform={portraitCamera(720,1440,kf(t,[[0,.78],[59,1.06]]))}>
-  <ProbabilityTruck x={1200-kf(t,[[0,0],[59,550]])} y={1120} t={t} scale={1.05}/>
+ <g transform={portraitCamera(710,1450,kf(t,[[0,.75],[59,1.02]]))}>
+  <ProbabilityTruck x={1190-kf(t,[[0,0],[59,530]])}
+    y={1320+kf(t,[[0,0],[59,280]])} t={t} scale={.78+.56*clamp(t/59)}/>
  </g>
  <HudChip f={t} label="SURVIVAL?" x={95} y={175} icon="dot"/>
 </g>;
