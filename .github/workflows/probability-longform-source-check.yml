@@ -8,6 +8,8 @@ on:
       - 'studio/src/episodes/probability-longform/**'
       - 'studio/src/episodes/index.ts'
       - '.github/workflows/probability-longform-source-check.yml'
+  pull_request:
+    branches: [feature/2p5d-locked-subject-v3]
   workflow_dispatch:
 
 permissions:
