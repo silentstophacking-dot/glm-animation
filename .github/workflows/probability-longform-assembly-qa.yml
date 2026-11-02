@@ -30,6 +30,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install FFprobe to verify the three existing audio files
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
       - name: Typecheck the longform and all original samples
         run: npx tsc --noEmit
 
