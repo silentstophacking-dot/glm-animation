@@ -1,0 +1,285 @@
+{
+  "engine": "Piper local CPU TTS",
+  "model": "en_US-joe-medium.onnx",
+  "voice_language": "en_US",
+  "note": "Not ElevenLabs and not the same voice as the pre-existing Rewind file",
+  "video_generated": false,
+  "original_voice_render_seconds": 141.314,
+  "rough_aligned_seconds": 230.0,
+  "scene_count": 27,
+  "scenes_crossing_next_cut": 0,
+  "max_start_drift_seconds": 0.18,
+  "timestamp_truth": "Scene timings measured from generated PCM; no word-level timings claimed",
+  "shots": [
+    {
+      "id": "COLD_OPEN",
+      "planned_start_sec": 0,
+      "planned_end_sec": 8,
+      "audio_start_sec": 0.18,
+      "audio_end_sec": 4.035,
+      "spoken_seconds": 3.855,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "BURIED_PROMISE",
+      "planned_start_sec": 8,
+      "planned_end_sec": 15,
+      "audio_start_sec": 8.18,
+      "audio_end_sec": 11.907,
+      "spoken_seconds": 3.727,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "FLASHBACK",
+      "planned_start_sec": 15,
+      "planned_end_sec": 23,
+      "audio_start_sec": 15.18,
+      "audio_end_sec": 19.603,
+      "spoken_seconds": 4.423,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "FIRST_CONSOLE",
+      "planned_start_sec": 23,
+      "planned_end_sec": 30,
+      "audio_start_sec": 23.18,
+      "audio_end_sec": 28.277,
+      "spoken_seconds": 5.097,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "COIN_TOSS",
+      "planned_start_sec": 30,
+      "planned_end_sec": 38,
+      "audio_start_sec": 30.18,
+      "audio_end_sec": 35.37,
+      "spoken_seconds": 5.19,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "HEADS_RESULT",
+      "planned_start_sec": 38,
+      "planned_end_sec": 45,
+      "audio_start_sec": 38.18,
+      "audio_end_sec": 40.723,
+      "spoken_seconds": 2.543,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "TEN_HEADS",
+      "planned_start_sec": 45,
+      "planned_end_sec": 53,
+      "audio_start_sec": 45.18,
+      "audio_end_sec": 48.605,
+      "spoken_seconds": 3.425,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "LOTTERY_TEST",
+      "planned_start_sec": 53,
+      "planned_end_sec": 63,
+      "audio_start_sec": 53.18,
+      "audio_end_sec": 58.532,
+      "spoken_seconds": 5.352,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "LOTTERY_WIN",
+      "planned_start_sec": 63,
+      "planned_end_sec": 71,
+      "audio_start_sec": 63.18,
+      "audio_end_sec": 65.409,
+      "spoken_seconds": 2.229,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "EUPHORIA",
+      "planned_start_sec": 71,
+      "planned_end_sec": 79,
+      "audio_start_sec": 71.18,
+      "audio_end_sec": 76.428,
+      "spoken_seconds": 5.248,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "ONE_ACTIVE_RULE",
+      "planned_start_sec": 79,
+      "planned_end_sec": 87,
+      "audio_start_sec": 79.18,
+      "audio_end_sec": 85.194,
+      "spoken_seconds": 6.014,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "DEATH_ZERO",
+      "planned_start_sec": 87,
+      "planned_end_sec": 96,
+      "audio_start_sec": 87.18,
+      "audio_end_sec": 92.683,
+      "spoken_seconds": 5.503,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "NEAR_MISS",
+      "planned_start_sec": 96,
+      "planned_end_sec": 104,
+      "audio_start_sec": 96.18,
+      "audio_end_sec": 101.196,
+      "spoken_seconds": 5.016,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "WALK_HOME",
+      "planned_start_sec": 104,
+      "planned_end_sec": 112,
+      "audio_start_sec": 104.18,
+      "audio_end_sec": 106.502,
+      "spoken_seconds": 2.322,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "SITE_WARNING",
+      "planned_start_sec": 112,
+      "planned_end_sec": 121,
+      "audio_start_sec": 112.18,
+      "audio_end_sec": 118.31,
+      "spoken_seconds": 6.13,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "CRACK",
+      "planned_start_sec": 121,
+      "planned_end_sec": 130,
+      "audio_start_sec": 121.18,
+      "audio_end_sec": 125.87,
+      "spoken_seconds": 4.69,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "FALL",
+      "planned_start_sec": 130,
+      "planned_end_sec": 139,
+      "audio_start_sec": 130.18,
+      "audio_end_sec": 134.29,
+      "spoken_seconds": 4.11,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "TRAPPED",
+      "planned_start_sec": 139,
+      "planned_end_sec": 149,
+      "audio_start_sec": 139.18,
+      "audio_end_sec": 146.32,
+      "spoken_seconds": 7.14,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "THE_LIMIT",
+      "planned_start_sec": 149,
+      "planned_end_sec": 159,
+      "audio_start_sec": 149.18,
+      "audio_end_sec": 155.264,
+      "spoken_seconds": 6.084,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "NO_RESCUE",
+      "planned_start_sec": 159,
+      "planned_end_sec": 167,
+      "audio_start_sec": 159.18,
+      "audio_end_sec": 163.998,
+      "spoken_seconds": 4.818,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "ONE_PERCENT",
+      "planned_start_sec": 167,
+      "planned_end_sec": 177,
+      "audio_start_sec": 167.18,
+      "audio_end_sec": 173.229,
+      "spoken_seconds": 6.049,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "BAD_CHOICE",
+      "planned_start_sec": 177,
+      "planned_end_sec": 188,
+      "audio_start_sec": 177.18,
+      "audio_end_sec": 181.952,
+      "spoken_seconds": 4.772,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "OVERRIDE_DECISION",
+      "planned_start_sec": 188,
+      "planned_end_sec": 197,
+      "audio_start_sec": 188.18,
+      "audio_end_sec": 194.693,
+      "spoken_seconds": 6.513,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "RUBBLE_MOVES",
+      "planned_start_sec": 197,
+      "planned_end_sec": 205,
+      "audio_start_sec": 197.18,
+      "audio_end_sec": 202.474,
+      "spoken_seconds": 5.294,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "LAUNCHED",
+      "planned_start_sec": 205,
+      "planned_end_sec": 213,
+      "audio_start_sec": 205.18,
+      "audio_end_sec": 211.786,
+      "spoken_seconds": 6.606,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "HEADLIGHTS",
+      "planned_start_sec": 213,
+      "planned_end_sec": 221,
+      "audio_start_sec": 213.18,
+      "audio_end_sec": 218.962,
+      "spoken_seconds": 5.782,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    },
+    {
+      "id": "PRE_IMPACT",
+      "planned_start_sec": 221,
+      "planned_end_sec": 230,
+      "audio_start_sec": 221.18,
+      "audio_end_sec": 228.065,
+      "spoken_seconds": 6.885,
+      "drift_from_plan_sec": 0.18,
+      "crosses_cut": false
+    }
+  ]
+}
