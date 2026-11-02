@@ -1,0 +1,55 @@
+name: Probability Episode Assembly Preflight (NO VIDEO)
+
+on:
+  push:
+    branches: [feature/probability-longform-edit-assembly]
+    paths:
+      - 'scripts/verify_longform_assembly.py'
+      - 'production/probability-longform/**'
+      - 'studio/src/episodes/probability-longform/**'
+      - '.github/workflows/probability-longform-assembly-check.yml'
+  pull_request:
+    branches: [feature/probability-longform-local-tts]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-audio-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out project without altering other compositions
+        uses: actions/checkout@v4
+
+      - name: Set up Node for source validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install original dependencies
+        working-directory: studio
+        run: npm ci
+
+      - name: Typecheck all episodes (NO RENDER)
+        working-directory: studio
+        run: npx tsc --noEmit
+
+      - name: Verify FFprobe is available
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          ffprobe -version | head -n 1
+
+      - name: Validate sound duration and all 27 edit beats (NO RENDER)
+        run: python3 scripts/verify_longform_assembly.py
+
+      - name: Confirm no video or contact-sheet files were made
+        run: |
+          test -z "$(find studio/out -type f -name '*.mp4' -print -quit 2>/dev/null || true)"
+          echo "Source-only and audio-duration preflight complete. No rendering performed."
