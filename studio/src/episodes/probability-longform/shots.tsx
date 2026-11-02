@@ -46,7 +46,7 @@ const CAMERA:Record<LongformShotId,CameraSetup>={
   WALK_HOME:{a:[770,555,.88],b:[1210,553,.98]},
   SITE_WARNING:{a:[1110,570,.96],b:[1215,566,1.08]},
   CRACK:{a:[960,665,1.16],b:[975,758,1.36]},
-  FALL:{a:[975,570,.88],b:[980,990,1.08]},
+  FALL:{a:[975,690,.88],b:[980,1380,1.08]},
   TRAPPED:{a:[920,680,1.05],b:[947,666,1.24]},
   THE_LIMIT:{a:[955,667,1.23],b:[960,665,1.42]},
   NO_RESCUE:{a:[954,675,1.22],b:[974,670,1.36]},
@@ -146,9 +146,11 @@ const actorPose=(t:number,stage:Location,mode:Behavior,
      {f:117,p:{tilt:34,armR:{a:132,b:-10},armL:{a:140,b:-7}}},
      {f:205,p:{tilt:10,armR:{a:128,b:-8},armL:{a:135,b:0}}}];break;
    case 'fear':keys=[
-     {f:0,p:{tilt:20,headTilt:14,armL:{a:110,b:-14}}},
-     {f:85,p:{tilt:9,headTilt:-17,armR:{a:144,b:23}}},
-     {f:215,p:{tilt:3,headTilt:4}}];break;
+     {f:0,p:{tilt:34,headTilt:-17,armL:{a:115,b:-20},
+       armR:{a:52,b:-22},legL:{a:37,b:-24}}},
+     {f:85,p:{tilt:17,headTilt:14,armR:{a:156,b:-20},
+       armL:{a:106,b:-14}}},
+     {f:215,p:{tilt:29,headTilt:-11,armR:{a:120,b:-18}}}];break;
    case 'switch':keys=[
      {f:0,p:{tilt:24,armR:{a:64,b:-18}}},
      {f:72,p:{tilt:-4,armR:{a:146,b:-12},headTilt:13}},
@@ -372,6 +374,10 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
       x={atX} y={atY} s={id==='HEADLIGHTS'||id==='PRE_IMPACT'?1.06:1.1}/>;
    const truck=id==='HEADLIGHTS'||id==='PRE_IMPACT';
    const truckP=truck?(id==='PRE_IMPACT'?.92:smooth(t/Math.max(1,len))):0;
+   // Anchor the truck's wheels to the road, instead of its body origin.
+   const truckScale=.52+1.00*truckP;
+   const truckWheelY=770+175*truckP;
+   const truckBodyY=truckWheelY-363*truckScale;
    physical=<><StreetWorld t={id==='PRE_IMPACT'?0:t} rain
        crack={cracking?id==='CRACK'?smooth(t/190):1:0}
        pit={pit?id==='FALL'?smooth((t-45)/120):1:0}/>
@@ -393,8 +399,8 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
        <path d={'M'+(1520-540*truckP)+' '+(500+65*truckP)+
           ' L1000 1070 L1750 1070Z'}
          fill="#FFE6A2" opacity={.06+truckP*.15}/>
-       <ProbabilityTruck x={1470-430*truckP} y={360-160*truckP}
-         t={id==='PRE_IMPACT'?0:t} scale={.58+truckP*.85}/>
+       <ProbabilityTruck x={1470-430*truckP} y={truckBodyY}
+         t={id==='PRE_IMPACT'?0:t} scale={truckScale}/>
      </g>}
     </>;
     overlay=id==='NEAR_MISS'?<Card x={1380} y={90} width={410}
