@@ -1,0 +1,842 @@
+{
+  "version": "editorial-assembly-v1",
+  "status": "SOURCE_ONLY_NOT_RENDERED",
+  "episode": "What If You Could Control Probability?",
+  "fps": 30,
+  "seconds": 230,
+  "sourceTiming": "production/probability-longform/voice-timing.json",
+  "voiceApproval": "Piper TTS candidate staged; user has not explicitly approved narrator sound",
+  "editPrinciple": "Never fill quiet gaps by looping static poses. Each gap must have motivated visible action and coherent physical staging.",
+  "physicalCameraRule": "One moving camera parent for whole SVG scene. Characters, static architecture and props share fixed world coordinates.",
+  "trailerPolicy": "Do not create short video tests. Review the full long-form production when requested.",
+  "shots": [
+    {
+      "id": "COLD_OPEN",
+      "startSec": 0,
+      "endSec": 8,
+      "voice": {
+        "startSec": 0.18,
+        "endSec": 4.035,
+        "durationSec": 3.855
+      },
+      "postVoiceActionSec": 3.965,
+      "beats": [
+        {
+          "atSec": 0.8,
+          "action": "A pebble falls from the concrete slab"
+        },
+        {
+          "atSec": 3.01,
+          "action": "Hand presses against immovable rock"
+        },
+        {
+          "atSec": 6.24,
+          "action": "Probability display pulses at zero"
+        }
+      ],
+      "soundDesign": [
+        "deep-stone-rumble",
+        "loose-grit"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Crushed under slab, eyes open, HUD: 0% death"
+    },
+    {
+      "id": "BURIED_PROMISE",
+      "startSec": 8,
+      "endSec": 15,
+      "voice": {
+        "startSec": 8.18,
+        "endSec": 11.907,
+        "durationSec": 3.727
+      },
+      "postVoiceActionSec": 3.093,
+      "beats": [
+        {
+          "atSec": 8.7,
+          "action": "He tests his fingers beneath the slab"
+        },
+        {
+          "atSec": 10.91,
+          "action": "Dust trickles into the light"
+        },
+        {
+          "atSec": 13.46,
+          "action": "His face tightens as the rock does not move"
+        }
+      ],
+      "soundDesign": [
+        "strained-breath",
+        "dust-fall"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Fingers scrabble under debris; impossible contradiction"
+    },
+    {
+      "id": "FLASHBACK",
+      "startSec": 15,
+      "endSec": 23,
+      "voice": {
+        "startSec": 15.18,
+        "endSec": 19.603,
+        "durationSec": 4.423
+      },
+      "postVoiceActionSec": 3.397,
+      "beats": [
+        {
+          "atSec": 15.8,
+          "action": "Hard cut from darkness to warm study"
+        },
+        {
+          "atSec": 18.45,
+          "action": "Camera reveals the desk and coin"
+        },
+        {
+          "atSec": 21.24,
+          "action": "Hero looks up at an unfamiliar interface"
+        }
+      ],
+      "soundDesign": [
+        "warm-air-tone"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Cut from dark cave to warmly lit perspective room"
+    },
+    {
+      "id": "FIRST_CONSOLE",
+      "startSec": 23,
+      "endSec": 30,
+      "voice": {
+        "startSec": 23.18,
+        "endSec": 28.277,
+        "durationSec": 5.097
+      },
+      "postVoiceActionSec": 1.723,
+      "beats": [
+        {
+          "atSec": 23.7,
+          "action": "An event field resolves out of darkness"
+        },
+        {
+          "atSec": 26.15,
+          "action": "Probability slider moves from 0 to 100"
+        },
+        {
+          "atSec": 28.6,
+          "action": "One active-slot warning appears, briefly overlooked"
+        }
+      ],
+      "soundDesign": [
+        "single-UI-tone"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Single probability dial appears above desk"
+    },
+    {
+      "id": "COIN_TOSS",
+      "startSec": 30,
+      "endSec": 38,
+      "voice": {
+        "startSec": 30.18,
+        "endSec": 35.37,
+        "durationSec": 5.19
+      },
+      "postVoiceActionSec": 2.63,
+      "beats": [
+        {
+          "atSec": 30.8,
+          "action": "Coin rests clearly in his fingers"
+        },
+        {
+          "atSec": 33.6,
+          "action": "Arm flick releases the coin at the fingertip"
+        },
+        {
+          "atSec": 36.24,
+          "action": "Coin reaches apex with distinct face orientation"
+        }
+      ],
+      "soundDesign": [
+        "coin-flick"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Hand follows coin from toss into the air; no detached props"
+    },
+    {
+      "id": "HEADS_RESULT",
+      "startSec": 38,
+      "endSec": 45,
+      "voice": {
+        "startSec": 38.18,
+        "endSec": 40.723,
+        "durationSec": 2.543
+      },
+      "postVoiceActionSec": 4.277,
+      "beats": [
+        {
+          "atSec": 38.7,
+          "action": "Coin lands with a bounce and physical contact shadow"
+        },
+        {
+          "atSec": 39.98,
+          "action": "Heads is visible at rest"
+        },
+        {
+          "atSec": 43.46,
+          "action": "Second toss and second heads result"
+        }
+      ],
+      "soundDesign": [
+        "metal-contact",
+        "second-coin-tap"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Coin lands on actual tabletop, two deliberate bounces"
+    },
+    {
+      "id": "TEN_HEADS",
+      "startSec": 45,
+      "endSec": 53,
+      "voice": {
+        "startSec": 45.18,
+        "endSec": 48.605,
+        "durationSec": 3.425
+      },
+      "postVoiceActionSec": 4.395,
+      "beats": [
+        {
+          "atSec": 45.8,
+          "action": "A readable series of coin landings progresses"
+        },
+        {
+          "atSec": 47.67,
+          "action": "Counter reaches ten only on tenth impact"
+        },
+        {
+          "atSec": 51.24,
+          "action": "Hold on ten heads, not a looping spin"
+        }
+      ],
+      "soundDesign": [
+        "coin-contact-sequence"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Rapid earned repeat cutaways; tracker increments to ten"
+    },
+    {
+      "id": "LOTTERY_TEST",
+      "startSec": 53,
+      "endSec": 63,
+      "voice": {
+        "startSec": 53.18,
+        "endSec": 58.532,
+        "durationSec": 5.352
+      },
+      "postVoiceActionSec": 4.468,
+      "beats": [
+        {
+          "atSec": 53.8,
+          "action": "Ticket slides into the slot"
+        },
+        {
+          "atSec": 57.17,
+          "action": "Digits rotate on a physical display"
+        },
+        {
+          "atSec": 60.8,
+          "action": "Hero leans in, waiting for the result"
+        }
+      ],
+      "soundDesign": [
+        "paper-feed",
+        "mechanical-spinner"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Ticket hands onto counter, mechanical numbers rotate"
+    },
+    {
+      "id": "LOTTERY_WIN",
+      "startSec": 63,
+      "endSec": 71,
+      "voice": {
+        "startSec": 63.18,
+        "endSec": 65.409,
+        "durationSec": 2.229
+      },
+      "postVoiceActionSec": 5.591,
+      "beats": [
+        {
+          "atSec": 63.8,
+          "action": "Lottery numbers stop in sequence"
+        },
+        {
+          "atSec": 64.74,
+          "action": "Winning ticket is verified in close-up"
+        },
+        {
+          "atSec": 69.24,
+          "action": "Hero reacts with delayed disbelief"
+        }
+      ],
+      "soundDesign": [
+        "numbers-lock",
+        "airy-chime"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Ticket digits lock in; gold reflection touches face"
+    },
+    {
+      "id": "EUPHORIA",
+      "startSec": 71,
+      "endSec": 79,
+      "voice": {
+        "startSec": 71.18,
+        "endSec": 76.428,
+        "durationSec": 5.248
+      },
+      "postVoiceActionSec": 2.572,
+      "beats": [
+        {
+          "atSec": 71.8,
+          "action": "Hero throws both arms up"
+        },
+        {
+          "atSec": 74.6,
+          "action": "Golden lighting catches the brim and silhouette"
+        },
+        {
+          "atSec": 77.24,
+          "action": "Tiny active-rule warning appears as celebration fades"
+        }
+      ],
+      "soundDesign": [
+        "short-celebration-rise",
+        "warning-beep"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Person celebrates; subtle warning on lower HUD"
+    },
+    {
+      "id": "ONE_ACTIVE_RULE",
+      "startSec": 79,
+      "endSec": 87,
+      "voice": {
+        "startSec": 79.18,
+        "endSec": 85.194,
+        "durationSec": 6.014
+      },
+      "postVoiceActionSec": 1.806,
+      "beats": [
+        {
+          "atSec": 79.8,
+          "action": "Highlight a single filled power slot"
+        },
+        {
+          "atSec": 82.6,
+          "action": "Select another event to replace the old one"
+        },
+        {
+          "atSec": 85.51,
+          "action": "Old guarantee dims completely"
+        }
+      ],
+      "soundDesign": [
+        "slot-dismiss"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Lottery guarantee crossed out when another selected"
+    },
+    {
+      "id": "DEATH_ZERO",
+      "startSec": 87,
+      "endSec": 96,
+      "voice": {
+        "startSec": 87.18,
+        "endSec": 92.683,
+        "durationSec": 5.503
+      },
+      "postVoiceActionSec": 3.317,
+      "beats": [
+        {
+          "atSec": 87.8,
+          "action": "Hero selects DYING with hand"
+        },
+        {
+          "atSec": 91.05,
+          "action": "Probability decreases visibly to zero"
+        },
+        {
+          "atSec": 94.02,
+          "action": "Protective glow forms and becomes steady"
+        }
+      ],
+      "soundDesign": [
+        "probability-slider",
+        "shield-engage"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "UI target DYING counts to 0; ring forms around actor"
+    },
+    {
+      "id": "NEAR_MISS",
+      "startSec": 96,
+      "endSec": 104,
+      "voice": {
+        "startSec": 96.18,
+        "endSec": 101.196,
+        "durationSec": 5.016
+      },
+      "postVoiceActionSec": 2.804,
+      "beats": [
+        {
+          "atSec": 96.8,
+          "action": "Falling sign enters frame from a grounded hinge"
+        },
+        {
+          "atSec": 99.6,
+          "action": "Hero recoils; sign narrowly misses"
+        },
+        {
+          "atSec": 102.24,
+          "action": "He laughs, mistaking protection for invulnerability"
+        }
+      ],
+      "soundDesign": [
+        "metal-swing",
+        "near-miss-whoosh"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Street sign swings past physically; actor recoils then smirks"
+    },
+    {
+      "id": "WALK_HOME",
+      "startSec": 104,
+      "endSec": 112,
+      "voice": {
+        "startSec": 104.18,
+        "endSec": 106.502,
+        "durationSec": 2.322
+      },
+      "postVoiceActionSec": 5.498,
+      "beats": [
+        {
+          "atSec": 104.8,
+          "action": "Hero walks along the same fixed world street"
+        },
+        {
+          "atSec": 105.81,
+          "action": "Streetlamp shadows and raindrops progress naturally"
+        },
+        {
+          "atSec": 110.24,
+          "action": "Establish construction site ahead"
+        }
+      ],
+      "soundDesign": [
+        "rain",
+        "walking-steps"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Hero walks under lamps; rain catches moon glow"
+    },
+    {
+      "id": "SITE_WARNING",
+      "startSec": 112,
+      "endSec": 121,
+      "voice": {
+        "startSec": 112.18,
+        "endSec": 118.31,
+        "durationSec": 6.13
+      },
+      "postVoiceActionSec": 2.69,
+      "beats": [
+        {
+          "atSec": 112.8,
+          "action": "Truck approaches and passes the construction barrier"
+        },
+        {
+          "atSec": 116.05,
+          "action": "Barrier shakes under the vehicle"
+        },
+        {
+          "atSec": 119.02,
+          "action": "A small crack opens beneath the curb"
+        }
+      ],
+      "soundDesign": [
+        "truck-pass",
+        "barrier-rattle"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Heavy vehicle passes; warning barrier rattles; fissure begins"
+    },
+    {
+      "id": "CRACK",
+      "startSec": 121,
+      "endSec": 130,
+      "voice": {
+        "startSec": 121.18,
+        "endSec": 125.87,
+        "durationSec": 4.69
+      },
+      "postVoiceActionSec": 4.13,
+      "beats": [
+        {
+          "atSec": 121.8,
+          "action": "First fracture reaches his shoe"
+        },
+        {
+          "atSec": 124.66,
+          "action": "He shifts weight to keep balance"
+        },
+        {
+          "atSec": 128.02,
+          "action": "Second fracture separates the asphalt"
+        }
+      ],
+      "soundDesign": [
+        "asphalt-fracture"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Cracks spread from shoe; hero tries to balance"
+    },
+    {
+      "id": "FALL",
+      "startSec": 130,
+      "endSec": 139,
+      "voice": {
+        "startSec": 130.18,
+        "endSec": 134.29,
+        "durationSec": 4.11
+      },
+      "postVoiceActionSec": 4.71,
+      "beats": [
+        {
+          "atSec": 130.8,
+          "action": "Road collapses under his feet"
+        },
+        {
+          "atSec": 133.21,
+          "action": "Hero descends into an actual open void"
+        },
+        {
+          "atSec": 137.02,
+          "action": "Street edge shrinks above him as he falls"
+        }
+      ],
+      "soundDesign": [
+        "ground-collapse",
+        "air-rush"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Ground opens; hero drops from visible surface below street"
+    },
+    {
+      "id": "TRAPPED",
+      "startSec": 139,
+      "endSec": 149,
+      "voice": {
+        "startSec": 139.18,
+        "endSec": 146.32,
+        "durationSec": 7.14
+      },
+      "postVoiceActionSec": 2.68,
+      "beats": [
+        {
+          "atSec": 139.8,
+          "action": "Dust settles after the fall"
+        },
+        {
+          "atSec": 143.5,
+          "action": "Hero moves one arm, realizing his leg is pinned"
+        },
+        {
+          "atSec": 146.8,
+          "action": "Concrete stops shifting; breath is audible"
+        }
+      ],
+      "soundDesign": [
+        "dust-settle",
+        "muffled-breath"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Impact WITHOUT death or gore; slab pins legs; face clear"
+    },
+    {
+      "id": "THE_LIMIT",
+      "startSec": 149,
+      "endSec": 159,
+      "voice": {
+        "startSec": 149.18,
+        "endSec": 155.264,
+        "durationSec": 6.084
+      },
+      "postVoiceActionSec": 3.736,
+      "beats": [
+        {
+          "atSec": 149.8,
+          "action": "Death setting still reads zero"
+        },
+        {
+          "atSec": 153.5,
+          "action": "He tries to lift the slab but cannot"
+        },
+        {
+          "atSec": 156.8,
+          "action": "The distinction between survival and freedom becomes visible"
+        }
+      ],
+      "soundDesign": [
+        "stone-scrape"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Death 0% stays illuminated while he struggles"
+    },
+    {
+      "id": "NO_RESCUE",
+      "startSec": 159,
+      "endSec": 167,
+      "voice": {
+        "startSec": 159.18,
+        "endSec": 163.998,
+        "durationSec": 4.818
+      },
+      "postVoiceActionSec": 3.002,
+      "beats": [
+        {
+          "atSec": 159.8,
+          "action": "First push fails"
+        },
+        {
+          "atSec": 162.6,
+          "action": "A second, stronger push fails"
+        },
+        {
+          "atSec": 165.24,
+          "action": "Cut to distant empty street showing nobody can hear"
+        }
+      ],
+      "soundDesign": [
+        "stone-scrape-two",
+        "faint-street-noise"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Three escalating efforts; boulder won't budge"
+    },
+    {
+      "id": "ONE_PERCENT",
+      "startSec": 167,
+      "endSec": 177,
+      "voice": {
+        "startSec": 167.18,
+        "endSec": 173.229,
+        "durationSec": 6.049
+      },
+      "postVoiceActionSec": 3.771,
+      "beats": [
+        {
+          "atSec": 167.8,
+          "action": "Probability board reveals 100 distinct tiles"
+        },
+        {
+          "atSec": 171.5,
+          "action": "Exactly one tile illuminates"
+        },
+        {
+          "atSec": 174.8,
+          "action": "Hero looks between odds and collapsed opening"
+        }
+      ],
+      "soundDesign": [
+        "grid-ticks"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "100-square board, exactly one square lit"
+    },
+    {
+      "id": "BAD_CHOICE",
+      "startSec": 177,
+      "endSec": 188,
+      "voice": {
+        "startSec": 177.18,
+        "endSec": 181.952,
+        "durationSec": 4.772
+      },
+      "postVoiceActionSec": 6.048,
+      "beats": [
+        {
+          "atSec": 177.8,
+          "action": "View 0% death guarantee"
+        },
+        {
+          "atSec": 180.72,
+          "action": "View 1% escape possibility"
+        },
+        {
+          "atSec": 185.58,
+          "action": "Hold his trembling finger before the new setting"
+        }
+      ],
+      "soundDesign": [
+        "low-drone",
+        "breath"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Character studies old and new values, visibly hesitates"
+    },
+    {
+      "id": "OVERRIDE_DECISION",
+      "startSec": 188,
+      "endSec": 197,
+      "voice": {
+        "startSec": 188.18,
+        "endSec": 194.693,
+        "durationSec": 6.513
+      },
+      "postVoiceActionSec": 2.307,
+      "beats": [
+        {
+          "atSec": 188.8,
+          "action": "Current protection receives a warning"
+        },
+        {
+          "atSec": 192.05,
+          "action": "Finger moves to ESCAPE 100%"
+        },
+        {
+          "atSec": 195.02,
+          "action": "Old protection extinguishes as new setting activates"
+        }
+      ],
+      "soundDesign": [
+        "warning-pulse",
+        "power-switch"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "One active slot; 0% death crossing out while escape rises"
+    },
+    {
+      "id": "RUBBLE_MOVES",
+      "startSec": 197,
+      "endSec": 205,
+      "voice": {
+        "startSec": 197.18,
+        "endSec": 202.474,
+        "durationSec": 5.294
+      },
+      "postVoiceActionSec": 2.526,
+      "beats": [
+        {
+          "atSec": 197.8,
+          "action": "Dust falls from overhead"
+        },
+        {
+          "atSec": 200.6,
+          "action": "Slab pivots and releases his leg"
+        },
+        {
+          "atSec": 203.24,
+          "action": "Opening widens, but debris remains dangerous"
+        }
+      ],
+      "soundDesign": [
+        "slab-movement",
+        "pebble-shift"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Hand selects escape, rubble begins separating"
+    },
+    {
+      "id": "LAUNCHED",
+      "startSec": 205,
+      "endSec": 213,
+      "voice": {
+        "startSec": 205.18,
+        "endSec": 211.786,
+        "durationSec": 6.606
+      },
+      "postVoiceActionSec": 1.214,
+      "beats": [
+        {
+          "atSec": 205.8,
+          "action": "Hero is lifted out of the cavity"
+        },
+        {
+          "atSec": 208.6,
+          "action": "Debris follows believable trajectories"
+        },
+        {
+          "atSec": 212.11,
+          "action": "His hand breaks into street-level daylight"
+        }
+      ],
+      "soundDesign": [
+        "rock-burst",
+        "open-air"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Lift, rotation, burst and coherent debris trajectory"
+    },
+    {
+      "id": "HEADLIGHTS",
+      "startSec": 213,
+      "endSec": 221,
+      "voice": {
+        "startSec": 213.18,
+        "endSec": 218.962,
+        "durationSec": 5.782
+      },
+      "postVoiceActionSec": 2.038,
+      "beats": [
+        {
+          "atSec": 213.8,
+          "action": "Hero lands and looks up from road surface"
+        },
+        {
+          "atSec": 216.6,
+          "action": "Truck approaches along the established street geography"
+        },
+        {
+          "atSec": 219.28,
+          "action": "Tires and headlights become unavoidable"
+        }
+      ],
+      "soundDesign": [
+        "engine-approach",
+        "brake"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Hero lands into lane; truck approaches in fixed world geography"
+    },
+    {
+      "id": "PRE_IMPACT",
+      "startSec": 221,
+      "endSec": 230,
+      "voice": {
+        "startSec": 221.18,
+        "endSec": 228.065,
+        "durationSec": 6.885
+      },
+      "postVoiceActionSec": 1.935,
+      "beats": [
+        {
+          "atSec": 221.8,
+          "action": "Freeze all world-space motion before collision"
+        },
+        {
+          "atSec": 225.05,
+          "action": "Old protection visibly reads OFF"
+        },
+        {
+          "atSec": 228.38,
+          "action": "Hard silence and final story line"
+        }
+      ],
+      "soundDesign": [
+        "hard-silence"
+      ],
+      "cameraConstraint": "Single camera transform around all fixed world objects. No independent background slide.",
+      "notes": "Freeze before impact, high contrast dark statement, no collision"
+    }
+  ]
+}
