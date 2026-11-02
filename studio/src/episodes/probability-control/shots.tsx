@@ -138,7 +138,7 @@ export const S9:React.FC<ShotProps>=({t})=><g>
 /** S10 – night city establishing. */
 export const S10:React.FC<ShotProps>=({t})=><g>
  <ChanceStreet t={t} id="pc-night-01" rain/>
- <g transform={portraitCamera(540,1220,kf(t,[[0,.85],[60,1.03]]))}>
+ <g transform={portraitCamera(540,970,kf(t,[[0,.85],[60,1.03]]))}>
   {pip(t,[{f:0,p:{x:460,y:1325,scale:1,yaw:.7}},
    {f:60,p:{x:540,armR:{a:38,b:-4}}}],[[0,'neutral'],[50,'worried']])}
  </g>
@@ -148,7 +148,7 @@ export const S10:React.FC<ShotProps>=({t})=><g>
 /** S11 – low angle pavement cracks while the hero notices. */
 export const S11:React.FC<ShotProps>=({t})=><g>
  <ChanceStreet t={t} id="pc-night-02" rain crack={clamp((t-12)/29)} pit={clamp((t-46)/24)}/>
- <g transform={portraitCamera(560,1340,kf(t,[[0,1.2],[70,1.25]]))}>
+ <g transform={portraitCamera(560,1060,kf(t,[[0,1.2],[70,1.25]]))}>
   {pip(t,[{f:0,p:{x:530,y:1320,scale:1.1,yaw:.3}},
    {f:25,p:{tilt:10,headTilt:-12,armL:{a:115,b:-15},armR:{a:126,b:9}}}],
    [[0,'neutral'],[20,'shock']],'rimRed')}
