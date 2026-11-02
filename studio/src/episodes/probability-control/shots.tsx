@@ -3,7 +3,8 @@ import {
   ShotProps, Hero, LOOKS, basePose, poseAt, faceAt, camT, kf, clamp, easeOut,
   FocusRings, Sparkle, HudChip, Schematic, CountUp, DrawOn, Foreground,
   NightSky, PC, ProbabilityStreet, ProbabilityCoin, ProbabilityLottery,
-  ChancePanel, ProbabilityTruck, RockBurst, ProbabilityCave
+  ChancePanel, ProbabilityTruck, RockBurst, ProbabilityCave,
+  ChanceRoom, ChanceDesk, ChanceKiosk, ChanceOverlook, ChanceStreet, ChanceCave
 } from '../../engine';
 
 /** Original rig, original pose interpolation, same character in every shot. */
@@ -48,7 +49,7 @@ export const S1:React.FC<ShotProps>=({t})=><g>
 
 /** S2 – hero believes he has won. */
 export const S2:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/><Shift t={t} cy={1150} z={1.22}>
+ <ChanceRoom t={t}/><Shift t={t} cy={1150} z={1.22}>
   {pip(t,[{f:0,p:{x:540,y:1270,scale:1.45,yaw:.30,armR:{a:18,b:0},expr:'smug'}},
    {f:30,p:{armR:{a:124,b:-22},tilt:-8,headTilt:6}},
    {f:58,p:{armR:{a:102,b:0},tilt:0}}],[[0,'smug'],[39,'happy']],'rimR')}
@@ -59,7 +60,7 @@ export const S2:React.FC<ShotProps>=({t})=><g>
 
 /** S3 – coin, high-angle insert. */
 export const S3:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/><Title title="A COIN FLIP" sub="Can you change the odds?"/>
+ <ChanceDesk t={t}/><Title title="A COIN FLIP" sub="Can you change the odds?"/>
  <g transform={portraitCamera(540,945,kf(t,[[0,1.35],[50,1.6]]))}>
   <ProbabilityCoin x={540} y={900-155*Math.abs(Math.sin(t*.115))} t={t} s={1.8}/>
  </g>
@@ -68,7 +69,7 @@ export const S3:React.FC<ShotProps>=({t})=><g>
 
 /** S4 – result and human reaction. */
 export const S4:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/>{copy('HEADS.',405,104,PC.gold)}
+ <ChanceRoom t={t}/>{copy('HEADS.',405,104,PC.gold)}
  <Shift t={t} cx={530} cy={1180} z={1.12}>
   {pip(t,[{f:0,p:{x:480,y:1240,yaw:.6,scale:1.55,armR:{a:30,b:20}}},
    {f:14,p:{armR:{a:162,b:-20},tilt:-8}},{f:32,p:{armR:{a:145,b:-22},tilt:3}}],
@@ -80,7 +81,7 @@ export const S4:React.FC<ShotProps>=({t})=><g>
 
 /** S5 – lottery from a sharp macro angle. */
 export const S5:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/><Title title="THE LOTTERY" sub="Even the impossible feels easy."/>
+ <ChanceKiosk t={t}/><Title title="THE LOTTERY" sub="Even the impossible feels easy."/>
  <g transform={portraitCamera(540,915,kf(t,[[0,1.03],[58,1.28]]))}>
   <ProbabilityLottery t={t}/>
  </g>
@@ -88,7 +89,7 @@ export const S5:React.FC<ShotProps>=({t})=><g>
 
 /** S6 – the second satisfying win. */
 export const S6:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/>
+ <ChanceKiosk t={t}/>
  <g opacity={.32}>{copy('7 7 7 7',570,182,PC.gold)}</g>
  {pip(t,[{f:0,p:{x:535,y:1390,scale:1.8,yaw:-.25,armL:{a:70,b:0}}},
  {f:18,p:{armL:{a:150,b:0},armR:{a:148,b:0},tilt:-11}},
@@ -100,7 +101,7 @@ export const S6:React.FC<ShotProps>=({t})=><g>
 
 /** S7 – the title and rule turn, original title-card grammar. */
 export const S7:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/>
+ <ChanceOverlook t={t}/>
  <g transform={portraitCamera(540,1040,kf(t,[[0,1],[60,1.12]]))}>
   {pip(t,[{f:0,p:{x:530,y:1330,scale:1.5,yaw:.3}},
   {f:50,p:{look:1,armR:{a:62,b:10}}}],[[0,'smug'],[38,'worried']])}
@@ -125,7 +126,7 @@ export const S8:React.FC<ShotProps>=({t})=><g>
 
 /** S9 – apparent invincibility: use the same single rig and a ring of light. */
 export const S9:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/><Title title="THE ULTIMATE CHEAT" sub="Make death impossible."/>
+ <ChanceRoom t={t}/><Title title="THE ULTIMATE CHEAT" sub="Make death impossible."/>
  <ChancePanel y={450} label="CHANCE OF DYING"
    value={Math.round(100*(1-easeOut(t/47)))+'%'} t={t}/>
  <circle cx={540} cy={1260} r={245+15*Math.sin(t*.07)}
@@ -136,7 +137,7 @@ export const S9:React.FC<ShotProps>=({t})=><g>
 
 /** S10 – night city establishing. */
 export const S10:React.FC<ShotProps>=({t})=><g>
- <ProbabilityStreet t={t} id="pc-night-01" rain/>
+ <ChanceStreet t={t} id="pc-night-01" rain/>
  <g transform={portraitCamera(540,1220,kf(t,[[0,.85],[60,1.03]]))}>
   {pip(t,[{f:0,p:{x:460,y:1325,scale:1,yaw:.7}},
    {f:60,p:{x:540,armR:{a:38,b:-4}}}],[[0,'neutral'],[50,'worried']])}
@@ -146,7 +147,7 @@ export const S10:React.FC<ShotProps>=({t})=><g>
 
 /** S11 – low angle pavement cracks while the hero notices. */
 export const S11:React.FC<ShotProps>=({t})=><g>
- <ProbabilityStreet t={t} id="pc-night-02" rain crack={clamp((t-12)/29)} pit={clamp((t-46)/24)}/>
+ <ChanceStreet t={t} id="pc-night-02" rain crack={clamp((t-12)/29)} pit={clamp((t-46)/24)}/>
  <g transform={portraitCamera(560,1340,kf(t,[[0,1.2],[70,1.25]]))}>
   {pip(t,[{f:0,p:{x:530,y:1320,scale:1.1,yaw:.3}},
    {f:25,p:{tilt:10,headTilt:-12,armL:{a:115,b:-15},armR:{a:126,b:9}}}],
@@ -157,7 +158,7 @@ export const S11:React.FC<ShotProps>=({t})=><g>
 
 /** S12 – wide high-angle fall to the gap. */
 export const S12:React.FC<ShotProps>=({t})=><g>
- <ProbabilityStreet t={t} id="pc-night-03" rain crack={1} pit={1}/>
+ <ChanceStreet t={t} id="pc-night-03" rain crack={1} pit={1}/>
  <g transform={portraitCamera(540,1400,kf(t,[[0,.97],[58,1.12]]))}>
   {pip(t,[{f:0,p:{x:540,y:1180,scale:1.25,spin:0,armL:{a:136,b:-17},armR:{a:145,b:20}}},
   {f:58,p:{y:2030,scale:.87,spin:75,tilt:32}}],[[0,'shock']],'rimRed')}
@@ -167,7 +168,7 @@ export const S12:React.FC<ShotProps>=({t})=><g>
 
 /** S13 – buried but alive, claustrophobic close-up. */
 export const S13:React.FC<ShotProps>=({t})=><g>
- <ProbabilityCave t={t}/>
+ <ChanceCave t={t}/>
  <g transform={portraitCamera(530,1350,kf(t,[[0,1.15],[80,1.32]]))}>
   {pip(t,[{f:0,p:{x:540,y:1340,scale:1.35,tilt:25,headTilt:-13,armR:{a:100,b:-10}}},
   {f:55,p:{headTilt:12,armL:{a:45,b:-20}}}],[[0,'shock'],[22,'worried']],'rimBlueL')}
@@ -189,7 +190,7 @@ export const S14:React.FC<ShotProps>=({t})=><g>
 
 /** S15 – the fatal edit: protection is visibly overwritten. */
 export const S15:React.FC<ShotProps>=({t})=><g>
- <BG t={t}/><Title title="OVERWRITE?" sub="Only one setting can survive."/>
+ <ChanceRoom t={t} dim/><Title title="OVERWRITE?" sub="Only one setting can survive."/>
  <ChancePanel y={510} label="DYING" value="0%" color={PC.mint} active={t<23}/>
  <ChancePanel y={885} label="ESCAPE" value={Math.round(1+99*easeOut((t-18)/36))+'%'}
    color={PC.gold} active={t>=23}/>
@@ -201,7 +202,7 @@ export const S15:React.FC<ShotProps>=({t})=><g>
 
 /** S16 – the cave reacts. */
 export const S16:React.FC<ShotProps>=({t})=><g>
- <ProbabilityCave t={t}/>
+ <ChanceCave t={t}/>
  <g transform={portraitCamera(540,1350,kf(t,[[0,1.1],[60,1.25]]))}>
   {pip(t,[{f:0,p:{x:520,y:1390,scale:1.3,tilt:18}},
     {f:33,p:{armL:{a:145,b:-19},armR:{a:149,b:12},tilt:-11,headTilt:15}}],[[0,'worried'],[29,'shock']],'rimRed')}
@@ -212,7 +213,7 @@ export const S16:React.FC<ShotProps>=({t})=><g>
 
 /** S17 – propelled upward, a true release rather than a slide cut. */
 export const S17:React.FC<ShotProps>=({t})=><g>
- <ProbabilityStreet t={t} rain crack={1} pit={1} id="pc-daybreak"/>
+ <ChanceStreet t={t} rain crack={1} pit={1} id="pc-daybreak"/>
  <RockBurst t={t} x={540} y={1500} size={1.3}/>
  <g transform={portraitCamera(540,1300,kf(t,[[0,.95],[58,1.1]]))}>
  {pip(t,[{f:0,p:{x:510,y:1650,scale:1.25,spin:-22,armL:{a:145,b:0},armR:{a:130,b:0}}},
@@ -223,7 +224,7 @@ export const S17:React.FC<ShotProps>=({t})=><g>
 
 /** S18 – oncoming headlights; stage clear geography. */
 export const S18:React.FC<ShotProps>=({t})=><g>
- <ProbabilityStreet t={t} rain id="pc-night-final"/>
+ <ChanceStreet t={t} rain id="pc-night-final"/>
  {pip(t,[{f:0,p:{x:300,y:1280,scale:1.2,tilt:45,spin:20}},
   {f:54,p:{x:340,y:1400,tilt:-3,spin:0,armL:{a:130,b:10}}}],[[0,'shock']],'rimRed')}
  <g transform={portraitCamera(710,1450,kf(t,[[0,.75],[59,1.02]]))}>
@@ -235,7 +236,7 @@ export const S18:React.FC<ShotProps>=({t})=><g>
 
 /** S19 – freeze BEFORE impact, preserves the approved dark ending. */
 export const S19:React.FC<ShotProps>=({t})=><g>
- <ProbabilityStreet t={0} id="pc-stop"/>
+ <ChanceStreet t={0} id="pc-stop"/>
  <g opacity={.52}><ProbabilityTruck x={735} y={1150} t={0} scale={1.25}/>
   {pip(0,[{f:0,p:{x:420,y:1280,scale:1.22,tilt:-20,expr:'shock'}}],[[0,'shock']],'rimRed')}
  </g>
