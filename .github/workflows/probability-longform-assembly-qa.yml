@@ -3,7 +3,10 @@ name: Long-form Probability Assembly QA — NO VIDEO EXPORT
 on:
   push:
     branches: [feature/probability-longform-sound-design]
-    paths: ['.github/workflows/probability-longform-assembly-qa.yml']
+    paths:
+      - '.github/workflows/probability-longform-assembly-qa.yml'
+      - 'studio/src/episodes/probability-longform/shots.tsx'
+      - 'studio/src/episodes/probability-longform/episode.tsx'
   workflow_dispatch:
 
 permissions:
