@@ -372,7 +372,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
       x={atX} y={atY} s={id==='HEADLIGHTS'||id==='PRE_IMPACT'?1.06:1.1}/>;
    const truck=id==='HEADLIGHTS'||id==='PRE_IMPACT';
    const truckP=truck?(id==='PRE_IMPACT'?.92:smooth(t/Math.max(1,len))):0;
-   physical=<><StreetWorld t={t} rain
+   physical=<><StreetWorld t={id==='PRE_IMPACT'?0:t} rain
        crack={cracking?id==='CRACK'?smooth(t/190):1:0}
        pit={pit?id==='FALL'?smooth((t-45)/120):1:0}/>
      {id==='NEAR_MISS'&&<g>
@@ -394,7 +394,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
           ' L1000 1070 L1750 1070Z'}
          fill="#FFE6A2" opacity={.06+truckP*.15}/>
        <ProbabilityTruck x={1470-430*truckP} y={360-160*truckP}
-         t={t} scale={.58+truckP*.85}/>
+         t={id==='PRE_IMPACT'?0:t} scale={.58+truckP*.85}/>
      </g>}
     </>;
     overlay=id==='NEAR_MISS'?<Card x={1380} y={90} width={410}
