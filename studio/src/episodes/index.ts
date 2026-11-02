@@ -4,5 +4,6 @@ import { copyPaste } from './copy-paste';
 import { probabilityControl } from './probability-control/index';
 import { probabilityQualityTest } from './probability-control/quality-test';
 import { probabilityControlV2 } from './probability-control/full-v2';
+import { rewindGradeCoin } from './probability-control/rewind-grade-coin';
 
-export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2];
+export const EPISODES = [rewind, copyPaste, probabilityControl, probabilityQualityTest, probabilityControlV2, rewindGradeCoin];
