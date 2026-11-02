@@ -1,0 +1,61 @@
+name: SVG 2.5D Camera Proof
+
+on:
+  push:
+    branches: [feature/probability-2p5d-parallax]
+    paths:
+      - 'studio/src/engine/depth25.tsx'
+      - 'studio/src/engine/index.ts'
+      - 'studio/src/episodes/probability-control/depth25-cafe.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/probability-2p5d.yml'
+  pull_request:
+    branches: [feature/reference-stick-characters]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install original project
+        run: npm ci
+      - name: Typecheck unchanged Rewind, approved character and new parallax utilities
+        run: npx tsc --noEmit
+      - name: Render 6.5-second real camera-movement test
+        run: |
+          mkdir -p out/depth25
+          npx remotion render src/index.ts Probability2p5dCafe out/depth25/2p5d-cafe.mp4 --codec=h264 --scale=0.6 --concurrency=2
+      - name: Export keyframe at near and far camera positions
+        run: |
+          for frame in 12 78 155 188; do
+            npx remotion still src/index.ts Probability2p5dCafe out/depth25/frame-${frame}.png --frame=${frame} --scale=0.5
+          done
+      - name: Upload video only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WATCH-2P5D-VIDEO-ONLY
+          path: studio/out/depth25/2p5d-cafe.mp4
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload pictures separately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2P5D-INSPECTION-STILLS-ONLY
+          path: studio/out/depth25/frame-*.png
+          if-no-files-found: warn
+          retention-days: 14
