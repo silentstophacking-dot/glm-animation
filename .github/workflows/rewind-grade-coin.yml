@@ -8,6 +8,9 @@ on:
       - 'studio/src/episodes/probability-control/rewind-grade-coin.tsx'
       - 'studio/src/episodes/index.ts'
       - '.github/workflows/rewind-grade-coin.yml'
+  pull_request:
+    branches:
+      - feature/probability-skill-pipeline
   workflow_dispatch:
 
 permissions:
