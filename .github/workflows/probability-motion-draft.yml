@@ -57,7 +57,7 @@ jobs:
       - name: Motion frame-grids using original script
         run: |
           python ../scripts/motiongrid.py probability-control --range 600:735 --step 12 --video out/probability-control/probability-motion-preview.mp4
-          python ../scripts/motiongrid.py probability-control --range 870:1170 --step 18 --video out/probability-control/probability-motion-preview.mp4
+          python ../scripts/motiongrid.py probability-control --range 870:1169 --step 18 --video out/probability-control/probability-motion-preview.mp4
 
       - name: Upload motion preview and frame grids
         if: always()
