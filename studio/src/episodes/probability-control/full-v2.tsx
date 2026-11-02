@@ -45,12 +45,14 @@ const BURIED:React.FC<ShotProps>=({t})=><g>
     <ChanceCave t={t}/>
     <path d="M0 215 L255 310 L510 115 L720 480 L1080 160"
       fill="none" stroke="#BCCCDD" strokeWidth={4} opacity=".16"/>
-    <Person x={510} y={1550} s={1.55} t={t} state="buried"/>
     <ellipse cx={530} cy={1650} rx={255} ry={51} fill="#06101F" opacity=".38"/>
     <path d="M180 1550 L570 1405 L830 1630 L795 1710 L310 1780 Z"
       fill="#596A80" stroke="#8D9BAD" strokeWidth={10}/>
     <path d="M580 1396 L690 1260 L830 1400 L802 1580 L686 1625"
       fill="#78879B" stroke="#A3B0C1" strokeWidth={8}/>
+    {/* Keep his face legible, while surrounding the feet with foreground debris. */}
+    <Person x={520} y={1515} s={1.63} t={t} state="buried"/>
+    <path d="M100 1750 L440 1660 L720 1800 L865 1960 H0Z" fill="#46546A" opacity={.66}/>
     {Array.from({length:20},(_,i)=>{
       const x=(i*73+t*.55)%1030,y=800+(i*179+t*1.5)%860;
       return <circle key={i} cx={x} cy={y} r={1.8+(i%3)}
@@ -98,17 +100,17 @@ const SWITCH:React.FC<ShotProps>=({t})=><g>
     y={870} color={C.gold} active={t>=29} t={t}/>
  <g opacity={ease((t-25)/10)}>
   <path d="M100 600 L975 665" stroke={C.red} strokeWidth={20} strokeLinecap="round"/>
-  {word("PROTECTION LOST",1500,60,C.red)}
-  <rect x={255} y={1570} width={575} height={93} rx={18} fill="#8D2A44" opacity=".8"/>
-  {word("OVERRIDE",1633,59,C.cream)}
+  {word("PROTECTION LOST",1300,60,C.red)}
+  <rect x={255} y={1710} width={575} height={93} rx={18} fill="#8D2A44" opacity=".8"/>
+  {word("OVERRIDE",1775,59,C.cream)}
  </g>
 </g>;
 
 const BURST:React.FC<ShotProps>=({t})=>{
- const launch=ease((t-7)/49),px=530+285*launch,py=1700-1170*launch;
+ const launch=ease((t-7)/49),px=530+125*launch,py=1700-800*launch;
  return <g>
- <Camera x={540+kf(t,[[0,0],[58,-45]])} y={1130-kf(t,[[0,0],[59,165]])}
-   z={1.0+.11*launch}>
+ <Camera x={540+kf(t,[[0,0],[58,-25]])} y={1150-75*launch}
+   z={1.0+.06*launch}>
    <ChanceStreet t={t} id="premium-escape" rain crack={1} pit={1}/>
    <path d="M345 1820 L540 1235 L705 1900Z" fill="#E3CA9D" opacity={.09*(1-launch)}/>
    <g opacity={.7}>
@@ -135,7 +137,7 @@ const BURST:React.FC<ShotProps>=({t})=>{
 
 /** Clear geography: head-on truck approaching on the same roadway as Pip. */
 const TRUCK:React.FC<ShotProps>=({t})=>{
- const r=ease(t/58),cx=1140-475*r,cy=1410+115*r,size=.71+.92*r;
+ const r=ease(t/58),cx=1150-420*r,size=.72+1.03*r,cy=1530-355*size;
  const px=380+45*r,py=1200+130*r;
  return <g>
  <Camera x={540+kf(t,[[0,40],[59,-12]])} y={955+kf(t,[[0,0],[59,15]])}
@@ -151,14 +153,14 @@ const TRUCK:React.FC<ShotProps>=({t})=>{
    <circle cx={cx-160*size} cy={cy+240*size} r={180+70*r}
      fill={C.gold} opacity={.045+.06*r}/>
  </Camera>
- <rect x="80" y="180" width={370} height={72} rx={15} fill="#4D1B32" stroke={C.red} strokeWidth={4}/>
- {word("NO SHIELD",265,45,C.red)}
+ <rect x="235" y="169" width={610} height={93} rx={16} fill="#4D1B32" stroke={C.red} strokeWidth={4}/>
+ {word("NO SHIELD",234,47,C.red)}
 </g>;
 };
 const END:React.FC<ShotProps>=({t})=><g>
  <ChanceStreet t={0} id="premium-freeze"/>
- <Person x={370} y={1355} s={1.65} t={0} state="stunned"/>
- <g opacity={.64}><ProbabilityTruck x={825} y={1470} t={0} scale={1.7}/></g>
+ <Person x={255} y={1300} s={1.63} t={0} state="stunned"/>
+ <g opacity={.82}><ProbabilityTruck x={795} y={935} t={0} scale={1.7}/></g>
  <rect width="1080" height="1920" fill="#070D1B" opacity={.52+.30*ease((t-5)/20)}/>
  <g opacity={ease((t-12)/14)}>
    <path d="M128 670 H952 M128 1230 H952" stroke={C.red} strokeWidth={10}/>
