@@ -8,6 +8,9 @@ on:
       - '.github/workflows/probability-soundscape.yml'
   pull_request:
     branches: [feature/probability-longform-local-tts]
+    paths:
+      - 'scripts/probability_soundscape.py'
+      - '.github/workflows/probability-soundscape.yml'
   workflow_dispatch:
 
 permissions:
