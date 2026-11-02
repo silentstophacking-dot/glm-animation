@@ -1,0 +1,71 @@
+name: Probability Motion Draft
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feature/probability-skill-pipeline]
+    paths:
+      - 'production/probability-control/APPROVED.md'
+
+permissions:
+  contents: read
+
+jobs:
+  motion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout approved episode
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify storyboard has been approved
+        run: |
+          test -f ../production/probability-control/APPROVED.md
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install skill requirements
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy
+          npm ci
+
+      - name: Rebuild provisional timeline and typecheck
+        run: |
+          python ../scripts/plan.py probability-control
+          npx tsc --noEmit
+
+      - name: Render silent original-engine animation at preview resolution
+        run: |
+          mkdir -p out/probability-control
+          npx remotion render src/index.ts ProbabilityControl out/probability-control/probability-motion-preview.mp4 --codec=h264 --scale=0.45 --concurrency=2
+
+      - name: Motion frame-grids using original script
+        run: |
+          python ../scripts/motiongrid.py probability-control --range 600:735 --step 12 --video out/probability-control/probability-motion-preview.mp4
+          python ../scripts/motiongrid.py probability-control --range 870:1170 --step 18 --video out/probability-control/probability-motion-preview.mp4
+
+      - name: Upload motion preview and frame grids
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-motion-preview
+          path: |
+            studio/out/probability-control/probability-motion-preview.mp4
+            studio/out/probability-control/motion/
+          if-no-files-found: warn
+          retention-days: 14
