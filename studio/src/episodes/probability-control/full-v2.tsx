@@ -131,6 +131,7 @@ const BURST:React.FC<ShotProps>=({t})=>{
     {word("ESCAPE · 100%",273,67,C.mint)}
  </g>}
 </g>;
+};
 
 /** Clear geography: head-on truck approaching on the same roadway as Pip. */
 const TRUCK:React.FC<ShotProps>=({t})=>{
@@ -153,6 +154,7 @@ const TRUCK:React.FC<ShotProps>=({t})=>{
  <rect x="80" y="180" width={370} height={72} rx={15} fill="#4D1B32" stroke={C.red} strokeWidth={4}/>
  {word("NO SHIELD",265,45,C.red)}
 </g>;
+};
 const END:React.FC<ShotProps>=({t})=><g>
  <ChanceStreet t={0} id="premium-freeze"/>
  <Person x={370} y={1355} s={1.65} t={0} state="stunned"/>
