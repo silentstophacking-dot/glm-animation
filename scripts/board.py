@@ -30,8 +30,17 @@ def font(size, bold=True):
     return ImageFont.load_default(size)
 
 
-head, body, note = font(34), font(28), font(23, False)
-W, H, CAP, PAD = 960, 540, 160, 24
+# Fit to source aspect ratio, preserving original landscape storyboard behavior.
+sample = next(src.glob('*.png'), None)
+if sample is not None:
+    with Image.open(sample) as im:
+        source_width, source_height = im.size
+else:
+    source_width, source_height = 16, 9
+portrait = source_height > source_width
+W, H = (420, 746) if portrait else (960, 540)
+CAP, PAD = (205, 24) if portrait else (160, 24)
+head, body, note = (font(26), font(22), font(18, False)) if portrait else (font(34), font(28), font(23, False))
 n = len(tl['shots'])
 rows = (n + cols - 1) // cols
 sheet = Image.new('RGB', (cols * W + (cols + 1) * PAD, rows * (H + CAP + PAD) + PAD + 90), (20, 17, 26))
@@ -67,16 +76,17 @@ for i, s in enumerate(tl['shots']):
         d.rectangle([x, y, x + W, y + H], fill=(60, 30, 40))
         d.text((x + 20, y + 20), f'missing {p.name}', font=body, fill=(255, 120, 120))
     d.rectangle([x, y + H, x + W, y + H + CAP], fill=(32, 27, 40))
-    d.text((x + 18, y + H + 12), f'{i + 1}  {s["id"]}  {s["size"].upper()}', font=head, fill=(255, 177, 90))
+    header = f'{i + 1}  {s["id"]}  {s["size"].upper()[:11]}' if portrait else f'{i + 1}  {s["id"]}  {s["size"].upper()}'
+    d.text((x + 18, y + H + 12), header, font=head, fill=(255, 177, 90))
     at = f'{s["first"] / tl["fps"]:.1f} s'
     d.text((x + W - 18 - d.textlength(at, font=note), y + H + 20), at, font=note, fill=(170, 160, 185))
     line = f'"{s["line"]}"' if s.get('line') else '(no words)'
-    yy = y + H + 58
+    yy = y + H + (73 if portrait else 58)
     for ln in fit(line, body, W - 36):
         d.text((x + 18, yy), ln, font=body, fill=(246, 239, 227))
         yy += 34
     if s.get('note'):
-        d.text((x + 18, yy + 2), fit(s['note'], note, W - 36)[0], font=note, fill=(170, 160, 185))
+        d.text((x + 18, y + H + 160 if portrait else yy + 2), fit(s['note'], note, W - 36)[0], font=note, fill=(170, 160, 185))
 out = out_dir(slug) / 'storyboard.jpg'
 sheet.save(out, quality=88)
 print(out, sheet.size)

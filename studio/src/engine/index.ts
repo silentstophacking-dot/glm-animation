@@ -16,3 +16,7 @@ export * from './sets/rooftop';
 export * from './sets/kitchen';
 export * from './sets/schematic';
 export * from './sets/bedroom';
+
+export * from './sets/probability';
+
+export * from './sets/probability-environments';

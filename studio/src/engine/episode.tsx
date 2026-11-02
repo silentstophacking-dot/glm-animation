@@ -82,8 +82,8 @@ const fxAt = (tl: Timeline, f: number) => {
 };
 
 /** Vignette and a fine grain that changes on twos, to take the vector edge off (the genre's finish). */
-const Grade: React.FC<{ f: number; grain: boolean; vignette: boolean }> = ({ f, grain, vignette }) => (
-  <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+const Grade: React.FC<{ f: number; grain: boolean; vignette: boolean; width?: number; height?: number }> = ({ f, grain, vignette, width = 1920, height = 1080 }) => (
+  <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
     <defs>
       <radialGradient id="epVig" cx="50%" cy="50%" r="75%">
         <stop offset="55%" stopColor="#000" stopOpacity={0} />
@@ -94,23 +94,23 @@ const Grade: React.FC<{ f: number; grain: boolean; vignette: boolean }> = ({ f, 
         <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0" />
       </filter>
     </defs>
-    {vignette ? <rect width="1920" height="1080" fill="url(#epVig)" /> : null}
-    {grain ? <rect width="1920" height="1080" filter="url(#epGrain)" /> : null}
+    {vignette ? <rect width={width} height={height} fill="url(#epVig)" /> : null}
+    {grain ? <rect width={width} height={height} filter="url(#epGrain)" /> : null}
   </svg>
 );
 
 /** One shot drawn in the shared defs (filters, gradients), in a 1920 x 1080 world. */
-export const ShotFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <svg width={1920} height={1080} viewBox="0 0 1920 1080">
+export const ShotFrame: React.FC<{ children: React.ReactNode; width?: number; height?: number }> = ({ children, width = 1920, height = 1080 }) => (
+  <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
     <KitDefs />
     <SetDefs />
     {children}
   </svg>
 );
 
-export type EpisodeProps = { timeline: Timeline; shots: ShotMap; looks?: Record<string, LookDef>; grain?: boolean; vignette?: boolean; bg?: string };
+export type EpisodeProps = { timeline: Timeline; shots: ShotMap; looks?: Record<string, LookDef>; grain?: boolean; vignette?: boolean; bg?: string; width?: number; height?: number };
 
-export const Episode: React.FC<EpisodeProps> = ({ timeline: tl, shots, looks = {}, grain = true, vignette = true, bg = '#0E0C1E' }) => {
+export const Episode: React.FC<EpisodeProps> = ({ timeline: tl, shots, looks = {}, grain = true, vignette = true, bg = '#0E0C1E', width = 1920, height = 1080 }) => {
   const f = useCurrentFrame();
   const seg = segAt(tl, f);
   const Shot = shots[seg.shot];
@@ -124,11 +124,11 @@ export const Episode: React.FC<EpisodeProps> = ({ timeline: tl, shots, looks = {
   return (
     <AbsoluteFill style={{ backgroundColor: bg }}>
       <AbsoluteFill style={{ transform: `translate(${x + jitter}px, ${y}px) scale(${x || y ? 1.02 : 1})`, filter: def?.grade && lv > 0 ? def.grade(lv) : undefined }}>
-        <ShotFrame>{Shot ? <Shot t={clockAt(seg, f)} len={info?.len ?? seg.b - seg.a} f={f} /> : null}</ShotFrame>
+        <ShotFrame width={width} height={height}>{Shot ? <Shot t={clockAt(seg, f)} len={info?.len ?? seg.b - seg.a} f={f} /> : null}</ShotFrame>
       </AbsoluteFill>
-      <Grade f={f} grain={grain} vignette={vignette} />
+      <Grade f={f} grain={grain} vignette={vignette} width={width} height={height} />
       {def?.Overlay && run ? (
-        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0, opacity: lv }}>
+        <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', inset: 0, opacity: lv }}>
           <def.Overlay f={f} lv={lv} p={clamp((f - run.a) / (run.b - run.a))} n={run.n} />
         </svg>
       ) : null}
@@ -141,14 +141,14 @@ export const Episode: React.FC<EpisodeProps> = ({ timeline: tl, shots, looks = {
 };
 
 /** The storyboard: frame i is shot i at its key frame, no audio, no look. Render it with scripts/stills.mjs. */
-export const Board: React.FC<{ timeline: Timeline; shots: ShotMap; grain?: boolean; vignette?: boolean; bg?: string }> = ({ timeline: tl, shots, grain = true, vignette = true, bg = '#0E0C1E' }) => {
+export const Board: React.FC<{ timeline: Timeline; shots: ShotMap; grain?: boolean; vignette?: boolean; bg?: string; width?: number; height?: number }> = ({ timeline: tl, shots, grain = true, vignette = true, bg = '#0E0C1E', width = 1920, height = 1080 }) => {
   const f = useCurrentFrame();
   const info = tl.shots[Math.min(f, tl.shots.length - 1)];
   const Shot = shots[info.id];
   return (
     <AbsoluteFill style={{ backgroundColor: bg }}>
-      <ShotFrame>{Shot ? <Shot t={info.key} len={info.len} f={info.first + info.key} /> : null}</ShotFrame>
-      <Grade f={info.key} grain={grain} vignette={vignette} />
+      <ShotFrame width={width} height={height}>{Shot ? <Shot t={info.key} len={info.len} f={info.first + info.key} /> : null}</ShotFrame>
+      <Grade f={info.key} grain={grain} vignette={vignette} width={width} height={height} />
     </AbsoluteFill>
   );
 };
@@ -158,7 +158,10 @@ export const defineEpisode = (id: string, p: EpisodeProps) => ({
   id,
   total: p.timeline.total,
   shotCount: p.timeline.shots.length,
+  width: p.width ?? 1920,
+  height: p.height ?? 1080,
+  fps: p.timeline.fps,
   Main: () => <Episode {...p} />,
-  Board: () => <Board timeline={p.timeline} shots={p.shots} grain={p.grain} vignette={p.vignette} bg={p.bg} />,
+  Board: () => <Board timeline={p.timeline} shots={p.shots} grain={p.grain} vignette={p.vignette} bg={p.bg} width={p.width} height={p.height} />,
 });
 export type EpisodeDef = ReturnType<typeof defineEpisode>;

@@ -1,0 +1,387 @@
+{
+  "slug": "probability-control",
+  "title": "WHAT IF YOU COULD CONTROL PROBABILITY?",
+  "fps": 30,
+  "total": 1170,
+  "segments": [
+    {
+      "shot": "S1",
+      "a": 0,
+      "b": 60,
+      "t0": 0,
+      "t1": 60,
+      "line": "He made his chance of dying zero.",
+      "look": "probability"
+    },
+    {
+      "shot": "S2",
+      "a": 60,
+      "b": 120,
+      "t0": 0,
+      "t1": 60,
+      "line": "Big mistake."
+    },
+    {
+      "shot": "S3",
+      "a": 120,
+      "b": 180,
+      "t0": 0,
+      "t1": 60,
+      "line": "What if you could control probability?"
+    },
+    {
+      "shot": "S4",
+      "a": 180,
+      "b": 240,
+      "t0": 0,
+      "t1": 60,
+      "line": "A coin flip? Always heads."
+    },
+    {
+      "shot": "S5",
+      "a": 240,
+      "b": 300,
+      "t0": 0,
+      "t1": 60,
+      "line": "Winning the lottery?"
+    },
+    {
+      "shot": "S6",
+      "a": 300,
+      "b": 360,
+      "t0": 0,
+      "t1": 60,
+      "line": "Every single time."
+    },
+    {
+      "shot": "S7",
+      "a": 360,
+      "b": 420,
+      "t0": 0,
+      "t1": 60,
+      "line": "But here's the catch."
+    },
+    {
+      "shot": "S8",
+      "a": 420,
+      "b": 480,
+      "t0": 0,
+      "t1": 60,
+      "line": "Only one probability can change at once."
+    },
+    {
+      "shot": "S9",
+      "a": 480,
+      "b": 540,
+      "t0": 0,
+      "t1": 60,
+      "line": "So he makes dying impossible.",
+      "look": "probability"
+    },
+    {
+      "shot": "S10",
+      "a": 540,
+      "b": 600,
+      "t0": 0,
+      "t1": 60,
+      "line": "That night, he walks home."
+    },
+    {
+      "shot": "S11",
+      "a": 600,
+      "b": 675,
+      "t0": 0,
+      "t1": 75,
+      "line": "Suddenly, the street gives way."
+    },
+    {
+      "shot": "S12",
+      "a": 675,
+      "b": 735,
+      "t0": 0,
+      "t1": 60,
+      "line": "He drops straight into darkness."
+    },
+    {
+      "shot": "S13",
+      "a": 735,
+      "b": 810,
+      "t0": 0,
+      "t1": 75,
+      "line": "Buried under concrete. Still alive."
+    },
+    {
+      "shot": "S14",
+      "a": 810,
+      "b": 870,
+      "t0": 0,
+      "t1": 60,
+      "line": "His chance of escaping? One percent."
+    },
+    {
+      "shot": "S15",
+      "a": 870,
+      "b": 930,
+      "t0": 0,
+      "t1": 60,
+      "line": "He changes it to one hundred. His protection disappears.",
+      "look": "probability"
+    },
+    {
+      "shot": "S16",
+      "a": 930,
+      "b": 990,
+      "t0": 0,
+      "t1": 60,
+      "line": "The rubble begins to move."
+    },
+    {
+      "shot": "S17",
+      "a": 990,
+      "b": 1050,
+      "t0": 0,
+      "t1": 60,
+      "line": "It launches him into the street."
+    },
+    {
+      "shot": "S18",
+      "a": 1050,
+      "b": 1110,
+      "t0": 0,
+      "t1": 60,
+      "line": "Right into an oncoming truck."
+    },
+    {
+      "shot": "S19",
+      "a": 1110,
+      "b": 1170,
+      "t0": 0,
+      "t1": 60,
+      "line": "He guaranteed his escape. Not his survival."
+    }
+  ],
+  "shots": [
+    {
+      "id": "S1",
+      "size": "macro UI",
+      "key": 55,
+      "len": 60,
+      "first": 0,
+      "line": "He made his chance of dying zero.",
+      "note": "Death chance counts down, warning"
+    },
+    {
+      "id": "S2",
+      "size": "medium reaction",
+      "key": 35,
+      "len": 60,
+      "first": 60,
+      "line": "Big mistake.",
+      "note": "Hero smug, big mistake"
+    },
+    {
+      "id": "S3",
+      "size": "macro high angle",
+      "key": 53,
+      "len": 60,
+      "first": 120,
+      "line": "What if you could control probability?",
+      "note": "Spinning golden coin"
+    },
+    {
+      "id": "S4",
+      "size": "low medium",
+      "key": 35,
+      "len": 60,
+      "first": 180,
+      "line": "A coin flip? Always heads.",
+      "note": "Coin lands heads, delighted hero"
+    },
+    {
+      "id": "S5",
+      "size": "insert closeup",
+      "key": 36,
+      "len": 60,
+      "first": 240,
+      "line": "Winning the lottery?",
+      "note": "Four lucky sevens spin"
+    },
+    {
+      "id": "S6",
+      "size": "medium reaction",
+      "key": 30,
+      "len": 60,
+      "first": 300,
+      "line": "Every single time.",
+      "note": "Big win, character celebrates"
+    },
+    {
+      "id": "S7",
+      "size": "wide title",
+      "key": 40,
+      "len": 60,
+      "first": 360,
+      "line": "But here's the catch.",
+      "note": "Power premise"
+    },
+    {
+      "id": "S8",
+      "size": "schematic insert",
+      "key": 38,
+      "len": 60,
+      "first": 420,
+      "line": "Only one probability can change at once.",
+      "note": "One active probability"
+    },
+    {
+      "id": "S9",
+      "size": "medium low angle",
+      "key": 40,
+      "len": 60,
+      "first": 480,
+      "line": "So he makes dying impossible.",
+      "note": "Protection activated"
+    },
+    {
+      "id": "S10",
+      "size": "city establishing wide",
+      "key": 39,
+      "len": 60,
+      "first": 540,
+      "line": "That night, he walks home.",
+      "note": "Walking in lit street"
+    },
+    {
+      "id": "S11",
+      "size": "low angle wide",
+      "key": 52,
+      "len": 75,
+      "first": 600,
+      "line": "Suddenly, the street gives way.",
+      "note": "Pavement cracks"
+    },
+    {
+      "id": "S12",
+      "size": "top-down moving",
+      "key": 36,
+      "len": 60,
+      "first": 675,
+      "line": "He drops straight into darkness.",
+      "note": "Character falls"
+    },
+    {
+      "id": "S13",
+      "size": "cramped closeup",
+      "key": 49,
+      "len": 75,
+      "first": 735,
+      "line": "Buried under concrete. Still alive.",
+      "note": "Trapped but alive"
+    },
+    {
+      "id": "S14",
+      "size": "schematic top-down",
+      "key": 32,
+      "len": 60,
+      "first": 810,
+      "line": "His chance of escaping? One percent.",
+      "note": "One square out of one hundred"
+    },
+    {
+      "id": "S15",
+      "size": "macro insert",
+      "key": 56,
+      "len": 60,
+      "first": 870,
+      "line": "He changes it to one hundred. His protection disappears.",
+      "note": "Protection overwritten"
+    },
+    {
+      "id": "S16",
+      "size": "low medium",
+      "key": 38,
+      "len": 60,
+      "first": 930,
+      "line": "The rubble begins to move.",
+      "note": "Stones shake and rise"
+    },
+    {
+      "id": "S17",
+      "size": "wide high-angle",
+      "key": 35,
+      "len": 60,
+      "first": 990,
+      "line": "It launches him into the street.",
+      "note": "Escape blast"
+    },
+    {
+      "id": "S18",
+      "size": "low tracking",
+      "key": 47,
+      "len": 60,
+      "first": 1050,
+      "line": "Right into an oncoming truck.",
+      "note": "Truck approaches"
+    },
+    {
+      "id": "S19",
+      "size": "freeze close",
+      "key": 40,
+      "len": 60,
+      "first": 1110,
+      "line": "He guaranteed his escape. Not his survival.",
+      "note": "Dark payoff before collision"
+    }
+  ],
+  "fx": [
+    {
+      "kind": "flash",
+      "color": "#FF485E",
+      "o": 0.55,
+      "f": 40
+    },
+    {
+      "kind": "flash",
+      "color": "#FFE2A9",
+      "o": 0.55,
+      "f": 210
+    },
+    {
+      "kind": "flash",
+      "color": "#FFEBB8",
+      "o": 0.6,
+      "f": 334
+    },
+    {
+      "kind": "shake",
+      "amp": 18,
+      "len": 24,
+      "f": 630
+    },
+    {
+      "kind": "shake",
+      "amp": 12,
+      "len": 13,
+      "f": 696
+    },
+    {
+      "kind": "shake",
+      "amp": 16,
+      "len": 16,
+      "f": 967
+    },
+    {
+      "kind": "flash",
+      "color": "#FFF1D3",
+      "o": 0.7,
+      "f": 996
+    },
+    {
+      "kind": "shake",
+      "amp": 6,
+      "len": 10,
+      "f": 1085
+    }
+  ],
+  "audio": {}
+}

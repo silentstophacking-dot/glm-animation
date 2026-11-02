@@ -1,0 +1,54 @@
+name: Probability Quality Benchmark
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'studio/src/episodes/probability-control/quality-test.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/probability-quality-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install original project dependencies
+        run: npm ci
+
+      - name: Typecheck the original samples and new benchmark
+        run: npx tsc --noEmit
+
+      - name: Render 13-second 702x1248 portrait quality test
+        run: |
+          mkdir -p out/probability-quality
+          npx remotion render src/index.ts ProbabilityQualityTest out/probability-quality/quality-test.mp4 --codec=h264 --scale=0.65 --concurrency=2
+
+      - name: Export six story and composition keyframes
+        run: |
+          for f in 58 102 175 225 290 382; do
+            npx remotion still src/index.ts ProbabilityQualityTest out/probability-quality/keyframe-${f}.png --frame=${f} --scale=0.5
+          done
+
+      - name: Upload 13-second visual benchmark
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-quality-benchmark
+          path: studio/out/probability-quality/
+          if-no-files-found: warn
+          retention-days: 14
