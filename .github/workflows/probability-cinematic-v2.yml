@@ -1,0 +1,58 @@
+name: Probability Cinematic V2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'studio/src/episodes/probability-control/full-v2.tsx'
+      - 'studio/src/episodes/probability-control/quality-test.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/probability-cinematic-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck including imported sample episodes
+        run: npx tsc --noEmit
+
+      - name: Render 25-second original-engine vertical episode at review resolution
+        run: |
+          mkdir -p out/probability-v2
+          npx remotion render src/index.ts ProbabilityControlV2 out/probability-v2/Probability_Control_V2.mp4 --codec=h264 --scale=0.5 --concurrency=2
+
+      - name: Export six critical action and payoff frames
+        run: |
+          for f in 58 290 430 561 620 730; do
+            npx remotion still src/index.ts ProbabilityControlV2 out/probability-v2/frame-${f}.png --frame=${f} --scale=0.4
+          done
+
+      - name: Upload the motion preview and inspection frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-v2-preview
+          path: studio/out/probability-v2/
+          retention-days: 14
+          if-no-files-found: warn
