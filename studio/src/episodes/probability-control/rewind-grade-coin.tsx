@@ -32,7 +32,7 @@ const Coin:React.FC<{
       <ellipse rx="42" ry="44" fill="#B76E27" stroke="#4F2C20" strokeWidth={6}/>
       <ellipse cx="-4" cy="-5" rx="38" ry="39" fill="#FFD986" stroke="#FBE9A3" strokeWidth={5}/>
       <ellipse cx="-4" cy="-5" rx="29" ry="29" fill="#ECB65F" stroke="#F7D78E" strokeWidth={3}/>
-      <path d="M-17 -11 L-17 3 L10 3 L10 -11 M-4 -11 V16" stroke="#865020"
+      <path d="M-15 -18 V14 M15 -18 V14 M-15 -3 H15" stroke="#865020"
         strokeWidth={6} fill="none" strokeLinecap="round" strokeLinejoin="round"/>
       <path d="M-26 -25 Q-9 -39 10 -30" fill="none" stroke="#FFF2BC" strokeWidth={4} opacity=".66"/>
     </g>
@@ -84,8 +84,9 @@ const A:React.FC<ShotProps>=({t})=>{
     <Near/>
   </g>
   <g opacity={cut(t,4,12)}>
-    {copy('WHAT IF?',94,208,52,T.soft,'start')}
-    <path d="M90 236 H380" stroke={T.orange} strokeWidth={5} opacity=".7"/>
+    {copy('WHAT IF YOU COULD',94,179,49,T.soft,'start')}
+    {copy('CONTROL THE ODDS?',94,262,63,T.gold,'start')}
+    <path d="M94 286 H760" stroke={T.orange} strokeWidth={5} opacity=".68"/>
   </g>
  </g>;
 };
@@ -212,7 +213,7 @@ const tl:Timeline={
  fps:30,total:150,segments:cuts,
  shots:[
   {id:'TOSS',size:'medium hero and desk',key:31,len:55,first:0,line:'He can control the odds.',note:'Original study / hero / desk, wrist-anchored coin'},
-  {id:'LANDING',size:'overhead extreme close',key:37,len:53,first:55,line:'A coin toss. Guaranteed heads.',note:'Original Rewind high-angle desk technique and physical bounce'},
+  {id:'LANDING',size:'overhead extreme close',key:47,len:53,first:55,line:'A coin toss. Guaranteed heads.',note:'Original Rewind high-angle desk technique and physical bounce'},
   {id:'RESULT',size:'medium close reaction',key:23,len:42,first:108,line:'Every single time.',note:'Character follow-through, motivated push-in'}
  ],
  fx:[{f:83,kind:'shake',len:5,amp:2},{f:110,kind:'flash',color:'#FFF2C7',o:.2}],
