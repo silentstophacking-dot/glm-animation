@@ -1,0 +1,75 @@
+name: Stage Approved Probability Narration into Source (AUDIO ONLY)
+
+# Run this once when the owner approves the narration. No video rendering.
+on:
+  push:
+    branches: [feature/probability-longform-local-tts]
+    paths: ['.github/workflows/stage-approved-probability-voice.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  stage-approved-voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out user's feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/probability-longform-local-tts
+          persist-credentials: true
+
+      - name: Download approved full-length scene-aligned 230s narration
+        uses: actions/download-artifact@v4
+        with:
+          repository: silentstophacking-dot/glm-animation
+          run-id: 41479024786
+          github-token: ${{ github.token }}
+          name: EDITOR-PROBABILITY-ROUGH-ALIGNED-NARRATION-MP3-ONLY
+          path: out/approved-voice
+
+      - name: Download the measured narration per-scene timing report
+        uses: actions/download-artifact@v4
+        with:
+          repository: silentstophacking-dot/glm-animation
+          run-id: 41479024786
+          github-token: ${{ github.token }}
+          name: EDITOR-VOICE-TIMINGS-AND-WAV-SEGMENTS
+          path: out/editor-voice
+
+      - name: Stage original MP3 and measured timing JSON
+        run: |
+          mkdir -p studio/public/probability-longform
+          cp out/approved-voice/Probability_Narration_230s_Rough_Aligned.mp3 \
+            studio/public/probability-longform/voice.mp3
+          cp out/editor-voice/timing-report.json \
+            production/probability-longform/voice-timing.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('production/probability-longform/episode-manifest.json').read_text())
+          a=json.loads(Path('production/probability-longform/voice-timing.json').read_text())
+          assert len(a['shots'])==27 and m['totalFrames']==6900
+          assert a['scenes_crossing_next_cut']==0
+          assert a['max_start_drift_seconds']<=0.2
+          assert all(s['id']==v['id'] for s,v in zip(m['shots'],a['shots']))
+          assert not m['render']['authorized']
+          assert Path('studio/public/probability-longform/voice.mp3').stat().st_size > 1000000
+          print('Approved audio and all 27 measured scene timings staged. No video render.')
+          PY
+
+      - name: Commit voice and timing data to the feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add studio/public/probability-longform/voice.mp3 \
+            production/probability-longform/voice-timing.json
+          if git diff --cached --quiet; then
+            echo "Approved media already staged, no new commit needed."
+          else
+            git commit -m "assets(audio): stage approved Probability TTS and measured 27-shot timing"
+            git push origin HEAD:feature/probability-longform-local-tts
+          fi
