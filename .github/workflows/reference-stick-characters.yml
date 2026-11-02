@@ -1,0 +1,62 @@
+name: Reference SVG Character Animation Test
+
+on:
+  push:
+    branches: [feature/reference-stick-characters]
+    paths:
+      - 'studio/src/episodes/probability-control/reference-hero.tsx'
+      - 'studio/src/episodes/probability-control/reference-style-coin.tsx'
+      - 'studio/src/episodes/probability-control/reference-cast.tsx'
+      - 'studio/src/episodes/index.ts'
+      - '.github/workflows/reference-stick-characters.yml'
+  pull_request:
+    branches: [feature/rewind-grade-coin-proof]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck the new character against unchanged original rig
+        run: npx tsc --noEmit
+      - name: Render complete five second SVG character animation
+        run: |
+          mkdir -p out/reference-style
+          npx remotion render src/index.ts ReferenceStyleCoin out/reference-style/Reference-Style-Coin.mp4 --codec=h264 --scale=0.7 --concurrency=2
+      - name: Render both character designs directly from SVG source
+        run: npx remotion still src/index.ts ReferenceCharacterCast out/reference-style/Character-Choices.png --frame=0 --scale=0.65
+      - name: Render character in first shot and reaction
+        run: |
+          npx remotion still src/index.ts ReferenceStyleCoin out/reference-style/Red-Hoodie-In-Scene.png --frame=31 --scale=0.55
+          npx remotion still src/index.ts ReferenceStyleCoin out/reference-style/Red-Hoodie-Reaction.png --frame=133 --scale=0.55
+      - name: Upload VIDEO ONLY (no pictures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WATCH-REFERENCE-CHARACTER-VIDEO-ONLY
+          path: studio/out/reference-style/Reference-Style-Coin.mp4
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Upload character images only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: REFERENCE-CHARACTERS-PICTURES
+          path: studio/out/reference-style/*.png
+          retention-days: 14
+          if-no-files-found: warn
