@@ -1,7 +1,7 @@
 {
   "project": "What If You Could Control Probability?",
   "version": "longform-episode-01-preproduction",
-  "status": "SOURCE_VALIDATED_VOICE_STAGED_EDITING_MAP_PREPARED__NO_VIDEO_RENDER",
+  "status": "LONGFORM_AUDIO_AND_PHYSICS_FIXED__AWAITING_FIRST_VISUAL_RENDER",
   "format": "1920x1080 landscape 16:9",
   "fps": 30,
   "totalSeconds": 230,
@@ -20,8 +20,10 @@
     "speechSeconds": 134.82,
     "silentSceneSeconds": 95.18,
     "timing": "All 27 measured segments fit their assigned scene windows; editorial beats documented in EDITING_MAP.json",
-    "sfx": "81 motivated visual beats mapped; sound effects planned, not produced",
-    "music": "Unselected; no music embedded"
+    "sfx": "Original 230-second procedural Foley, synchronized to real coin contacts, lottery digit locks, action beats",
+    "music": "Original 230-second synthesized suspense score reused from prior sound-design branch",
+    "mix": "Voice 0.82, Foley 0.55, suspense music 0.26; all remain adjustable and are provisional until listening review",
+    "visualFixes": "Hand-to-table coin flight and settle; 10 actual flips; winning lottery ticket unchanged across cut; debris delayed until fractures"
   },
   "render": {
     "authorized": false,
