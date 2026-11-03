@@ -63,6 +63,14 @@ export const rigLocalToWorld=(pose:Pose,q:Point):Point=>{
     y:pose.y+((ox*Math.sin(a)+oy*Math.cos(a))-90)*pose.scale
   };
 };
+/** Exact inverse of rigLocalToWorld for world-fixed interaction targets. */
+export const rigWorldToLocal=(pose:Pose,q:Point):Point=>{
+  const x=(q.x-pose.x)/pose.scale;
+  const y=(q.y-pose.y)/pose.scale+90;
+  const a=-pose.spin*Math.PI/180;
+  return {x:x*Math.cos(a)-y*Math.sin(a),
+    y:x*Math.sin(a)+y*Math.cos(a)-90};
+};
 const color=(v:V2Variant)=>v==='coral'
   ?[PAL.coral,PAL.coralShade,PAL.coralHi]
   :v==='gold'?[PAL.gold,PAL.goldShade,PAL.goldHi]
