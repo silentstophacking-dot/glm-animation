@@ -90,11 +90,11 @@ export const RefCharacter:React.FC<RefCharacterProps>=({
     'M-15 -158Q-23 -132 -20 -90';
   const idleNear='M16 -159Q28 -122 19 -84';
   const pointNear='M16 -159L30 -129L84 -134';
-  const waveNear='M16 -159L36 -195L42 -220';
+  const waveNear='M16 -159L49 -195L72 -235';
   const nearArm=gesture==='wave'?waveNear:gesture==='point'?
     ('M16 -159Q'+mix(28,34,armSwing)+' '+mix(-122,-132,armSwing)+' '+mix(19,84,armSwing)+' '+mix(-84,-134,armSwing)):idleNear;
-  const handX=gesture==='wave'?42:gesture==='point'?mix(19,84,armSwing):19;
-  const handY=gesture==='wave'?-220:gesture==='point'?mix(-84,-134,armSwing):-84;
+  const handX=gesture==='wave'?72:gesture==='point'?mix(19,84,armSwing):19;
+  const handY=gesture==='wave'?-235:gesture==='point'?mix(-84,-134,armSwing):-84;
   return <g transform={'translate('+x+' '+y+') scale('+scale+')'}>
     <ellipse cx="2" cy="5" rx="29" ry="6" fill="#000" opacity=".26"/>
     {/* Distant limbs draw first so an overlaid sleeve makes depth legible. */}
