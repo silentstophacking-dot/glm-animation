@@ -64,8 +64,8 @@ const handsAt=(pose:Pose,f:number):{L?:Point;R?:Point}=>{
   // Hands brace above the knees while the pelvis lowers. This prevents
   // the impossible floor pickup shown by V3's wide-angle rig.
   return {
-    L:rigWorldToLocal(pose,{x:pose.x-68,y:pose.y-24}),
-    R:rigWorldToLocal(pose,{x:pose.x+73,y:pose.y-24})
+    L:rigWorldToLocal(pose,{x:pose.x-68,y:pose.y+7}),
+    R:rigWorldToLocal(pose,{x:pose.x+73,y:pose.y+7})
   };
 };
 const anatomy=(f:number)=>{
@@ -134,18 +134,19 @@ const macroHand=(f:number):Point=>{
 };
 const CloseHand:React.FC<{f:number}>=({f})=>{
   const at=macroHand(f);
-  const start={x:680,y:560};
-  const d='M'+start.x+' '+start.y+'Q'+(at.x-89)+' '+(at.y-110)
-    +' '+at.x+' '+at.y;
+  const start={x:710,y:574};
+  const elbow={x:at.x-145,y:at.y-106};
+  const d='M'+start.x+' '+start.y+'L'+elbow.x+' '+elbow.y
+    +'L'+at.x+' '+at.y;
   return <g>
     <path d={d} stroke="#160F18" strokeWidth="50" fill="none"
       strokeLinecap="round"/>
     <path d={d} stroke={C.coral} strokeWidth="39" fill="none"
       strokeLinecap="round"/>
-    <path d={'M'+start.x+' '+start.y+'Q'+(at.x-92)+' '+(at.y-118)
-      +' '+at.x+' '+at.y}
-      stroke="#F28E71" strokeWidth="6" opacity=".7" fill="none"
-      strokeLinecap="round"/>
+    <path d={d} stroke="#F28E71" strokeWidth="6"
+      opacity=".7" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx={elbow.x} cy={elbow.y} r="20" fill={C.coral}
+      stroke="#271A22" strokeWidth="3"/>
     <ellipse cx={at.x} cy={at.y} rx="22" ry="24"
       fill={C.cream} stroke="#2B2025" strokeWidth="5"/>
     <path d={'M'+(at.x-12)+' '+(at.y-3)+'Q'+at.x+' '+(at.y+17)
