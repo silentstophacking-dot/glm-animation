@@ -70,6 +70,18 @@ jobs:
             echo "Foley file already staged."
           else
             git commit -m "assets(audio): stage original scene-synchronized Foley for probability longform"
+            # The project is being edited from ChatGPT while GitHub renders
+            # audio. Fetch/rebase before pushing; never overwrite source work.
+            # If the generator itself changed after this job started, abort
+            # instead of committing stale audio.
+            git fetch origin feature/probability-longform-quality-fixes
+            latest_script=$(git show FETCH_HEAD:scripts/generate_probability_sfx.py | sha256sum | cut -d' ' -f1)
+            local_script=$(sha256sum scripts/generate_probability_sfx.py | cut -d' ' -f1)
+            if [ "$latest_script" != "$local_script" ]; then
+              echo "::error::Generator source changed mid-job; rerun with latest sound cues."
+              exit 1
+            fi
+            git rebase FETCH_HEAD
             git push origin HEAD:feature/probability-longform-quality-fixes
           fi
 
