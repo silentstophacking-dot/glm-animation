@@ -85,7 +85,7 @@ jobs:
             "out/longform-first/part-${PART}.mp4" \
             --frames="${FIRST}-${LAST}" \
             --codec=h264 \
-            --scale=0.6666666666667 \
+            --scale=0.6666666666666666 \
             --concurrency=2 \
             --crf=23 \
             --muted
