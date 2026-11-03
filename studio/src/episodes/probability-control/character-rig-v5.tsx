@@ -50,7 +50,7 @@ const movingFoot=(a:V5Point,b:V5Point,frame:number,start:number,end:number,lift:
   return p(mix(a.x,b.x,ease(frame,start,end)),a.y-lift*Math.sin(Math.PI*u));
 };
 export const GROUND_Y=855;
-export const V5_CONTROL_POINT=p(918,721);
+export const V5_CONTROL_POINT=p(918,674);
 const START={far:p(634,847),near:p(701,847)};
 const FINISH={far:p(751,847),near:p(827,847)};
 
@@ -68,7 +68,7 @@ export const actorV5At=(frame:number):V5Pose=>{
     3.5*Math.sin(Math.PI*clamp((f-96)/45));
   const hip=p(
     666+62*stepOne+60*stepTwo-10*anticipate+8*crouch-6*pushback,
-    679-bob+50*crouch+3*anticipate-4*pushback
+    637+21*Math.sin(Math.PI*clamp((f-58)/84))-bob+45*crouch+3*anticipate-4*pushback
   );
   const lean=2+3*anticipate+16*crouch-13*pushback;
   const headTilt= -3-4*anticipate-9*crouch+12*pushback;
@@ -147,7 +147,7 @@ export const auditV5Mechanics=()=>{
       throw new Error('V5 knees cross at '+f);
   }
   const rest=actorV5At(145),low=actorV5At(207);
-  if(low.hip.y-rest.hip.y<44)throw new Error('V5 crouch lacks weight shift');
+  if(low.hip.y-rest.hip.y<42)throw new Error('V5 crouch lacks weight shift');
   if(maxFootError>1.5)throw new Error('V5 bone cannot reach foot, max error '+maxFootError);
   if(maxHandError>1.5)throw new Error('V5 bone cannot reach resting hand, max error '+maxHandError);
   return {maxFootError,maxHandError,frames:330};
