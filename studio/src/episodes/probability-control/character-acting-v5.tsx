@@ -117,11 +117,11 @@ const Lab:React.FC<{lit:boolean}>=({lit})=><g>
     strokeWidth="9" opacity=".48"/>)}
   <ellipse cx="1667" cy="208" rx="540" ry="390" fill="url(#v5WarmHalo)" opacity=".6"/>
   {/* Low wall console exactly matches the hand's world-contact target. */}
-  <rect x="869" y="568" width="242" height="255" rx="19"
+  <rect x="869" y="510" width="242" height="313" rx="19"
     fill="#303644" stroke="#171D29" strokeWidth="12"/>
-  <rect x="890" y="592" width="200" height="97" rx="8"
+  <rect x="890" y="538" width="200" height="86" rx="8"
     fill="#111B2A" stroke="#5B687A" strokeWidth="6"/>
-  <path d="M912 642L941 624L965 640L1005 609L1060 637"
+  <path d="M912 590L941 574L965 590L1005 559L1060 584"
     fill="none" stroke={lit?P.teal:'#6994A1'}
     strokeWidth="5" strokeLinecap="round"/>
   <g>
@@ -136,7 +136,7 @@ const Lab:React.FC<{lit:boolean}>=({lit})=><g>
   <path d="M920 822V849" stroke="#4C5567" strokeWidth="13"/>
   <path d="M980 822V849" stroke="#4C5567" strokeWidth="13"/>
   <ellipse cx={950} cy={849} rx="133" ry="17" fill="#090B14" opacity=".27"/>
-  {lit?<ellipse cx="918" cy="713" rx="220" ry="180"
+  {lit?<ellipse cx="918" cy="674" rx="220" ry="180"
     fill="url(#v5ActiveHalo)" opacity=".88"/>:null}
   <path d="M80 151H1852" stroke="#5B5066" strokeWidth="20" opacity=".8"/>
   {[265,550,1780].map(x=><rect key={x} x={x} y="148"
@@ -179,8 +179,8 @@ export const CharacterActingV5:React.FC=()=>{
       <Lab lit={pressed}/>
       <CharacterRigV5 pose={pose} grip={contact(f)>.95}/>
       {pressed?<g opacity={reflect}>
-        <path d="M1066 706H1210" stroke={P.teal} strokeWidth="5"/>
-        <text x="1220" y="716" fontFamily="Arial,sans-serif"
+        <path d="M1066 657H1210" stroke={P.teal} strokeWidth="5"/>
+        <text x="1220" y="665" fontFamily="Arial,sans-serif"
           fontSize="34" fontWeight="800" fill={P.teal}>SYSTEM LIVE</text>
         <ellipse cx="912" cy="710" rx="140" ry="142"
           fill="url(#v5ActiveHalo)" opacity=".48"/>
