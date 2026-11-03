@@ -1,0 +1,212 @@
+name: Probability Control — FIRST COMPLETE 3m50s MOVIE
+
+on:
+  push:
+    branches: [feature/probability-longform-first-full-render]
+    paths:
+      - '.github/workflows/probability-first-full-film.yml'
+      - 'studio/src/episodes/probability-longform/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: probability-first-full-film
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install existing app
+        run: npm ci
+      - name: Full film preflight
+        run: |
+          npx tsc --noEmit
+          node ../scripts/validate_longform_motion.cjs
+          cd ..
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          m=json.loads(Path('production/probability-longform/episode-manifest.json').read_text())
+          assert m['totalFrames']==6900 and len(m['shots'])==27 and m['fps']==30
+          assert m['totalSeconds']==230
+          audio=Path('studio/public/probability-longform/master.mp3')
+          assert audio.stat().st_size>1000000
+          print('Validated 6,900 frames + full mastered narration')
+          PY
+
+  render-chapters:
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - {part: '00', start: 0, end: 899}
+          - {part: '01', start: 900, end: 2129}
+          - {part: '02', start: 2130, end: 3359}
+          - {part: '03', start: 3360, end: 4469}
+          - {part: '04', start: 4470, end: 5639}
+          - {part: '05', start: 5640, end: 6899}
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install Remotion dependencies
+        run: npm ci
+      - name: Render contiguous segment from the FULL film (1280x720)
+        env:
+          PART: ${{ matrix.part }}
+          FIRST: ${{ matrix.start }}
+          LAST: ${{ matrix.end }}
+        run: |
+          mkdir -p out/longform-first
+          npx remotion render src/index.ts ProbabilityLongform01 \
+            "out/longform-first/part-${PART}.mp4" \
+            --frames="${FIRST}-${LAST}" \
+            --codec=h264 \
+            --scale=0.6666666666666666 \
+            --concurrency=2 \
+            --crf=23 \
+            --muted
+      - name: Confirm nonempty chapter MP4 for final verification
+        env:
+          PART: ${{ matrix.part }}
+        run: |
+          test -s "out/longform-first/part-${PART}.mp4"
+          echo "Chapter ${PART} was rendered. Exact frames will be checked at assembly."
+
+      - name: Upload rendered part only
+        uses: actions/upload-artifact@v4
+        with:
+          name: PROB-FULL-PART-${{ matrix.part }}
+          path: studio/out/longform-first/part-${{ matrix.part }}.mp4
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+  assemble-complete-film:
+    needs: render-chapters
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: PROB-FULL-PART-*
+          path: parts
+          merge-multiple: true
+      - name: Install FFmpeg and FFprobe for final frame-accurate assembly
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+
+      - name: Verify all six chapters exist; create contiguous 3m50s film
+        run: |
+          mkdir -p out/film
+          python3 - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          root=Path('parts')
+          expected=[900,1230,1230,1110,1170,1260]
+          manifest=json.loads(Path('production/probability-longform/episode-manifest.json').read_text())
+          assert len(expected)==6 and sum(expected)==manifest['totalFrames']==6900
+          lines=[]
+          for i,frames in enumerate(expected):
+              p=root/f'part-{i:02}.mp4'
+              assert p.is_file() and p.stat().st_size>10000, p
+              info=json.loads(subprocess.check_output(['ffprobe','-v','error',
+                '-show_entries','stream=nb_frames,width,height,avg_frame_rate',
+                '-of','json',str(p)]))
+              video=info['streams'][0]
+              assert (video['width'],video['height'])==(1280,720)
+              assert video['avg_frame_rate']=='30/1'
+              assert int(video['nb_frames'])==frames,(p,video['nb_frames'],frames)
+              lines.append("file '"+str(p.resolve())+"'")
+          Path('out/film/concat.txt').write_text('\n'.join(lines)+'\n')
+          print('All 6 chapters: 6,900 exactly contiguous frames')
+          PY
+          ffmpeg -hide_banner -loglevel error -y \
+            -f concat -safe 0 -i out/film/concat.txt -c:v copy -an \
+            -movflags +faststart out/film/probability-silent.mp4
+          ffmpeg -hide_banner -loglevel error -y \
+            -i out/film/probability-silent.mp4 \
+            -i studio/public/probability-longform/master.mp3 \
+            -map 0:v:0 -map 1:a:0 \
+            -c:v copy -c:a aac -b:a 192k -ar 48000 \
+            -t 230 -movflags +faststart \
+            out/film/Probability_Control_FIRST_FULL_3m50s_720p.mp4
+      - name: Verify full film with soundtrack, exact FPS and frame count
+        run: |
+          python3 - <<'PY'
+          import subprocess,json
+          from pathlib import Path
+          p=Path('out/film/Probability_Control_FIRST_FULL_3m50s_720p.mp4')
+          d=json.loads(subprocess.check_output(['ffprobe','-v','error',
+            '-show_format','-show_streams','-of','json',str(p)]))
+          v=next(s for s in d['streams'] if s['codec_type']=='video')
+          a=next(s for s in d['streams'] if s['codec_type']=='audio')
+          assert (v['width'],v['height'])==(1280,720)
+          assert int(v['nb_frames'])==6900,v['nb_frames']
+          assert v['avg_frame_rate']=='30/1'
+          assert a['codec_name']=='aac'
+          assert 229.7 < float(d['format']['duration']) < 230.5
+          print('COMPLETE MOVIE VERIFIED: 6,900 frames, 3m50s, 720p, stereo/mono AAC audio')
+          PY
+      - name: Make iPhone-friendly full movie plus full-film review montage
+        run: |
+          ffmpeg -hide_banner -loglevel error -y \
+            -i out/film/Probability_Control_FIRST_FULL_3m50s_720p.mp4 \
+            -vf 'scale=960:540:flags=lanczos' \
+            -c:v libx264 -preset veryfast -crf 27 -pix_fmt yuv420p \
+            -c:a aac -b:a 128k -movflags +faststart \
+            out/film/Probability_Control_FIRST_FULL_iPhone_540p.mp4
+          ffmpeg -hide_banner -loglevel error -y \
+            -i out/film/Probability_Control_FIRST_FULL_3m50s_720p.mp4 \
+            -vf 'fps=1/8,scale=384:216:flags=lanczos,tile=5x6:padding=8:margin=8:color=0x151724' \
+            -frames:v 1 out/film/Probability_Control_Full_Film_Contact_Sheet.png
+      - name: Upload complete 3m50s film at 720p (not just pictures)
+        uses: actions/upload-artifact@v4
+        with:
+          name: WATCH-PROBABILITY-FIRST-COMPLETE-3M50S-720P-MP4
+          path: out/film/Probability_Control_FIRST_FULL_3m50s_720p.mp4
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload complete iPhone full movie as separate MP4
+        uses: actions/upload-artifact@v4
+        with:
+          name: WATCH-PROBABILITY-FIRST-COMPLETE-3M50S-iPHONE-MP4
+          path: out/film/Probability_Control_FIRST_FULL_iPhone_540p.mp4
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload full-length film visual review frames separately
+        uses: actions/upload-artifact@v4
+        with:
+          name: REVIEW-PROBABILITY-FIRST-FULL-FILM-CONTACT-SHEET
+          path: out/film/Probability_Control_Full_Film_Contact_Sheet.png
+          if-no-files-found: error
+          retention-days: 14
