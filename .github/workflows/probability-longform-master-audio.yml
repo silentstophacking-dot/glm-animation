@@ -57,8 +57,9 @@ jobs:
               assert 229.7<duration<230.5,(name,duration)
               print('Confirmed',name,round(duration,3),'s',p.stat().st_size,'bytes')
           source=Path('studio/src/episodes/probability-longform/episode.tsx').read_text()
-          for n in ('voice.mp3','sfx.mp3','music.mp3'):
-              assert 'probability-longform/'+n in source
+          assert 'probability-longform/master.mp3' in source
+          for n in ('voice.mp3','sfx.mp3','music.mp3','master.mp3'):
+              assert (root/n).is_file(), n
           PY
 
       - name: Generate one listenable, complete 3:50 audio-only rough master
