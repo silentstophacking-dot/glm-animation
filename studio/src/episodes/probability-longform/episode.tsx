@@ -44,7 +44,14 @@ export const longformTimeline:Timeline={
   ],
   // Candidate English Piper voice. The 230s bed is timed to the 27 scene starts
   // from measured PCM and contains intentional quiet gaps for visual acting.
-  audio:{voice:'probability-longform/voice.mp3',voiceVol:0.86}
+  // Candidate narrator + independently original, code-synthesized Foley
+  // and suspense score. Separate tracks allow editor to rebalance later.
+  // The soundtrack stays silent before the final oncoming-truck impact.
+  audio:{
+    voice:'probability-longform/voice.mp3',voiceVol:0.82,
+    sfx:'probability-longform/sfx.mp3',sfxVol:0.55,
+    music:'probability-longform/music.mp3',musicVol:0.26
+  }
 };
 
 export const probabilityLongform01=defineEpisode('ProbabilityLongform01',{
