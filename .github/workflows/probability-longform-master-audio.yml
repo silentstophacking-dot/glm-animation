@@ -1,0 +1,126 @@
+name: Probability Longform Full Audio Mix & Final Source QA (NO VIDEO)
+
+on:
+  push:
+    branches: [feature/probability-longform-quality-fixes]
+    paths:
+      - '.github/workflows/probability-longform-master-audio.yml'
+      - 'studio/src/episodes/probability-longform/**'
+      - 'production/probability-longform/**'
+  pull_request:
+    branches: [feature/probability-longform-edit-assembly]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audio-master-and-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Verify video source and all motion tests without rendering
+        working-directory: studio
+        run: |
+          npm ci
+          npx tsc --noEmit
+          node ../scripts/validate_longform_motion.cjs
+
+      - name: Ensure FFmpeg audio tools are present
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+
+      - name: Validate exact voice, original Foley, and original score
+        run: |
+          python3 scripts/verify_longform_assembly.py
+          python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+          root=Path('studio/public/probability-longform')
+          for name in ('voice.mp3','sfx.mp3','music.mp3'):
+              p=root/name
+              assert p.stat().st_size>400000, (name,p.stat().st_size)
+              duration=float(subprocess.check_output([
+                  'ffprobe','-v','error','-show_entries','format=duration',
+                  '-of','default=noprint_wrappers=1:nokey=1',str(p)
+              ]))
+              assert 229.7<duration<230.5,(name,duration)
+              print('Confirmed',name,round(duration,3),'s',p.stat().st_size,'bytes')
+          source=Path('studio/src/episodes/probability-longform/episode.tsx').read_text()
+          for n in ('voice.mp3','sfx.mp3','music.mp3'):
+              assert 'probability-longform/'+n in source
+          PY
+
+      - name: Generate one listenable, complete 3:50 audio-only rough master
+        run: |
+          mkdir -p out/probability-review
+          ffmpeg -hide_banner -loglevel error -y \
+            -i studio/public/probability-longform/voice.mp3 \
+            -i studio/public/probability-longform/sfx.mp3 \
+            -i studio/public/probability-longform/music.mp3 \
+            -filter_complex '[0:a]volume=0.82[v];[1:a]volume=0.55[fx];[2:a]volume=0.26[mu];[v][fx][mu]amix=inputs=3:duration=first:dropout_transition=0,alimiter=limit=0.89:level=0[master]' \
+            -map '[master]' -c:a libmp3lame -b:a 160k \
+            out/probability-review/Probability_Full_3m50s_Audio_Draft.mp3
+          ffmpeg -hide_banner -loglevel error -y \
+            -ss 0 -t 40 -i out/probability-review/Probability_Full_3m50s_Audio_Draft.mp3 \
+            -c:a libmp3lame -b:a 144k \
+            out/probability-review/Probability_Opening_40s_Audio_Draft.mp3
+          ffmpeg -hide_banner -loglevel error -y \
+            -ss 185 -t 45 -i out/probability-review/Probability_Full_3m50s_Audio_Draft.mp3 \
+            -c:a libmp3lame -b:a 144k \
+            out/probability-review/Probability_Final_45s_Audio_Draft.mp3
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          for n,min_time,max_time in [
+              ('Probability_Full_3m50s_Audio_Draft.mp3',229.5,230.5),
+              ('Probability_Opening_40s_Audio_Draft.mp3',39.5,40.5),
+              ('Probability_Final_45s_Audio_Draft.mp3',44.5,45.5)
+          ]:
+              path=Path('out/probability-review')/n
+              assert path.stat().st_size>200000
+              length=float(subprocess.check_output([
+                  'ffprobe','-v','error','-show_entries','format=duration',
+                  '-of','default=noprint_wrappers=1:nokey=1',str(path)
+              ]))
+              assert min_time<=length<=max_time,(n,length)
+              print(n,length)
+          assert not list(Path('out').rglob('*.mp4')), 'Video export is forbidden'
+          PY
+
+      - name: Upload final episode's candidate AUDIO only — no images and no video
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-PROBABILITY-LONGFORM-AUDIO-230-SECONDS
+          path: out/probability-review/Probability_Full_3m50s_Audio_Draft.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload first 40 seconds AUDIO only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-PROBABILITY-OPENING-40-SECONDS
+          path: out/probability-review/Probability_Opening_40s_Audio_Draft.mp3
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload last 45 seconds AUDIO only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LISTEN-PROBABILITY-ENDING-45-SECONDS
+          path: out/probability-review/Probability_Final_45s_Audio_Draft.mp3
+          if-no-files-found: warn
+          retention-days: 14
