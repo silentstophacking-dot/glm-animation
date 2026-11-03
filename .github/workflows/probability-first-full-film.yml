@@ -89,26 +89,13 @@ jobs:
             --concurrency=2 \
             --crf=23 \
             --muted
-      - name: Verify this actual MP4 segment
+      - name: Confirm nonempty chapter MP4 for final verification
         env:
           PART: ${{ matrix.part }}
-          FIRST: ${{ matrix.start }}
-          LAST: ${{ matrix.end }}
         run: |
-          python3 - <<'PY'
-          import os,subprocess,json
-          from pathlib import Path
-          p=Path('out/longform-first')/('part-'+os.environ['PART']+'.mp4')
-          info=json.loads(subprocess.check_output(['ffprobe','-v','error',
-            '-show_entries','stream=codec_name,width,height,nb_frames,avg_frame_rate',
-            '-of','json',str(p)]))
-          vid=next(x for x in info['streams'] if x['codec_name']=='h264')
-          expected=int(os.environ['LAST'])-int(os.environ['FIRST'])+1
-          assert (vid['width'],vid['height'])==(1280,720),vid
-          assert int(vid['nb_frames'])==expected,(vid,expected)
-          assert vid['avg_frame_rate']=='30/1',vid
-          print('CONFIRMED FULL-FILM CHAPTER',os.environ['PART'],expected,'frames, 1280x720')
-          PY
+          test -s "out/longform-first/part-${PART}.mp4"
+          echo "Chapter ${PART} was rendered. Exact frames will be checked at assembly."
+
       - name: Upload rendered part only
         uses: actions/upload-artifact@v4
         with:
@@ -129,6 +116,13 @@ jobs:
           pattern: PROB-FULL-PART-*
           path: parts
           merge-multiple: true
+      - name: Install FFmpeg and FFprobe for final frame-accurate assembly
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+
       - name: Verify all six chapters exist; create contiguous 3m50s film
         run: |
           mkdir -p out/film
