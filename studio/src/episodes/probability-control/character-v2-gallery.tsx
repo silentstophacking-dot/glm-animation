@@ -15,7 +15,7 @@ const lerp=(a:number,b:number,t:number)=>a+(b-a)*t;
 const pulse=(t:number,start:number)=>t<start?0:Math.sin((t-start)*.35)*Math.exp(-(t-start)/16);
 const WIDTH=1920,HEIGHT=1080;
 
-const Defs:React.FC=()=><defs>
+export const Defs:React.FC=()=><defs>
   <linearGradient id="v2Wall" x1="0" y1="0" x2=".9" y2="1">
     <stop stopColor="#302438"/><stop offset=".65" stopColor="#241D2E"/>
     <stop offset="1" stopColor="#101523"/>
@@ -36,7 +36,7 @@ const Defs:React.FC=()=><defs>
     <stop offset="1" stopColor="#6DDBCC" stopOpacity="0"/>
   </radialGradient>
 </defs>;
-const Room:React.FC<{lab?:boolean;active?:boolean;night?:boolean}>=
+export const Room:React.FC<{lab?:boolean;active?:boolean;night?:boolean}>=
 ({lab=false,active=false,night=false})=><g>
   <rect x="-600" y="-400" width="3200" height="2200" fill="url(#v2Wall)"/>
   <path d="M0 0H1920V860H0Z" fill="#2B2334" opacity=".6"/>

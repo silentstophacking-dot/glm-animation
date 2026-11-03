@@ -5,6 +5,7 @@ import { STUDIO } from './studio.config';
 import { EPISODES } from './episodes';
 import { CastSheet } from './CastSheet';
 import {CharacterRigV2Gallery,CharacterRigV2Motion} from './episodes/probability-control/character-v2-gallery';
+import {CharacterActingV3,ACTING_V3_FRAMES,ACTING_V3_FPS} from './episodes/probability-control/character-acting-v3';
 
 // Every episode gets two compositions: <Id> (the film) and <Id>Board (one frame per shot, at its key frame, for the
 // storyboard). Cast renders the cast sheet.
@@ -20,6 +21,9 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} fps={e.fps} width={e.width} height={e.height} />
         </React.Fragment>
       ))}
+      <Composition id="CharacterActingV3" component={CharacterActingV3}
+        durationInFrames={ACTING_V3_FRAMES} fps={ACTING_V3_FPS}
+        width={1920} height={1080}/>
       <Composition id="Cast" component={CastSheet} durationInFrames={1} {...common} />
       <Composition id="CharacterRigV2Gallery" component={CharacterRigV2Gallery}
         durationInFrames={5} fps={30} width={1920} height={1080}/>
