@@ -24,7 +24,8 @@ const Windows:React.FC<{x:number;y:number;w:number;h:number;seed:number}>=({x,y,
 
 export const StudioWorld:React.FC<{t:number;night?:boolean;desk?:boolean}>=
 ({t,night=false,desk=true})=><g>
-  <rect width="1920" height="1080" fill="#1F1729"/>
+  {/* Overscan prevents blank edges during a real wide camera dolly. */}
+  <rect x="-1200" y="-700" width="4400" height="2500" fill="#1F1729"/>
   <Study id={night?'longformStudyNight':'longformStudyDay'} t={t} veil={.26}
     night={night}/>
   {desk&&<Desk x0={555} x1={1370} y={700}/>}
@@ -68,8 +69,8 @@ export const LotteryWorld:React.FC<{t:number}>=({t})=><g>
       <stop offset="100%" stopColor="#1F2736"/>
     </linearGradient>
   </defs>
-  <rect width="1920" height="1080" fill="url(#longLotteryWall)"/>
-  <rect x={0} y={800} width={1920} height={280} fill="#242939"/>
+  <rect x="-1200" y="-700" width="4400" height="2500" fill="url(#longLotteryWall)"/>
+  <rect x={-1200} y={800} width={4400} height={1500} fill="#242939"/>
   <path d="M0 825 H1920" stroke="#776B6C" strokeWidth={8}/>
   <rect x={405} y={120} width={1100} height={665} rx={27}
     fill="#1A273C" stroke="#AC8B77" strokeWidth={13}/>
@@ -102,24 +103,25 @@ export const OverlookWorld:React.FC<{t:number}>=({t})=><g>
     <stop offset=".66" stopColor="#5E4760"/>
     <stop offset="1" stopColor="#C98A78"/>
   </linearGradient></defs>
-  <rect width={1920} height={1080} fill="url(#longOverlook)"/>
+  <rect x={-1200} y={-800} width={4400} height={2600} fill="url(#longOverlook)"/>
   <circle cx={1450} cy={360} r={145} fill="#FFE1AF" opacity=".86"/>
   <circle cx={1450} cy={360} r={390} fill="#FFCB8B" opacity=".06"/>
-  {Array.from({length:21},(_,i)=>{
+  {Array.from({length:28},(_,idx)=>{
+    const i=idx-4;
     const x=i*104-85,h=100+390*rnd(31,i),y=820-h;
     return <g key={i}>
       <rect x={x} y={y} width={110} height={h} fill={i%2?'#41354F':'#544058'}/>
       <Windows x={x} y={y} w={90} h={h} seed={i+1}/>
     </g>;
   })}
-  <rect x={0} y={814} width={1920} height={266} fill="#302C3D"/>
+  <rect x={-1200} y={814} width={4400} height={1266} fill="#302C3D"/>
   {Array.from({length:13},(_,i)=><path key={i}
     d={'M'+(i*156-25)+' 820 L'+(960+(i-6)*225)+' 1080'}
     stroke="#8A6B77" strokeWidth={3} opacity=".23"/>)}
-  <path d="M0 795 H1920 M0 824 H1920" stroke="#A28A83" strokeWidth={12}/>
+  <path d="M-1200 795 H3200 M-1200 824 H3200" stroke="#A28A83" strokeWidth={12}/>
   {[0,260,520,780,1040,1300,1560,1820].map(x=>
     <rect key={x} x={x} y={670} width={13} height={162} fill="#3A3246"/>)}
-  <path d="M0 687 H1920" stroke="#817E89" strokeWidth={12}/>
+  <path d="M-1200 687 H3200" stroke="#817E89" strokeWidth={12}/>
 </g>;
 
 export const StreetWorld:React.FC<{
@@ -136,10 +138,11 @@ export const StreetWorld:React.FC<{
       <stop offset="1" stopColor="#141B2E"/>
     </linearGradient>
   </defs>
-  <rect width="1920" height="1080" fill="url(#longStreetNight)"/>
+  <rect x="-1200" y="-800" width="4400" height="2800" fill="url(#longStreetNight)"/>
   <circle cx={370} cy={180} r={66} fill="#E1E6F0" opacity=".7"/>
   <circle cx={370} cy={180} r={195} fill="#A7CAE9" opacity=".05"/>
-  {Array.from({length:24},(_,i)=>{
+  {Array.from({length:37},(_,idx)=>{
+    const i=idx-7;
     const x=i*95-30,h=170+260*rnd(61,i),y=605-h;
     return <g key={i}>
       <rect x={x} y={y} width={104} height={h+30}
@@ -148,9 +151,9 @@ export const StreetWorld:React.FC<{
     </g>;
   })}
   {/* Static perspective road. The actor and signage share this world. */}
-  <path d="M0 1080 L665 578 H1250 L1920 1080Z" fill="url(#longStreetRoad)"/>
-  <path d="M-200 1080 L634 579 L665 579 L100 1080Z" fill="#526078"/>
-  <path d="M1820 1080 L1250 579 L1280 579 L2100 1080Z" fill="#435369"/>
+  <path d="M-1200 2200 L665 578 H1250 L3200 2200Z" fill="url(#longStreetRoad)"/>
+  <path d="M-1400 2200 L634 579 L665 579 L-900 2200Z" fill="#526078"/>
+  <path d="M2820 2200 L1250 579 L1280 579 L3400 2200Z" fill="#435369"/>
   <path d="M960 590 V1090" stroke="#BBAE9E" strokeWidth={4} opacity=".18"
     strokeDasharray="25 70"/>
   {Array.from({length:12},(_,i)=>{
@@ -206,7 +209,7 @@ export const CaveWorld:React.FC<{t:number;opening?:number}>=({t,opening=0})=><g>
     <stop offset=".55" stopColor="#0D1728"/>
     <stop offset="1" stopColor="#0A0F1C"/>
   </linearGradient></defs>
-  <rect width="1920" height="1080" fill="url(#longCave)"/>
+  <rect x="-1200" y="-800" width="4400" height="2800" fill="url(#longCave)"/>
   <path d="M0 0 H1920 L1770 340 L1550 215 L1300 417 L1010 180 L800 425 L520 268 L280 422Z"
     fill="#36475C"/>
   <path d="M0 310 L300 150 L500 510 L550 730 L0 940Z" fill="#233449"/>
