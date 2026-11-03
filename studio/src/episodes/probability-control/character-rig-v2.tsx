@@ -17,6 +17,8 @@ export type V2RigProps={
   hands?:V2Targets; feet?:V2Targets;
   handStyles?:Partial<Record<Side,HandStyle>>;
   shadow?:number;
+  /** Optional world-space contact shadow position for planted feet/squats. */
+  shadowAt?:Point;
 };
 const PAL={
   ink:'#100E18',outline:'#1C1522',face:'#FFF2DE',soft:'#F2BF70',
@@ -158,7 +160,7 @@ const FaceV2:React.FC<{expr:Expr;blink:number;yaw:number;look:number}>=
  * warm rim are our independent construction choices.
  */
 export const CharacterRigV2:React.FC<V2RigProps>=({
-  pose,variant='coral',hands={},feet={},handStyles={},shadow=.35
+  pose,variant='coral',hands={},feet={},handStyles={},shadow=.35,shadowAt
 })=>{
   const j=rigV2Joints(pose,hands,feet);
   const [coat,coatShade,coatHi]=color(variant);
@@ -197,7 +199,7 @@ export const CharacterRigV2:React.FC<V2RigProps>=({
     <FaceV2 expr={pose.expr} blink={pose.blink} yaw={pose.yaw} look={pose.look}/>
   </g>;
   return <g>
-    {shadow>0?<ellipse cx={pose.x} cy={pose.y+LEG_LEN*pose.scale+7}
+    {shadow>0?<ellipse cx={shadowAt?.x??pose.x} cy={shadowAt?.y??(pose.y+LEG_LEN*pose.scale+7)}
       rx={56*pose.scale} ry={11*pose.scale} opacity={shadow*.48} fill="#05040B"/>:null}
     <g transform={'translate('+pose.x+' '+pose.y+') scale('+pose.scale+
       ') rotate('+pose.spin+' 0 -90)'}>
