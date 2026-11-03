@@ -52,8 +52,8 @@ export const rigV2Joints=(pose:Pose,hands:V2Targets={},feet:V2Targets={})=>{
   return {
     armL:hands.L?solveTwoBone(j.armL.root,hands.L,62,58,1):j.armL,
     armR:hands.R?solveTwoBone(j.armR.root,hands.R,62,58,-1):j.armR,
-    legL:feet.L?solveTwoBone(j.legL.root,feet.L,72,68,-1):j.legL,
-    legR:feet.R?solveTwoBone(j.legR.root,feet.R,72,68,1):j.legR,
+    legL:feet.L?solveTwoBone(j.legL.root,feet.L,72,68,1):j.legL,
+    legR:feet.R?solveTwoBone(j.legR.root,feet.R,72,68,-1):j.legR,
     head:j.head
   };
 };
