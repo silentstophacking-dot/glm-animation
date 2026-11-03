@@ -1,0 +1,62 @@
+name: Ifverse Character Match — Reference-Accurate SVG Study
+
+on:
+  push:
+    branches: [feature/ifverse-character-reference-match]
+    paths:
+      - 'studio/src/episodes/probability-control/ifverse-character-match.tsx'
+      - 'studio/src/Root.tsx'
+      - '.github/workflows/ifverse-character-match.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  character-match:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install exact dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Render character appearance sheet
+        run: |
+          mkdir -p out/ifverse-character-match
+          npx remotion still src/index.ts IfverseCharacterSheet \
+            out/ifverse-character-match/Reference-Match-Characters.png \
+            --frame=0 --scale=0.6666666666666666
+      - name: Render two-character appearance test
+        run: |
+          npx remotion render src/index.ts IfverseCharacterMotion \
+            out/ifverse-character-match/Reference-Match-6s.mp4 \
+            --codec=h264 --scale=0.6666666666666666 \
+            --concurrency=2 --crf=21 --muted
+      - name: Verify complete animation and create mobile JPG
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          N=$(ffprobe -v error -select_streams v:0 -count_frames \
+            -show_entries stream=nb_read_frames -of default=nw=1:nk=1 \
+            out/ifverse-character-match/Reference-Match-6s.mp4)
+          test "$N" = "180"
+          ffmpeg -y -loglevel error -i \
+            out/ifverse-character-match/Reference-Match-Characters.png \
+            -frames:v 1 out/ifverse-character-match/Reference-Match-Characters.jpg
+      - name: Upload review (MP4 and image files)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: IFVERSE-CHARACTER-MATCH-REVIEW
+          path: studio/out/ifverse-character-match/*
+          retention-days: 14
+          if-no-files-found: warn
