@@ -7,6 +7,7 @@ import { CastSheet } from './CastSheet';
 import {CharacterRigV2Gallery,CharacterRigV2Motion} from './episodes/probability-control/character-v2-gallery';
 import {CharacterActingV3,ACTING_V3_FRAMES,ACTING_V3_FPS} from './episodes/probability-control/character-acting-v3';
 import {CharacterActingV4,ACTING_V4_FRAMES,ACTING_V4_FPS} from './episodes/probability-control/character-acting-v4';
+import {CharacterActingV5,V5_TEST_FRAMES,V5_TEST_FPS} from './episodes/probability-control/character-acting-v5';
 
 // Every episode gets two compositions: <Id> (the film) and <Id>Board (one frame per shot, at its key frame, for the
 // storyboard). Cast renders the cast sheet.
@@ -22,6 +23,9 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} fps={e.fps} width={e.width} height={e.height} />
         </React.Fragment>
       ))}
+      <Composition id="CharacterActingV5" component={CharacterActingV5}
+        durationInFrames={V5_TEST_FRAMES} fps={V5_TEST_FPS}
+        width={1920} height={1080}/>
       <Composition id="CharacterActingV4" component={CharacterActingV4}
         durationInFrames={ACTING_V4_FRAMES} fps={ACTING_V4_FPS}
         width={1920} height={1080}/>
