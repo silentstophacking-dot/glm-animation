@@ -44,7 +44,13 @@ export const longformTimeline:Timeline={
   ],
   // Candidate English Piper voice. The 230s bed is timed to the 27 scene starts
   // from measured PCM and contains intentional quiet gaps for visual acting.
-  audio:{voice:'probability-longform/voice.mp3',voiceVol:0.86}
+  // Render uses ONE finished, loudness-balanced audio track. Keeping
+  // voice.mp3, sfx.mp3 and music.mp3 separately in studio/public preserves
+  // individual edit control without DOUBLE-MIXING them during rendering.
+  // All three stems are original/candidate, not final user-approved sound.
+  audio:{
+    voice:'probability-longform/master.mp3',voiceVol:1
+  }
 };
 
 export const probabilityLongform01=defineEpisode('ProbabilityLongform01',{

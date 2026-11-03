@@ -1,0 +1,48 @@
+name: Probability Longform Physics & Audio Source QA (NO VIDEO)
+
+on:
+  push:
+    branches: [feature/probability-longform-quality-fixes]
+    paths:
+      - 'studio/src/episodes/probability-longform/**'
+      - 'scripts/validate_longform_motion.cjs'
+      - 'scripts/verify_longform_assembly.py'
+      - '.github/workflows/probability-longform-quality-check.yml'
+  pull_request:
+    branches: [feature/probability-longform-edit-assembly]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-animation-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install original Remotion dependencies
+        working-directory: studio
+        run: npm ci
+      - name: Compile all old and new episodes (NO RENDER)
+        working-directory: studio
+        run: npx tsc --noEmit
+      - name: Verify physical animation rules and lottery continuity
+        working-directory: studio
+        run: node ../scripts/validate_longform_motion.cjs
+      - name: Verify existing voice asset and full edit timeline
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          python3 scripts/verify_longform_assembly.py
+      - name: Assert no videos produced
+        run: |
+          test -z "$(find studio/out -type f -name '*.mp4' -print -quit 2>/dev/null || true)"
+          echo "Code, physics, and narration passed. NO VIDEO RENDER."

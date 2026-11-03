@@ -10,6 +10,7 @@ import {
   CaveWorld, CaveForeground
 } from './worlds';
 import {LONGFORM_SHOTS,LongformShotId} from './shotplan';
+import {coinTrajectory,repeatedCoinAt,montageCoinAt,lotteryDigit} from './motion';
 
 /**
  * 27 directed shots. Every physical scene is under ONE camT transform.
@@ -207,7 +208,7 @@ const Coin:React.FC<{x:number;y:number;flip?:number;s?:number;shadow?:boolean}>=
  </g>;
 };
 
-const Ticket:React.FC<{x:number;y:number;t:number}>=({x,y,t})=><g
+const Ticket:React.FC<{x:number;y:number;t:number;winner?:boolean}>=({x,y,t,winner=false})=><g
  transform={'translate('+x+' '+y+') rotate(-7)'}>
  <rect x={-185} y={-95} width={370} height={220} rx={10}
    fill="#F1E4C9" stroke="#B8AB93" strokeWidth={7}/>
@@ -215,7 +216,7 @@ const Ticket:React.FC<{x:number;y:number;t:number}>=({x,y,t})=><g
  {Array.from({length:4},(_,i)=><text key={i}
    x={-118+i*79} y={50} textAnchor="middle" fontFamily={FONT.title}
    fontSize={55} fontWeight={800} fill="#29364E">
-    {t>120?'7':(Math.floor(t/7)+i*3)%10}
+    {lotteryDigit(t,i,winner)}
    </text>)}
  <path d="M-140 68 H137" stroke="#877F77" strokeWidth={3}/>
  <text x="0" y="104" textAnchor="middle" fontSize={19}
@@ -277,15 +278,22 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
    const held=toWorld(actor,joints(actor).armR.end);
    const release=toWorld(actorPose(72,'study','toss'),
      joints(actorPose(72,'study','toss')).armR.end);
-   const dt=Math.max(0,t-72);
-   const fly=Math.min(90,dt);
-   const coinX=t<72?held.x:release.x+2.7*fly;
-   const coinY=t<72?held.y:release.y-10*fly+.11*fly*fly;
+   // The release position comes from the character's actual right hand.
+   // The coin is no longer allowed to freeze midair or drift off the desk.
+   const landedPoint={x:1190,y:657};
+   const flight=coinTrajectory(t,release,landedPoint);
+   const coinX=t<72?held.x:flight.x;
+   const coinY=t<72?held.y:flight.y;
    physical=<><StudioWorld t={t} night={id==='DEATH_ZERO'}/>
     {person}
+    {toss&&t>=72&&<ellipse cx={landedPoint.x} cy={landedPoint.y+33}
+      rx={24} ry={7} fill="#21141D" opacity={.12+.23*Math.min(1,(t-72)/85)}/>}
     {(toss||id==='FLASHBACK')&&<Coin
-      x={toss?coinX:1190} y={toss?coinY:671}
-      flip={toss?dt*.22:0} s={toss?.69:.65}/>}
+      x={toss?coinX:landedPoint.x} y={toss?coinY:landedPoint.y}
+      flip={toss?flight.flip:0} s={toss?.69:.65}
+      shadow={!toss}/>}
+    {toss&&t>=174&&<ellipse cx={landedPoint.x} cy={landedPoint.y+33}
+      rx={24} ry={7} fill="#21141D" opacity=".19"/>}
     {id==='DEATH_ZERO'&&<circle cx={actor.x} cy={actor.y-150}
       r={240+7*Math.sin(t*.052)} stroke={C.mint} strokeWidth={8}
       fill={C.mint} fillOpacity=".035" opacity=".74"/>}
@@ -302,13 +310,14 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
   }
   case 'HEADS_RESULT':case 'TEN_HEADS':{
     const flips=id==='TEN_HEADS';
-    const period=flips?45:125;
-    const phase=flips?t%period:t;
-    const air=flips?Math.max(0,145*Math.sin(Math.PI*phase/period)):Math.max(0,180*Math.sin(Math.PI*clamp(phase/85)));
+    const coinState=flips?montageCoinAt(t):repeatedCoinAt(t);
     physical=<><MacroDesk t={t}/>
-      <ellipse cx={985} cy={640} rx={95} ry={29} fill="#221721" opacity=".40"/>
-      <Coin x={985} y={600-air} flip={t*.26} s={1.58}/>
-      {flips&&<g>{copy('HEADS '+Math.min(10,1+Math.floor(t/22)),1280,280,72,C.gold)}</g>}
+      {/* The contact shadow remains on the DESK even during the toss. */}
+      <ellipse cx={985} cy={673} rx={66} ry={16} fill="#221721"
+        opacity={coinState.airborne?.20:.38}/>
+      <Coin x={985} y={coinState.y} flip={coinState.flip}
+        s={1.58} shadow={false}/>
+      {flips&&<g>{copy('HEADS '+('completed' in coinState ? coinState.completed : coinState.count),1280,280,72,C.gold)}</g>}
     </>;
     overlay=<><SmallTitle title={flips?'TEN FLIPS. TEN HEADS.':'HEADS. AGAIN.'}
       color={C.gold}/><g opacity={after}>
@@ -320,7 +329,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
     physical=<><LotteryWorld t={t}/>
       <Person stage="lottery" mode={id==='LOTTERY_WIN'?'joy':'thinking'}
         t={t} x={1420} y={810} s={.88}/>
-      <Ticket x={930} y={706} t={t}/>
+      <Ticket x={930} y={706} t={t} winner={id==='LOTTERY_WIN'}/>
     </>;
     overlay=<><SmallTitle title={id==='LOTTERY_TEST'?'THE LOTTERY TEST.':'ALL FOUR NUMBERS MATCH.'}
       color={C.gold}/>
@@ -387,7 +396,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
        <ProbabilityTruck x={1540-480*smooth(t/len)} y={385} t={t} scale={.58}/>
      </g>}
      {person}
-     {id==='CRACK'&&<RockBurst x={960} y={900} t={t-140} size={.22}/>}
+     {id==='CRACK'&&t>=140&&t<185&&<RockBurst x={960} y={900} t={t-140} size={.22}/>} 
      {id==='LAUNCHED'&&<RockBurst x={960} y={850} t={t} size={.84}/>}
      {truck&&<g>
        <path d={'M'+(1520-540*truckP)+' '+(500+65*truckP)+
@@ -422,7 +431,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
     physical=<><CaveWorld t={t} opening={opening}/>
       <Person t={t} stage="cave" mode={mode}/>
       <CaveForeground t={t} opening={opening}/>
-      {id==='RUBBLE_MOVES'&&<RockBurst t={t-90} x={1050} y={850} size={.54}/>}
+      {id==='RUBBLE_MOVES'&&t>=90&&<RockBurst t={t-90} x={1050} y={850} size={.54}/>}
     </>;
     overlay=id==='TRAPPED'?<SmallTitle title="BURIED UNDER CONCRETE." />:
       id==='THE_LIMIT'?<><SmallTitle title="IMMORTAL. NOT FREE."/>
