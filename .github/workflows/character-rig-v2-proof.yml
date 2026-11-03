@@ -1,0 +1,68 @@
+name: Character Rig V2 — Acting and Contact Proof
+
+on:
+  push:
+    branches: [feature/character-rig-v2-acting-proof]
+    paths:
+      - 'studio/src/episodes/probability-control/character-rig-v2.tsx'
+      - 'studio/src/episodes/probability-control/character-v2-gallery.tsx'
+      - 'studio/src/Root.tsx'
+      - '.github/workflows/character-rig-v2-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install exact dependency versions
+        run: npm ci
+      - name: Typecheck all existing and new Remotion compositions
+        run: npx tsc --noEmit
+      - name: Render five independent character approval frames
+        run: |
+          set -euo pipefail
+          mkdir -p out/character-v2
+          for i in 0 1 2 3 4; do
+            npx remotion still src/index.ts CharacterRigV2Gallery "out/character-v2/Frame-$((i+1)).png" --frame=$i --scale=0.6666666666666666
+          done
+      - name: Render single 5-second anchored-hand motion proof
+        run: |
+          npx remotion render src/index.ts CharacterRigV2Motion out/character-v2/Interaction-5s.mp4 \
+            --codec=h264 --scale=0.6666666666666666 --concurrency=2 --crf=22 --muted
+      - name: Verify 150 frames and make iPhone-friendly single contact sheet
+        run: |
+          set -euo pipefail
+          count=$(ffprobe -v error -select_streams v:0 -count_frames \
+            -show_entries stream=nb_read_frames -of default=nw=1:nk=1 \
+            out/character-v2/Interaction-5s.mp4)
+          test "$count" = 150
+          ffmpeg -y -hide_banner -loglevel error \
+            -i out/character-v2/Frame-1.png \
+            -i out/character-v2/Frame-2.png \
+            -i out/character-v2/Frame-3.png \
+            -i out/character-v2/Frame-4.png \
+            -i out/character-v2/Frame-5.png \
+            -filter_complex "[0:v]scale=640:360[a];[1:v]scale=640:360[b];[2:v]scale=640:360[c];[3:v]scale=640:360[d];[4:v]scale=640:360[e];[a][b][c][d][e]xstack=inputs=5:layout=0_0|640_0|1280_0|320_360|960_360:fill=0x101725[v]" \
+            -map "[v]" -frames:v 1 -update 1 out/character-v2/Character-Rig-V2-Review-Sheet.jpg
+          ffprobe -v error -show_entries format=duration,size -of default=nw=1 out/character-v2/Interaction-5s.mp4
+      - name: Upload complete image and motion review set
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CHARACTER-RIG-V2-VISUAL-PROOF
+          path: studio/out/character-v2/*
+          retention-days: 14
+          if-no-files-found: warn
