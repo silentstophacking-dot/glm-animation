@@ -4,6 +4,7 @@ import './engine/fonts';
 import { STUDIO } from './studio.config';
 import { EPISODES } from './episodes';
 import { CastSheet } from './CastSheet';
+import {CharacterRigV2Gallery,CharacterRigV2Motion} from './episodes/probability-control/character-v2-gallery';
 
 // Every episode gets two compositions: <Id> (the film) and <Id>Board (one frame per shot, at its key frame, for the
 // storyboard). Cast renders the cast sheet.
@@ -20,6 +21,10 @@ export const Root: React.FC = () => {
         </React.Fragment>
       ))}
       <Composition id="Cast" component={CastSheet} durationInFrames={1} {...common} />
+      <Composition id="CharacterRigV2Gallery" component={CharacterRigV2Gallery}
+        durationInFrames={5} fps={30} width={1920} height={1080}/>
+      <Composition id="CharacterRigV2Motion" component={CharacterRigV2Motion}
+        durationInFrames={150} fps={30} width={1920} height={1080}/>
     </>
   );
 };
