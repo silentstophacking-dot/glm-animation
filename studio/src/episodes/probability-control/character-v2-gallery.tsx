@@ -159,7 +159,7 @@ const Theater:React.FC<{variant:number;t:number;animated?:boolean}>=
     y:lerp(rightEnd.y,button.y,progress)
   };
   const actorHands=isCave?
-    {L:{x:-82,y:-205},R:{x:82,y:-205}}:
+    {L:{x:-82,y:-214},R:{x:82,y:-214}}:
     (variant===1||animated)?{R:animated?movingHand:button}:undefined;
   const stageWorld=<g>
     {isCave?<g>
@@ -179,14 +179,14 @@ const Theater:React.FC<{variant:number;t:number;animated?:boolean}>=
     </g>:null}
     <CharacterRigV2 pose={hero}
       variant="coral" hands={actorHands}
-      handStyles={{R:activated?'fist':variant===1?'point':'open'}}
+      handStyles={{R:(variant===1||animated)?'grip':'open'}}
       shadow={isCave?0:.45}/>
     {isCave?<g>
       {/* The upper slab and buried rubble are drawn AFTER the rig, so their
           occlusion visibly locks the shoulders and legs in the cave. */}
-      <path d="M630 220L1360 230L1290 393L710 411Z"
+      <path d="M630 182L1360 185L1290 349L710 363Z"
         fill="#65666B" stroke="#282A30" strokeWidth="17"/>
-      <path d="M683 379L1326 360" stroke="#B0AAA2"
+      <path d="M683 332L1326 319" stroke="#B0AAA2"
         strokeWidth="11" opacity=".55"/>
       <path d="M550 720L740 632L820 710L915 755L1090 706L1240 635L1470 758
        L1620 950H520Z" fill="#45474E" stroke="#1A202C" strokeWidth="20"/>
