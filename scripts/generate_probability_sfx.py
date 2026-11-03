@@ -160,13 +160,46 @@ def main():
         if shot["id"]=="PRE_IMPACT":
             # The world freezes: absolute silence BEFORE collision.
             continue
+        # Those four shots have exact physical interaction frames in the
+        # Remotion scene. Use actual frame contact times, not generic beat cues.
+        exact=[]
+        if shot["id"]=="COIN_TOSS":
+            exact=[
+                ("coin-flick",shot["startSec"]+72/30),
+                ("metal-contact",shot["startSec"]+154/30)
+            ]
+        elif shot["id"]=="HEADS_RESULT":
+            exact=[
+                ("metal-contact",shot["startSec"]+.08),
+                ("second-coin-tap",shot["startSec"]+150/30)
+            ]
+        elif shot["id"]=="TEN_HEADS":
+            exact=[
+                ("coin-contact",shot["startSec"]+22*(n+1)/30)
+                for n in range(10)
+            ]
+        elif shot["id"]=="LOTTERY_TEST":
+            exact=[
+                ("numbers-lock",shot["startSec"]+(150+18*i)/30)
+                for i in range(4)
+            ]
+
+        if exact:
+            for kind,when in exact:
+                sound=clip_sound(kind)
+                mix_in(track,sound,when,.72)
+                events.append({"shot":shot["id"],"sound":kind,
+                    "at_sec":round(when,3),"gain":.72,
+                    "sync":"physical contact frame"})
+            continue
+
         for i,kind in enumerate(cues):
             when=beats[min(i,len(beats)-1)]["atSec"]
             volume=.55 if shot["id"] in ("COLD_OPEN","BURIED_PROMISE") else .78
             if "brake" in kind or "engine" in kind:
                 volume=.53
-            s=clip_sound(kind)
-            mix_in(track,s,when,volume)
+            sound=clip_sound(kind)
+            mix_in(track,sound,when,volume)
             events.append({"shot":shot["id"],"sound":kind,
                            "at_sec":round(when,3),"gain":volume})
 
