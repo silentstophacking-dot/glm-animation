@@ -44,13 +44,12 @@ export const longformTimeline:Timeline={
   ],
   // Candidate English Piper voice. The 230s bed is timed to the 27 scene starts
   // from measured PCM and contains intentional quiet gaps for visual acting.
-  // Candidate narrator + independently original, code-synthesized Foley
-  // and suspense score. Separate tracks allow editor to rebalance later.
-  // The soundtrack stays silent before the final oncoming-truck impact.
+  // Render uses ONE finished, loudness-balanced audio track. Keeping
+  // voice.mp3, sfx.mp3 and music.mp3 separately in studio/public preserves
+  // individual edit control without DOUBLE-MIXING them during rendering.
+  // All three stems are original/candidate, not final user-approved sound.
   audio:{
-    voice:'probability-longform/voice.mp3',voiceVol:0.82,
-    sfx:'probability-longform/sfx.mp3',sfxVol:0.55,
-    music:'probability-longform/music.mp3',musicVol:0.26
+    voice:'probability-longform/master.mp3',voiceVol:1
   }
 };
 
