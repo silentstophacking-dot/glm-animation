@@ -57,12 +57,12 @@ const poseAtFrame=(f:number):Pose=>{
   const anticipation=ease(f,35,49)*(1-ease(f,54,70));
   const focus=ease(f,129,162)*(1-ease(f,235,266));
   const x=716+139*advance-13*recoil;
-  const y=662+10*advance+114*crouch-124*rise+3*anticipation;
-  const tilt=1+27*crouch-27*rise-12*recoil+5*anticipation;
+  const y=662+10*advance+126*crouch-136*rise+3*anticipation;
+  const tilt=1+19*crouch-19*rise-12*recoil+5*anticipation;
   const headTilt=-6*focus+8*recoil-5*anticipation;
   const expr:Pose['expr']=f<31?'neutral'
     :f<79?'shock'
-    :f<185?'worried'
+    :f<202?'worried'
     :f<253?'happy'
     :'shock';
   const grounded:Pose={
@@ -145,7 +145,7 @@ validateActingV3();
 const Coin:React.FC<{x:number;y:number;rotation?:number;energy?:number;held?:boolean}>=
 ({x,y,rotation=0,energy=0,held=false})=>{
   const charged=energy>0;
-  return <g transform={'translate('+x+' '+y+') rotate('+rotation+')'}>
+  return <g transform={'translate('+x+' '+y+') rotate('+rotation+') scale(1.3)'}>
     {charged?<g>
       <circle r={27+energy*90} fill="url(#actingV3GoldGlow)" opacity={energy*.8}/>
       <circle r={27+energy*27} stroke={C.gold} strokeWidth={2+3*energy}
@@ -220,14 +220,7 @@ const Stage:React.FC<{f:number}>=({f})=>{
       energy={shine*(.64+.18*Math.sin(f*.15))}
       held={held}/>
     <EventLight f={f} coin={coin}/>
-    {f>=260?<g opacity={ease(f,260,294)}>
-      <path d="M1125 475H1420" stroke={C.gold}
-        strokeWidth="3" opacity=".85"/>
-      <text x="1441" y="490" fontFamily="Arial,sans-serif"
-        fontWeight="800" fill={C.cream} fontSize="40">IMPOSSIBLE.</text>
-      <text x="1441" y="527" fontFamily="Arial,sans-serif"
-        fill={C.steel} fontSize="26">THE COIN IS CHARGED.</text>
-    </g>:null}
+    {/* Physical world is now free of detached screen-space annotations. */}
   </g>;
 };
 const Camera:React.FC<{f:number;children:React.ReactNode}>=({f,children})=>{
@@ -252,6 +245,15 @@ export const CharacterActingV3:React.FC=()=>{
       </radialGradient>
     </defs>
     <Camera f={f}><Stage f={f}/></Camera>
+    {f>=260?<g opacity={ease(f,260,295)}>
+      <rect x="1314" y="177" width="500" height="132" rx="17"
+        fill="#111724" opacity=".86"/>
+      <path d="M1342 202V284" stroke={C.gold} strokeWidth="5"/>
+      <text x="1370" y="240" fontFamily="Arial,sans-serif"
+        fontWeight="800" fill={C.cream} fontSize="42">IMPOSSIBLE.</text>
+      <text x="1370" y="279" fontFamily="Arial,sans-serif"
+        fill={C.steel} fontSize="24">THE COIN IS CHARGED.</text>
+    </g>:null}
     <g opacity=".92">
       <path d="M73 92H490" stroke={C.gold} strokeWidth="5"
         strokeLinecap="round"/>
