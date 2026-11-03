@@ -317,7 +317,7 @@ const Frame:React.FC<{id:LongformShotId;t:number;len:number}>=({id,t,len})=>{
         opacity={coinState.airborne?.20:.38}/>
       <Coin x={985} y={coinState.y} flip={coinState.flip}
         s={1.58} shadow={false}/>
-      {flips&&<g>{copy('HEADS '+coinState.completed,1280,280,72,C.gold)}</g>}
+      {flips&&<g>{copy('HEADS '+('completed' in coinState ? coinState.completed : coinState.count),1280,280,72,C.gold)}</g>}
     </>;
     overlay=<><SmallTitle title={flips?'TEN FLIPS. TEN HEADS.':'HEADS. AGAIN.'}
       color={C.gold}/><g opacity={after}>
