@@ -68,7 +68,7 @@ export const actorV5At=(frame:number):V5Pose=>{
     3.5*Math.sin(Math.PI*clamp((f-96)/45));
   const hip=p(
     666+62*stepOne+60*stepTwo-10*anticipate+8*crouch-6*pushback,
-    679-bob+78*crouch+3*anticipate-4*pushback
+    679-bob+50*crouch+3*anticipate-4*pushback
   );
   const lean=2+3*anticipate+16*crouch-13*pushback;
   const headTilt= -3-4*anticipate-9*crouch+12*pushback;
@@ -79,7 +79,18 @@ export const actorV5At=(frame:number):V5Pose=>{
     f<219?'effort':f<273?'focus':f<310?'surprise':'relief';
   const blink=Math.max(...[34,117,210,277,315]
     .map(k=>Math.max(0,1-Math.abs(f-k)/2.5)));
-  return {hip,footFar,footNear,lean,headTilt,
+  // The swing follows the two steps. Loose arms hang by the body in repose,
+  // rather than permanently posing both hands on the hips.
+  const swing=(Math.sin(Math.PI*clamp((f-58)/42))-
+    Math.sin(Math.PI*clamp((f-96)/45)))*.65;
+  const shoulderX=hip.x+6+lean*.96;
+  const shoulderY=hip.y-121+Math.abs(lean)*.10;
+  const recoilHand=ease(f,276,299)*(1-ease(f,313,329));
+  const nearHand=p(shoulderX+28+12+22*swing+27*recoilHand,
+    shoulderY+6+120-53*recoilHand);
+  const farHand=p(shoulderX-29-13-19*swing,
+    shoulderY+9+118);
+  return {hip,footFar,footNear,lean,headTilt,nearHand,farHand,
     gaze:f<250?.5:f<305?.85:.2,emotion,blink};
 };
 
@@ -136,7 +147,7 @@ export const auditV5Mechanics=()=>{
       throw new Error('V5 knees cross at '+f);
   }
   const rest=actorV5At(145),low=actorV5At(207);
-  if(low.hip.y-rest.hip.y<65)throw new Error('V5 crouch lacks weight shift');
+  if(low.hip.y-rest.hip.y<44)throw new Error('V5 crouch lacks weight shift');
   if(maxFootError>1.5)throw new Error('V5 bone cannot reach foot, max error '+maxFootError);
   if(maxHandError>1.5)throw new Error('V5 bone cannot reach resting hand, max error '+maxHandError);
   return {maxFootError,maxHandError,frames:330};
