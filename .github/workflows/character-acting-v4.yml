@@ -1,0 +1,73 @@
+name: Character Acting V4 — Planted Feet and Shot Grammar
+
+on:
+  push:
+    branches: [feature/character-acting-v4-grounded-staging]
+    paths:
+      - 'studio/src/episodes/probability-control/character-acting-v4.tsx'
+      - 'studio/src/episodes/probability-control/character-v2-gallery.tsx'
+      - 'studio/src/episodes/probability-control/character-rig-v2.tsx'
+      - 'studio/src/Root.tsx'
+      - '.github/workflows/character-acting-v4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install pinned dependencies
+        run: npm ci
+      - name: Typecheck character IK and all preserved compositions
+        run: npx tsc --noEmit
+      - name: Render physical-contact and crouch keyframe first
+        run: |
+          mkdir -p out/character-acting-v3
+          npx remotion still src/index.ts CharacterActingV4 \
+            out/character-acting-v4/Crouch-Pose.png --frame=173 \
+            --scale=0.6666666666666666
+      - name: Render hand-to-coin pickup insert keyframe
+        run: |
+          npx remotion still src/index.ts CharacterActingV4 \
+            out/character-acting-v4/Pickup-Insert.png --frame=231 \
+            --scale=0.6666666666666666
+      - name: Render full 12 second grounded-acting test (no full film)
+        run: |
+          npx remotion render src/index.ts CharacterActingV4 \
+            out/character-acting-v4/Character-Acting-V4-12s.mp4 \
+            --codec=h264 --scale=0.6666666666666666 \
+            --concurrency=2 --crf=21 --muted
+      - name: Install FFmpeg verification tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Validate 360 frames and create 12-frame motion contact sheet
+        run: |
+          set -euo pipefail
+          f=out/character-acting-v4/Character-Acting-V4-12s.mp4
+          count=$(ffprobe -v error -select_streams v:0 -count_frames \
+            -show_entries stream=nb_read_frames -of default=nw=1:nk=1 "$f")
+          test "$count" = 360
+          ffmpeg -y -hide_banner -loglevel error -i "$f" \
+            -vf 'fps=1,scale=480:270,tile=4x3:padding=8:margin=8:color=0x101725' \
+            -frames:v 1 -update 1 \
+            out/character-acting-v4/Acting-V4-12-Moments.jpg
+          ffprobe -v error -show_entries format=duration,size -of default=nw=1 "$f"
+      - name: Upload complete review deliverables
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CHARACTER-ACTING-V4-12S-REVIEW
+          path: studio/out/character-acting-v4/*
+          if-no-files-found: warn
+          retention-days: 14
