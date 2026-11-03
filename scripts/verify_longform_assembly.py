@@ -60,7 +60,8 @@ assert prev == 6900 and count >= 78
 assert 90 < silent < 100, f"Unexpected narration coverage {silent}"
 episode = (STUDIO/"src/episodes/probability-longform/episode.tsx").read_text()
 shots = (STUDIO/"src/episodes/probability-longform/shots.tsx").read_text()
-assert "audio:{voice:'probability-longform/voice.mp3'" in episode
+for name in ("voice.mp3", "sfx.mp3", "music.mp3"):
+    assert "probability-longform/"+name in episode, f"Missing soundtrack stem: {name}"
 assert "camT(x,y,zoom,960,540)" in shots
 assert "<WorldCamera id={id} t={t} len={len}>{physical}</WorldCamera>" in shots
 assert "ProbabilityLongform01" in episode
