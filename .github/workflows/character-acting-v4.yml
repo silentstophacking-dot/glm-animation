@@ -34,7 +34,7 @@ jobs:
         run: npx tsc --noEmit
       - name: Render physical-contact and crouch keyframe first
         run: |
-          mkdir -p out/character-acting-v3
+          mkdir -p out/character-acting-v4
           npx remotion still src/index.ts CharacterActingV4 \
             out/character-acting-v4/Crouch-Pose.png --frame=173 \
             --scale=0.6666666666666666
