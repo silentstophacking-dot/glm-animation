@@ -1,0 +1,55 @@
+name: Stage Existing Original Probability Music (AUDIO ONLY)
+
+on:
+  push:
+    branches: [feature/probability-longform-quality-fixes]
+    paths: ['.github/workflows/stage-existing-probability-music.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reuse-original-music:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/probability-longform-quality-fixes
+          persist-credentials: true
+      - name: Reuse ORIGINAL 230s instrumental from earlier successful sound-design PR
+        run: |
+          git fetch --depth=1 origin feature/probability-longform-sound-design
+          mkdir -p studio/public/probability-longform
+          git show FETCH_HEAD:studio/public/probability-longform/music.mp3 \
+            > studio/public/probability-longform/music.mp3
+          test "$(wc -c < studio/public/probability-longform/music.mp3)" -gt 500000
+      - name: Inspect duration (no video)
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+          f=Path('studio/public/probability-longform/music.mp3')
+          d=float(subprocess.check_output([
+            'ffprobe','-v','error','-show_entries','format=duration',
+            '-of','default=noprint_wrappers=1:nokey=1',str(f)
+          ]))
+          assert 229.8<d<230.3,d
+          print('Original, licensed-from-own-code music:',round(d,3),'sec')
+          PY
+      - name: Save music with safe fast-forward-only push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add studio/public/probability-longform/music.mp3
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(audio): reuse original 230s Probability suspense score"
+            git fetch origin feature/probability-longform-quality-fixes
+            git rebase FETCH_HEAD
+            git push origin HEAD:feature/probability-longform-quality-fixes
+          fi
