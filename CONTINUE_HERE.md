@@ -4,7 +4,7 @@
 
 ## Latest development after handover
 
-**Active branch: `feature/puffer-lab-performance`**, based on `feature/project-handoff`. The new `PufferRoomPerformance` is the next 11-second integration candidate: animated black puffer, depth lab, moving camera and shared console contact. See [implementation and review notes](production/style/PUFFER_ROOM_PERFORMANCE.md). Earlier media and branches below remain preserved. The owner has not yet reviewed this new motion proof; do not treat it as episode approval.
+**Active branch: `feature/lab-time-anomaly`**, based on `feature/puffer-lab-performance`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). Visual review of this new scene is pending. Earlier compositions, films and branches remain preserved.
 
 ## Open the right version
 
@@ -25,7 +25,7 @@ Preserve Probability Control, earlier films, rigs and experiments. Inspect real 
 - The owner liked the sunset lab, material detail and thin warm rim/cool fill lighting. Keep the small round black head, visible neck, readable cream expressions and controlled slender body proportions with fuller clothing/limbs. Earlier versions were first too bulky, then too skinny; avoid swinging between those extremes.
 - Front-view arms must be genuinely frontal. This was corrected after owner feedback. Visible eyes must not be faded to imply depth; use placement, foreshortening and occlusion. Both corrections are in the current rig.
 - The orange-red hoodie was an experiment. The owner wants a character that feels less like the reference channel. Outfit comparisons include teal/utility/waistcoat, a cobalt-and-gold lead jacket and most recently **a puffer jacket**.
-- The owner said they loved the puffer direction. Black was recommended and is used in the latest room proof; **final colour was not explicitly selected**. Black, cobalt and teal remain available. Puffer animation has not been approved.
+- The owner said they loved the puffer direction. Black was recommended and is used in the latest room proof; **final colour was not explicitly selected**. Black, cobalt and teal remain available. The owner liked the integrated puffer animation and asked to continue into a mini-scene.
 - The revised character turn and sunset lighting were liked. The 11-second combined acting proof was reviewed; the assistant recommended more walk/hand/recovery polish. This is not blanket approval to rebuild the episode.
 - **Latest owner reaction to the seven-second room camera proof: “I love it.”** Keep this background direction: projected furniture faces, city behind window frame, grounded puffer figure and physically linked foreground parallax.
 - Latest proposed next step: one cohesive scene with the puffer character walking through the depth-surfaced lab and interacting with the console. The owner then asked to preserve the project for another ChatGPT account. This handover does not itself approve a full film rebuild.
@@ -54,7 +54,7 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 
 ## Latest verification
 
-The new puffer performance passed local 720p decoding/metadata checks and GitHub’s full-resolution render/verification: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41852035320 . Draft PR #38 and handoff/review preserve the candidate; owner visual review remains pending.
+The new puffer performance passed local 720p decoding/metadata checks and GitHub’s full-resolution render/verification: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41852035320 . Draft PR #38 and handoff/review preserve that result; the owner subsequently liked it.
 
 ## Verified results at handover
 
