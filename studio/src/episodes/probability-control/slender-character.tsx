@@ -17,6 +17,14 @@ export const SlenderCharacter:React.FC<{
   const feet=pose?.feet??[{x:-12,y:-4},{x:13,y:-4}];
   const hand=pose?{x:pose.hand.x,y:pose.hand.y-pose.drop}:{x:point?90:20,y:point?-238:-147};
   const arm=pose?limb({x:10,y:-269},hand,60,-1).path:point?'M10 -269L38 -229L88 -238':'M10 -269L17 -211L20 -150';
+  const handDrawing=(x:number,y:number,pointing=false,mirror=false)=> <g transform={`translate(${x} ${y}) rotate(${pointing?-90:0}) scale(${handSize*.75*(mirror?-1:1)} ${handSize*.75})`}>
+    <path d="M0 -7V1" stroke={ink} strokeWidth="3.5" strokeLinecap="round"/>
+    <path d={pointing?'M-2 -4L2 -4L3 0L3 11Q3 14 1 14Q-1 14 -1 11V7Q-6 10 -6 5V1Q-6 -1 -3 0Z':
+      'M-2 -4L2 -4L3 0Q7 0 6 4L4 6V10Q0 14 -4 10L-5 3Q-5 0 -3 0Z'}
+      fill={ink}/>
+    <path d="M-3 1L-3 7" stroke={rim} strokeWidth=".7" opacity=".55" strokeLinecap="round"/>
+  </g>;
+  const farX=build==='slim'?-16:-16*bodyWidth;
   const sleeve=(d:string,near:boolean)=><g>
     <path d={d} fill="none" stroke={ink} strokeWidth={(near?11:9)*sleeveWidth}
       strokeLinecap="round" strokeLinejoin="round"/>
@@ -35,8 +43,12 @@ export const SlenderCharacter:React.FC<{
       <path d="M-13 -4H-2M14 -4H24" stroke={rim} strokeWidth="1" opacity=".6"/>
     </g>}
     <g transform={`translate(0 ${pose?.drop??0})`}>
-    {sleeve('M-9 -269L-18 -216L-16 -153',false)}
-    <ellipse cx="-16" cy="-150" rx={3.5*handSize} ry={5*handSize} fill={ink}/>
+    {sleeve(`M${build==='slim'?-9:-9*bodyWidth} -269L${build==='slim'?-18:-18*bodyWidth} -216L${farX} -153`,false)}
+    {build==='slim'?<ellipse cx="-16" cy="-150" rx="3.5" ry="5" fill={ink}/>:<g>
+      <path d={`M${farX} -153v7`} stroke="#A84A41" strokeWidth={6.5*sleeveWidth} strokeLinecap="butt"/>
+      <path d={`M${farX-3*sleeveWidth} -146h${6*sleeveWidth}`} stroke="#F08B6D" strokeWidth="1" opacity=".6"/>
+      {handDrawing(farX,-141)}
+    </g>}
     <g transform={`scale(${bodyWidth} 1)`}>
     {coral?<path d="M-10 -293Q-26 -285 -21 -258L-16 -249L-8 -275Z"
       fill="#B73F38" stroke={ink} strokeWidth="1.2"/>:null}
@@ -68,8 +80,14 @@ export const SlenderCharacter:React.FC<{
       </g>:null}
     </g>
     {sleeve(arm,true)}
-    <ellipse cx={hand.x} cy={hand.y} rx={3.5*handSize} ry={5*handSize} fill={ink}/>
-    {point&&!pose?<path d="M91 -239L99 -241" stroke={ink} strokeWidth="3" strokeLinecap="round"/>:null}
+    {build==='slim'||pose?<g>
+      <ellipse cx={hand.x} cy={hand.y} rx={3.5*handSize} ry={5*handSize} fill={ink}/>
+      {point&&!pose?<path d="M91 -239L99 -241" stroke={ink} strokeWidth="3" strokeLinecap="round"/>:null}
+    </g>:point?handDrawing(hand.x+4,hand.y,true):<g>
+      <path d={`M${hand.x} -150v7`} stroke="#AC4A40" strokeWidth={8*sleeveWidth} strokeLinecap="butt"/>
+      <path d={`M${hand.x-4*sleeveWidth} -143h${8*sleeveWidth}`} stroke="#F08B6D" strokeWidth="1" opacity=".65"/>
+      {handDrawing(hand.x,-138,false,true)}
+    </g>}
     </g>
   </g>;
 };
