@@ -17,6 +17,7 @@ import {CharacterSunsetLightingProof,CharacterSunsetLightingBoard} from './episo
 import {CombinedCharacterPerformance,CombinedCharacterBoard} from './episodes/probability-control/combined-performance-proof';
 import {CharacterOutfitSheet,TealOutfitLabStudy} from './episodes/probability-control/character-outfit-sheet';
 import {LeadCharacterStudy,LeadCharacterLabStudy} from './episodes/probability-control/lead-character-study';
+import {PufferJacketStudy,PufferLabStudy} from './episodes/probability-control/puffer-jacket-study';
 import { CastSheet } from './CastSheet';
 import {CharacterRigV2Gallery,CharacterRigV2Motion} from './episodes/probability-control/character-v2-gallery';
 import {CharacterActingV3,ACTING_V3_FRAMES,ACTING_V3_FPS} from './episodes/probability-control/character-acting-v3';
@@ -38,6 +39,8 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} fps={e.fps} width={e.width} height={e.height} />
         </React.Fragment>
       ))}
+      <Composition id="PufferJacketStudy" component={PufferJacketStudy} durationInFrames={1} fps={30} width={1440} height={1700}/>
+      <Composition id="PufferLabStudy" component={PufferLabStudy} durationInFrames={1} fps={30} width={1920} height={1080}/>
       <Composition id="LeadCharacterStudy" component={LeadCharacterStudy} durationInFrames={1} fps={30} width={1440} height={1500}/>
       <Composition id="LeadCharacterLabStudy" component={LeadCharacterLabStudy} durationInFrames={1} fps={30} width={1920} height={1080}/>
       <Composition id="CharacterOutfitSheet" component={CharacterOutfitSheet} durationInFrames={1} fps={30} width={1440} height={1700}/>
