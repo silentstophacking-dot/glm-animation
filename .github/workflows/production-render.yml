@@ -5,22 +5,22 @@ on:
       composition:
         description: 'Exact composition ID (see studio/src/Root.tsx and episodes)'
         required: true
-        default: IfverseCharacterMotion
+        default: IfverseContactPreview
         type: string
   push:
-    branches: ['production/**']
+    branches: ['production/**', 'feature/ifverse-contact-preview']
     paths: ['studio/**', 'scripts/render-production.mjs', 'scripts/verify-render.py', '.github/workflows/production-render.yml']
 permissions:
   contents: read
 concurrency:
-  group: production-render-${{ github.ref }}-${{ inputs.composition || 'IfverseCharacterMotion' }}
+  group: production-render-${{ github.ref }}-${{ inputs.composition || 'IfverseContactPreview' }}
   cancel-in-progress: false
 jobs:
   render:
     runs-on: ubuntu-latest
     timeout-minutes: 330
     env:
-      COMPOSITION: ${{ inputs.composition || 'IfverseCharacterMotion' }}
+      COMPOSITION: ${{ inputs.composition || 'IfverseContactPreview' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
