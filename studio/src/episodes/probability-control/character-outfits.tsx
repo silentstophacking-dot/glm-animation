@@ -1,16 +1,23 @@
 import React from 'react';
-export type CharacterOutfit='hoodie'|'teal-overshirt'|'ochre-jacket'|'navy-waistcoat'|'cobalt-lead';
+import {PufferGarment,PufferOutfit} from './puffer-garment';
+export type CharacterOutfit='hoodie'|'teal-overshirt'|'ochre-jacket'|'navy-waistcoat'|'cobalt-lead'|PufferOutfit;
+export const isPufferOutfit=(outfit:CharacterOutfit):outfit is PufferOutfit=>outfit.startsWith('puffer-');
 export function outfitPalette(outfit:CharacterOutfit,lit:boolean){
  const base={cloth:lit?['#F28A60','#DC6049','#803D49']:['#E36A50','#D85845','#AA3E38'],far:lit?['#CD7055','#703D4B']:['#D65B47','#A7413B'],pants:lit?['#38303A','#131D2C']:['#302632','#101521'],cuff:'#B94A3E',shoe:'#1D1B26',sole:'#E2B680'};
+ if(isPufferOutfit(outfit)){
+  const colors=outfit==='puffer-black'?['#64717D','#35414E','#172434']:outfit==='puffer-cobalt'?['#82A7D7','#466FA7','#293F62']:['#7BAAA0','#427D79','#264F59'];
+  return {...base,cloth:colors,far:[colors[1],colors[2]],cuff:colors[2],pants:['#343D4B','#172332'],shoe:'#DBD0BB',sole:'#A39988'};
+ }
  if(outfit==='cobalt-lead')return {...base,cloth:['#729FE0','#416FB5','#263D66'],far:['#466EA1','#283E61'],cuff:'#263F67',pants:['#343E51','#182435'],shoe:'#E4D9C3',sole:'#C9A45E'};
  if(outfit==='teal-overshirt')return {...base,cloth:lit?['#75B1A4','#43837E','#2A4C5D']:['#639E94','#3D7976','#294D59'],far:['#50847C','#2B4D58'],cuff:'#356760',shoe:'#D4CCBA',sole:'#938A7E'};
  if(outfit==='ochre-jacket')return {...base,cloth:['#D9AA68','#B9894C','#705343'],far:['#B68B58','#6B5244'],cuff:'#6A5142',shoe:'#34303A',sole:'#A59275'};
  if(outfit==='navy-waistcoat')return {...base,cloth:['#F0DEC0','#D2C4AA','#89939A'],far:['#C9BDA7','#838E96'],cuff:'#B7AD99',pants:['#414854','#1C2634'],shoe:'#CFC6B5',sole:'#8F877C'};
  return base;
 }
-export const OutfitGarment:React.FC<{outfit:Exclude<CharacterOutfit,'hoodie'>;w:number;c:number;s:number;seam:number;cloth:string}>=({outfit,w,c,s,seam,cloth})=>{
+export const OutfitGarment:React.FC<{id:string;outfit:Exclude<CharacterOutfit,'hoodie'>;w:number;c:number;s:number;seam:number;cloth:string}>=({id,outfit,w,c,s,seam,cloth})=>{
  const ink='#120F17',cream='#EADCC2',hem=outfit==='ochre-jacket'?-184:-177;
  const shell=`M${-w} -272Q${-w*.8} -279 ${-w*.42} -280L0 -277L${w*.46} -280Q${w*.83} -277 ${w} -270L${w*.92} -224L${w*.9} ${hem}Q0 ${hem+5} ${-w*.9} ${hem}L${-w*.92} -224Z`;
+ if(isPufferOutfit(outfit))return <PufferGarment id={id+'puffer'} w={w} c={c} s={s} seam={seam} colors={outfitPalette(outfit,true).cloth}/>;
  if(outfit==='cobalt-lead')return <g>
   {/* Gold mock-neck remains visible through the asymmetric jacket opening. */}
   <path d={`M${-w*.6} -285Q0 -291 ${w*.6} -285V-168Q0 -163 ${-w*.6} -168Z`} fill="#D5AD57" stroke={ink} strokeWidth="1.3"/>

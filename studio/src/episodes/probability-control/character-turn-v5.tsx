@@ -1,5 +1,5 @@
 import React from 'react';
-import {CharacterOutfit,OutfitGarment,outfitPalette} from './character-outfits';
+import {CharacterOutfit,OutfitGarment,outfitPalette,isPufferOutfit} from './character-outfits';
 import {kf,clamp} from '../../engine/anim';
 import {CharacterV2Pose,v2HandLocal} from './character-v2-motion';
 import type {CharacterMood} from './cinematic-character-v2';
@@ -32,7 +32,7 @@ export function auditTurnV5(lighting:'baseline'|'sunset'='baseline'){
  return {lighting,frames:TURN_FRAMES,maxHeelDrift,headDiameter:72,floorY:0,footAction:'heels planted; toes pivot on floor'};
 }
 export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset';pose?:CharacterV2Pose;mood?:CharacterMood;shadow?:boolean;outfit?:CharacterOutfit}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline',pose,mood='calm',shadow=true,outfit='hoodie'})=>{
- const lit=lighting==='sunset',palette=outfitPalette(outfit,lighting==='sunset');
+ const lit=lighting==='sunset',palette=outfitPalette(outfit,lighting==='sunset'),puffer=isPufferOutfit(outfit);
  const g=turnV5Geometry(yaw),{c,s,width:w}=g,ink='#120F17',rim='#E2B680',cream='#F5E8D0';
  const ha=clamp(headYaw)*Math.PI/2,hc=Math.cos(ha),hs=Math.sin(ha),seam=w*.8*s;
  const drop=pose?.drop??0;
@@ -53,8 +53,12 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
    angle=(side>0?Math.atan2(dy,dx):Math.atan2(tip.y-ik.knee.y,tip.x-ik.knee.x))*180/Math.PI;
   }
   return <g>
-   <path d={path} fill="none" stroke={ink} strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"/>
-   <path d={path} fill="none" stroke={u(side>0?'cloth':'far')} strokeWidth="16.5" strokeLinecap="round" strokeLinejoin="round"/>
+   <path d={path} fill="none" stroke={ink} strokeWidth={puffer?23:20} strokeLinecap="round" strokeLinejoin="round"/>
+   <path d={path} fill="none" stroke={u(side>0?'cloth':'far')} strokeWidth={puffer?19.5:16.5} strokeLinecap="round" strokeLinejoin="round"/>
+   {puffer&&!pose?[-250,-226,-202,-178].map(y=>{
+    const x=sh+(wr-sh)*(y+270)/119;
+    return <g key={y}><path d={`M${x-9} ${y}q9 4 18 0`} fill="none" stroke="#101D2B" strokeWidth="1.2" opacity=".7"/><path d={`M${x-8} ${y-2}q8 3 16 0`} fill="none" stroke="#C2D6D8" strokeWidth=".8" opacity=".18"/></g>;
+   }):null}
    {pose&&side>0?<g transform={`translate(${tip.x} ${tip.y}) rotate(${angle})`}>
     <path d="M-14 -4L-8 -4Q-5 -6 -2 -3L0 -1Q1 2 -3 4L-7 5Q-8 9 -11 7L-12 4H-14Z" fill={ink}/>
     <path d="M-14 -5V5" stroke={palette.cuff} strokeWidth="1.6"/>
@@ -109,7 +113,7 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
   <path d={`M${seam} -266V-170`} stroke="#A63C34" strokeWidth="1" opacity=".6"/>
   <path d={`M${-w*.83} -164Q0 -160 ${w*.83} -164L${w*.87} -155Q0 -149 ${-w*.87} -155Z`} fill="#C44C3D" stroke="#9B3834" strokeWidth=".8"/>
   <path d={`M${seam-10*c} -184L${seam-6*c} -198H${seam+10*c}L${seam+14*c} -183`} fill="none" stroke="#A03932" strokeWidth="1.5"/>
-  </>:<OutfitGarment outfit={outfit} w={w} c={c} s={s} seam={seam} cloth={u('cloth')}/>}
+  </>:<OutfitGarment id={id+'outfit'} outfit={outfit} w={w} c={c} s={s} seam={seam} cloth={u('cloth')}/>}
   <path d="M-6 -297H6L7 -274Q1 -269 -6 -275Z" fill={ink}/>
   <path d="M-4 -288V-277" stroke={rim} strokeWidth="1" opacity=".75"/>
   {outfit==='hoodie'?<path d={`M${seam-9*c} -268l${-c} 22M${seam+6*c} -267l${c} 20`} stroke="#EFD9BC" strokeWidth="1.4" strokeLinecap="round"/>:null}
