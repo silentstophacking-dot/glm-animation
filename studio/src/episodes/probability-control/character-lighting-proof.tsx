@@ -1,8 +1,9 @@
 import React from 'react';
+import type {CharacterOutfit} from './character-outfits';
 import {useCurrentFrame} from 'remotion';
 import {CharacterTurnV5,turnV5At} from './character-turn-v5';
 import {LabBackground} from './cinematic-lab';
-export const SunsetCharacterScene:React.FC<{id:string;frame:number;lit?:boolean}>=({id,frame,lit=true})=>{
+export const SunsetCharacterScene:React.FC<{id:string;frame:number;lit?:boolean;outfit?:CharacterOutfit}>=({id,frame,lit=true,outfit='hoodie'})=>{
  const s=turnV5At(frame),u=(n:string)=>`url(#${id+n})`;
  return <g>
   <defs>
@@ -17,7 +18,7 @@ export const SunsetCharacterScene:React.FC<{id:string;frame:number;lit?:boolean}
   {/* Window is up/left. Cast shade runs away across the same fixed floor. */}
   <path d="M1044 930L1118 930L1390 1000Q1370 1030 1300 1015Z" fill="#080F1D" opacity=".38" filter={u('shadow')}/>
   {[-16,16].map(x=><ellipse key={x} cx={1080+x*1.9} cy="932" rx="22" ry="4" fill="#090D17" opacity=".65"/>)}
-  <CharacterTurnV5 id={id+'actor'} x={1080} y={930} scale={1.9} yaw={s.body} headYaw={s.head} lighting={lit?'sunset':'baseline'}/>
+  <CharacterTurnV5 id={id+'actor'} x={1080} y={930} scale={1.9} yaw={s.body} headYaw={s.head} lighting={lit?'sunset':'baseline'} outfit={outfit}/>
   <rect width="1920" height="1080" fill={u('vignette')}/>
  </g>;
 };

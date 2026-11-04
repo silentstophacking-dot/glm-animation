@@ -1,4 +1,5 @@
 import React from 'react';
+import {CharacterOutfit,OutfitGarment,outfitPalette} from './character-outfits';
 import {kf,clamp} from '../../engine/anim';
 import {CharacterV2Pose,v2HandLocal} from './character-v2-motion';
 import type {CharacterMood} from './cinematic-character-v2';
@@ -30,8 +31,8 @@ export function auditTurnV5(lighting:'baseline'|'sunset'='baseline'){
  }
  return {lighting,frames:TURN_FRAMES,maxHeelDrift,headDiameter:72,floorY:0,footAction:'heels planted; toes pivot on floor'};
 }
-export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset';pose?:CharacterV2Pose;mood?:CharacterMood;shadow?:boolean}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline',pose,mood='calm',shadow=true})=>{
- const lit=lighting==='sunset';
+export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset';pose?:CharacterV2Pose;mood?:CharacterMood;shadow?:boolean;outfit?:CharacterOutfit}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline',pose,mood='calm',shadow=true,outfit='hoodie'})=>{
+ const lit=lighting==='sunset',palette=outfitPalette(outfit,lighting==='sunset');
  const g=turnV5Geometry(yaw),{c,s,width:w}=g,ink='#120F17',rim='#E2B680',cream='#F5E8D0';
  const ha=clamp(headYaw)*Math.PI/2,hc=Math.cos(ha),hs=Math.sin(ha),seam=w*.8*s;
  const drop=pose?.drop??0;
@@ -56,10 +57,10 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
    <path d={path} fill="none" stroke={u(side>0?'cloth':'far')} strokeWidth="16.5" strokeLinecap="round" strokeLinejoin="round"/>
    {pose&&side>0?<g transform={`translate(${tip.x} ${tip.y}) rotate(${angle})`}>
     <path d="M-14 -4L-8 -4Q-5 -6 -2 -3L0 -1Q1 2 -3 4L-7 5Q-8 9 -11 7L-12 4H-14Z" fill={ink}/>
-    <path d="M-14 -5V5" stroke="#B94A3E" strokeWidth="1.6"/>
+    <path d="M-14 -5V5" stroke={palette.cuff} strokeWidth="1.6"/>
     <path d="M-12 -4L-7 -4" stroke={rim} strokeWidth=".8" opacity=".6"/>
    </g>:<g transform={`translate(${tip.x} ${tip.y}) rotate(${pose?angle-90:0}) scale(${pose?1:side} 1)`}>
-    <path d="M-8 -3H8V2H-8Z" fill="#B94A3E" stroke={ink} strokeWidth="1.2"/>
+    <path d="M-8 -3H8V2H-8Z" fill={palette.cuff} stroke={ink} strokeWidth="1.2"/>
     <path d="M-5 2H5L6 11Q5 16 1 16Q-3 16 -4 12L-7 10Q-9 6 -5 5Z" fill={ink}/>
     <path d="M-5 6L-4 11" stroke={rim} strokeWidth=".8" opacity=".55"/>
    </g>}
@@ -69,15 +70,15 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
   // Turn: planted heel pivot. Performance: the supplied world-space sole target drives each shoe.
   const toe=17*s,half=8*c+5*s;
   return <g transform={`translate(${at.x} ${at.y}) rotate(${pose?.shoeAngles?.[i]??0})`}>
-   <path d={`M-6 -8Q0 -11 6 -8L${toe+half} -5Q${toe+half+2} -1 ${toe+half} 0H${-half}Q${-half-2} -3 -6 -8Z`} fill="#1D1B26" stroke="#0E111C" strokeWidth="1.5"/>
-   <path d={`M${-half} -1H${toe+half}`} stroke={rim} strokeWidth="1.1" opacity=".7"/>
+   <path d={`M-6 -8Q0 -11 6 -8L${toe+half} -5Q${toe+half+2} -1 ${toe+half} 0H${-half}Q${-half-2} -3 -6 -8Z`} fill={palette.shoe} stroke="#0E111C" strokeWidth="1.5"/>
+   <path d={`M${-half} -1H${toe+half}`} stroke={palette.sole} strokeWidth="1.1" opacity=".7"/>
   </g>;
  };
  return <g transform={`translate(${x} ${y}) scale(${scale})`} filter={solid?u('solid'):undefined}>
   <defs>
-   <linearGradient id={id+'cloth'} x2="1" y2=".3"><stop stopColor={lit?"#F28A60":"#E36A50"}/><stop offset=".3" stopColor={lit?"#DC6049":"#D85845"}/><stop offset="1" stopColor={lit?"#803D49":"#AA3E38"}/></linearGradient>
-   <linearGradient id={id+'far'} x2="1"><stop stopColor={lit?"#CD7055":"#D65B47"}/><stop offset="1" stopColor={lit?"#703D4B":"#A7413B"}/></linearGradient>
-   <linearGradient id={id+'pants'} x2="1"><stop stopColor={lit?"#38303A":"#302632"}/><stop offset="1" stopColor={lit?"#131D2C":"#101521"}/></linearGradient>
+   <linearGradient id={id+'cloth'} x2="1" y2=".3"><stop stopColor={palette.cloth[0]}/><stop offset=".3" stopColor={palette.cloth[1]}/><stop offset="1" stopColor={palette.cloth[2]}/></linearGradient>
+   <linearGradient id={id+'far'} x2="1"><stop stopColor={palette.far[0]}/><stop offset="1" stopColor={palette.far[1]}/></linearGradient>
+   <linearGradient id={id+'pants'} x2="1"><stop stopColor={palette.pants[0]}/><stop offset="1" stopColor={palette.pants[1]}/></linearGradient>
    <radialGradient id={id+'headLight'} cx=".2" cy=".18" r=".9"><stop stopColor="#20202C"/><stop offset=".55" stopColor="#12121E"/><stop offset="1" stopColor="#090E18"/></radialGradient>
    <filter id={id+'sunRim'} x="-15%" y="-5%" width="130%" height="110%" colorInterpolationFilters="sRGB">
     <feOffset in="SourceAlpha" dx="1.25" dy="1" result="inset"/>
@@ -98,15 +99,18 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
   </g>)}
   <g transform={`translate(0 ${drop}) rotate(${pose?.lean??0} 0 -146)`}>
   {arm(-1)}
+  {outfit!=='hoodie'?<path d={`M${-w*.78} -192Q0 -196 ${w*.78} -192L${g.hips[1]+7} -144Q0 -140 ${g.hips[0]-7} -144Z`} fill={u('pants')}/>:null}
+  {outfit==='hoodie'?<>
   <path d={`M${-w*.65} -290Q${-w-8} -285 ${-w-4} -270L${-w*.6} -254L${w*.5} -273L${w*.55} -287Z`} fill="#B7463C" stroke={ink} strokeWidth="1.4"/>
   <path d={`M${-w} -272Q${-w*.8} -278 ${-w*.42} -280L0 -277L${w*.46} -280Q${w*.83} -277 ${w} -270L${w*.93} -237L${w*.83} -207L${w*.87} -155Q0 -149 ${-w*.87} -155L${-w*.83} -207Z`} fill={u('cloth')} stroke={ink} strokeWidth="1.5"/>
   <path d={`M${seam} -276Q${seam+3} -243 ${seam} -207L${seam} -155Q${w*.65} -151 ${w*.87} -155L${w*.83} -207L${w} -270Z`} fill="#8D3537" opacity={.35*s}/>
   <path d={`M${seam} -266V-170`} stroke="#A63C34" strokeWidth="1" opacity=".6"/>
   <path d={`M${-w*.83} -164Q0 -160 ${w*.83} -164L${w*.87} -155Q0 -149 ${-w*.87} -155Z`} fill="#C44C3D" stroke="#9B3834" strokeWidth=".8"/>
   <path d={`M${seam-10*c} -184L${seam-6*c} -198H${seam+10*c}L${seam+14*c} -183`} fill="none" stroke="#A03932" strokeWidth="1.5"/>
+  </>:<OutfitGarment outfit={outfit} w={w} c={c} s={s} seam={seam} cloth={u('cloth')}/>}
   <path d="M-6 -297H6L7 -274Q1 -269 -6 -275Z" fill={ink}/>
   <path d="M-4 -288V-277" stroke={rim} strokeWidth="1" opacity=".75"/>
-  <path d={`M${seam-9*c} -268l${-c} 22M${seam+6*c} -267l${c} 20`} stroke="#EFD9BC" strokeWidth="1.4" strokeLinecap="round"/>
+  {outfit==='hoodie'?<path d={`M${seam-9*c} -268l${-c} 22M${seam+6*c} -267l${c} 20`} stroke="#EFD9BC" strokeWidth="1.4" strokeLinecap="round"/>:null}
   <g transform={`translate(2 -326) rotate(${pose?.headTilt??0})`}>
    <ellipse rx="36" ry="36" fill={lit?u('headLight'):ink}/>
    <path d="M-35 0Q-35 -27 -10 -35Q12 -41 29 -21" fill="none" stroke={rim} strokeWidth={lit?1.05:1.8} strokeLinecap="round"/>
