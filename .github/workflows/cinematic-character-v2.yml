@@ -1,0 +1,53 @@
+name: Cinematic character V2 review
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/cinematic-character-v2]
+    paths:
+      - studio/src/episodes/probability-control/cinematic-character-v2.tsx
+      - studio/src/episodes/probability-control/cinematic-character-v2-sheet.tsx
+      - studio/src/episodes/probability-control/character-v2-motion.ts
+      - studio/src/episodes/probability-control/slender-motion-board.tsx
+      - studio/src/cinematic-character-v2-entry.tsx
+      - .github/workflows/cinematic-character-v2.yml
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Check geometry and contacts across the planned motion
+        run: |
+          mkdir -p out/character-v2
+          npx --no-install esbuild src/episodes/probability-control/character-v2-motion.ts --bundle --platform=node --outfile=out/character-v2/audit.cjs
+          node -e "console.log(require('./out/character-v2/audit.cjs').auditCharacterV2())" | tee out/character-v2/audit.log
+      - name: Render design comparison and contextual poses
+        run: |
+          set -o pipefail
+          npx remotion still src/cinematic-character-v2-entry.tsx CinematicCharacterV2Sheet out/character-v2/Character-V2-Design.png --frame=0 2>&1 | tee out/character-v2/design.log
+          npx remotion still src/cinematic-character-v2-entry.tsx CinematicCharacterV2Board out/character-v2/Character-V2-Poses.png --frame=0 2>&1 | tee out/character-v2/poses.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CHARACTER-V2-REVIEW-${{ github.run_id }}
+          path: studio/out/character-v2/*.png
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CHARACTER-V2-LOG-${{ github.run_id }}
+          path: studio/out/character-v2/*.log
+          if-no-files-found: warn
