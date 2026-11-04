@@ -1,5 +1,5 @@
 import React from 'react';
-import {SlenderPose,limb} from './slender-mechanics';
+import {SlenderPose,limb,nearHandRig} from './slender-mechanics';
 
 // Normalized standing height: 360. Head: 68 (18.9%); floor-to-hip: 142 (39.4%).
 // Reference: supplied Reaction Time clip, 00:40 full-body profile.
@@ -16,7 +16,8 @@ export const SlenderCharacter:React.FC<{
   const ink='#100D14',cloth=coral?'#DD5142':'#15131B',rim='#D8B079';
   const feet=pose?.feet??[{x:-12,y:-4},{x:13,y:-4}];
   const hand=pose?{x:pose.hand.x,y:pose.hand.y-pose.drop}:{x:point?90:20,y:point?-238:-147};
-  const arm=pose?limb({x:10,y:-269},hand,60,-1).path:point?'M10 -269L38 -229L88 -238':'M10 -269L17 -211L20 -150';
+  const dynamicHand=pose&&build!=='slim'?nearHandRig(pose):null;
+  const arm=dynamicHand?dynamicHand.chain.path:pose?limb({x:10,y:-269},hand,60,-1).path:point?'M10 -269L38 -229L88 -238':'M10 -269L17 -211L20 -150';
   const handDrawing=(x:number,y:number,pointing=false,mirror=false)=> <g transform={`translate(${x} ${y}) rotate(${pointing?-90:0}) scale(${handSize*.75*(mirror?-1:1)} ${handSize*.75})`}>
     <path d="M0 -7V1" stroke={ink} strokeWidth="3.5" strokeLinecap="round"/>
     <path d={pointing?'M-2 -4L2 -4L3 0L3 11Q3 14 1 14Q-1 14 -1 11V7Q-6 10 -6 5V1Q-6 -1 -3 0Z':
@@ -80,7 +81,11 @@ export const SlenderCharacter:React.FC<{
       </g>:null}
     </g>
     {sleeve(arm,true)}
-    {build==='slim'||pose?<g>
+    {dynamicHand?<g transform={`translate(${dynamicHand.tip.x} ${dynamicHand.tip.y}) rotate(${dynamicHand.angle})`}>
+      <path d="M-13 -3L-7 -3Q-5 -5 -2 -3L0 -1Q1 1 -2 3L-5 4Q-4 8 -7 7L-10 4H-13Z" fill={ink}/>
+      <path d="M-11 -3L-6 -3" stroke={rim} strokeWidth=".8" opacity=".6"/>
+      <path d="M-12 -5v10" stroke="#B7614D" strokeWidth="1.4"/>
+    </g>:build==='slim'||pose?<g>
       <ellipse cx={hand.x} cy={hand.y} rx={3.5*handSize} ry={5*handSize} fill={ink}/>
       {point&&!pose?<path d="M91 -239L99 -241" stroke={ink} strokeWidth="3" strokeLinecap="round"/>:null}
     </g>:point?handDrawing(hand.x+4,hand.y,true):<g>

@@ -44,3 +44,27 @@ export function auditSlender(){
  if(maxContact>.001)throw new Error('Button contact drift');
  return {frames:270,maxContact};
 }
+
+/** Contact target is the leading edge of the palm; sleeve ends at the wrist. */
+export function nearHandRig(pose:SlenderPose){
+ const tip={x:pose.hand.x,y:pose.hand.y-pose.drop};
+ const dx=tip.x-10,dy=tip.y+269,d=Math.hypot(dx,dy);
+ const ux=dx/d,uy=dy/d;
+ const wrist={x:tip.x-ux*10,y:tip.y-uy*10};
+ const chain=limb({x:10,y:-269},wrist,55,-1);
+ return {tip,wrist,chain,angle:Math.atan2(uy,ux)*180/Math.PI};
+}
+export function balancedAt(f:number){
+ const state=slenderAt(f);
+ const moving=kf(f,[[20,0],[28,1],[116,1],[124,0]]);
+ const swing=10*((state.near.x-state.far.x-37.5)/100)*moving;
+ return {...state,pose:{...state.pose,hand:{x:state.pose.hand.x-swing,y:state.pose.hand.y-Math.abs(swing)*.3}}};
+}
+export function auditBalanced(){
+ const result=auditSlender();
+ for(let f=0;f<270;f++){
+  const {x,pose}=balancedAt(f);nearHandRig(pose);
+  if(f>=162&&f<=202&&Math.hypot(x+pose.hand.x*1.5-BUTTON.x,890+pose.hand.y*1.5-BUTTON.y)>.001)throw new Error('Balanced palm lost contact');
+ }
+ return {...result,hand:'palm tip and sleeve wrist checked on every frame'};
+}

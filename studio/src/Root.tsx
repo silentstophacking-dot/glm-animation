@@ -7,6 +7,7 @@ import {IfverseContactPreview} from './episodes/probability-control/ifverse-cont
 import {SlenderDesignSheet} from './episodes/probability-control/slender-character-sheet';
 import {SlenderMotionBoard} from './episodes/probability-control/slender-motion-board';
 import {CharacterBuildComparison} from './episodes/probability-control/character-build-comparison';
+import {BalancedMotionProof} from './episodes/probability-control/balanced-motion-proof';
 import { CastSheet } from './CastSheet';
 import {CharacterRigV2Gallery,CharacterRigV2Motion} from './episodes/probability-control/character-v2-gallery';
 import {CharacterActingV3,ACTING_V3_FRAMES,ACTING_V3_FPS} from './episodes/probability-control/character-acting-v3';
@@ -28,6 +29,7 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} fps={e.fps} width={e.width} height={e.height} />
         </React.Fragment>
       ))}
+      <Composition id="BalancedMotionProof" component={BalancedMotionProof} durationInFrames={270} fps={30} width={1920} height={1080}/>
       <Composition id="CharacterBuildComparison" component={CharacterBuildComparison} durationInFrames={1} fps={30} width={1920} height={1080}/>
       <Composition id="SlenderMotionBoard" component={SlenderMotionBoard} durationInFrames={1} fps={30} width={1920} height={1230}/>
       <Composition id="SlenderDesignSheet" component={SlenderDesignSheet} durationInFrames={1} fps={30} width={1920} height={1080}/>
