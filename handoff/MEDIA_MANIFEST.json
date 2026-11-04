@@ -1,0 +1,77 @@
+[
+  {
+    "path": "review/lab-room-depth-7s.mp4",
+    "bytes": 838942,
+    "sha256": "87d93c9efee6672d02b2f09094a1d3ac907d828d99e055ba26b489686a842658"
+  },
+  {
+    "path": "review/combined-performance-11s.mp4",
+    "bytes": 502817,
+    "sha256": "8c6031ffce3a2fdb1edf8a74536e9039d5084f72be153c26bee15c358260fdc0"
+  },
+  {
+    "path": "review/sunset-lighting-6s.mp4",
+    "bytes": 151205,
+    "sha256": "f39c8d2131fe7b3563e542f45221ad374bd52b3f067b8128388c6bfa694e2976"
+  },
+  {
+    "path": "review/character-turn-v5-6s.mp4",
+    "bytes": 62212,
+    "sha256": "57526162b1fc838c2037d6257101dfc620e48becc9f2cf8bc9cea9601b208933"
+  },
+  {
+    "path": "review/performance-v3-11s.mp4",
+    "bytes": 415043,
+    "sha256": "92dc2a6404ab4d689516f2fb54e1bc367224e11127bef6c2205a91b71d27654f"
+  },
+  {
+    "path": "review/depth-camera-6s.mp4",
+    "bytes": 511291,
+    "sha256": "4ce1d30d5d930c50d10f34cad33b35d31dc6df91445c8b0ac094e088eed362e2"
+  },
+  {
+    "path": "review/balanced-motion-9s.mp4",
+    "bytes": 395440,
+    "sha256": "56476e191c42ffe2705a40f594ae2feebbb9d51dfbb19336d31d6de0f6efee99"
+  },
+  {
+    "path": "review/contact-preview-8s.mp4",
+    "bytes": 102526,
+    "sha256": "d6bcdf73e48b47fc027b30af4f1a25910facf0419fbcd95f34d6432e970d26d1"
+  },
+  {
+    "path": "review/puffer-options.png",
+    "bytes": 589237,
+    "sha256": "7b28d0d46762a4e8b54fee9cbb315c24a52c615bc49080f6792faa2afd785ee6"
+  },
+  {
+    "path": "review/black-puffer-in-lab.png",
+    "bytes": 1776084,
+    "sha256": "771b05deb3104d336f995b60ae2e6d604b3c5bdddb16b45c6f2d8689f63a7e15"
+  },
+  {
+    "path": "review/lead-outfit-options.png",
+    "bytes": 501144,
+    "sha256": "0ab4db176ac0c8505726fbedc46137f6fc1b9205756c2c868cb00d33357ccefb"
+  },
+  {
+    "path": "review/earlier-outfit-options.png",
+    "bytes": 565679,
+    "sha256": "810fb9bd18b3b65e830361a1492634cbf17ad8e4c84713357d84e93209322cd2"
+  },
+  {
+    "path": "references/reaction-time-50s.png",
+    "bytes": 227034,
+    "sha256": "c2a87fe0b2b3b0c1bfba5c22f0e01a88892ba6be031a662ceae53e714fbf1dc5"
+  },
+  {
+    "path": "references/reaction-time-standing-40s.png",
+    "bytes": 287112,
+    "sha256": "f2e4ee80a3ae6c80a4db18da3e00a82be64f2ae64def58e2b7f6262671859a90"
+  },
+  {
+    "path": "references/earlier-motion-comparison.jpg",
+    "bytes": 188752,
+    "sha256": "21c9c0fc6da3f09972d9086583ee58a39f26ee1e2549b53a0481dc9b5630313f"
+  }
+]
