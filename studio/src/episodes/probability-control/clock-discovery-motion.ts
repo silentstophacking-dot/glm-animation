@@ -19,10 +19,12 @@ export function discoveryActorAt(f:number){
  const reach=(hips:number[])=>Math.max(...p.feet.map((foot,i)=>foot.y-4+147.4-Math.sqrt(143**2-(foot.x-hips[i])**2)));
  const correction=reach(g.hips)-reach(oldG.hips);p.drop+=correction;
  p.hand={x:p.hand.x,y:p.hand.y+correction};
- p.yaw=blend(.55,-.58,head);p.gaze=-look;p.gazeY=-1.8*look;
- p.headTilt=kf(f,[[412,2],[445,-11],[552,-11],[576,-7],[620,-3],[679,-3],[719,-8]]);
+ p.yaw=blend(kf(f,[[412,anomalyActorAt(412).headYaw],[584,.3],[620,.55]]),-.58,head);p.gaze=blend(original.pose.gaze??0,-1,look);p.gazeY=-1.8*look;
+ p.headTilt=kf(f,[[412,anomalyActorAt(412).pose.headTilt],[445,-11],[552,-11],[576,-7],[620,-3],[679,-3],[719,-8]]);
  p.blink=Math.max(...[567,681].map(b=>clamp(1-Math.abs(f-b)/2)));
- p.surprised=false;p.farHand={x:-25,y:-153};
+ p.surprised=false;
+ const settle=kf(f,[[412,0],[448,1]]),far=original.pose.farHand!;
+ p.farHand={x:blend(far.x,-25,settle),y:blend(far.y,-153,settle)};
  if(f>=540){
   // A deliberate hold, a second intention, a stop short, then withdrawal.
   const intent=kf(f,[[540,0],[618,0],[650,1],[678,1],[714,0]]);
@@ -32,6 +34,9 @@ export function discoveryActorAt(f:number){
  return {...original,pose:p,yaw:p.torsoYaw,headYaw:p.yaw,mood:'concerned' as const};
 }
 export function auditClockDiscovery(){
+ const before=discoveryActorAt(411),after=discoveryActorAt(412);
+ const freeArmBoundary=Math.hypot(before.pose.farHand!.x-after.pose.farHand!.x,before.pose.farHand!.y-after.pose.farHand!.y);
+ if(freeArmBoundary>1.5||Math.abs(before.headYaw-after.headYaw)>.05||Math.abs(before.pose.headTilt-after.pose.headTilt)>1)throw new Error('Discontinuous discovery transition');
  const previous=auditLabTimeAnomaly();let maxPlantedDrift=0,minSecondReachGap=Infinity;
  for(let f=0;f<ANOMALY_FRAMES;f++){
   const a=discoveryActorAt(f),p=a.pose,g=turnV5Geometry(a.yaw);
@@ -49,5 +54,5 @@ export function auditClockDiscovery(){
  }
  if(maxPlantedDrift>.001||minSecondReachGap<24)throw new Error('Discovery contact/stop failure');
  if(!(discoveryActorAt(440).headYaw<-.4&&discoveryActorAt(560).headYaw<-.4))throw new Error('Clock eyeline missing');
- return {frames:ANOMALY_FRAMES,shots:previous.shots,maxPlantedDrift,minSecondReachGap,buttonFrame:BUTTON_FRAME,activationFrame:ACTIVATION_FRAME,stepFrames:STEP_FRAMES,clothSeconds:DISCOVERY_CLOTH_SECONDS,acting:'eye lead 412, head 420, chest 427; realization hold; stop short 650–678'};
+ return {frames:ANOMALY_FRAMES,freeArmBoundary,shots:previous.shots,maxPlantedDrift,minSecondReachGap,buttonFrame:BUTTON_FRAME,activationFrame:ACTIVATION_FRAME,stepFrames:STEP_FRAMES,clothSeconds:DISCOVERY_CLOTH_SECONDS,acting:'eye lead 412, head 420, chest 427; realization hold; stop short 650–678'};
 }
