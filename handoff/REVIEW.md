@@ -4,6 +4,9 @@ These are small review copies, not 1080p masters. They are tracked in this repos
 
 ## Start here
 
+- [Latest 24s clock discovery acting](review/clock-discovery-24s.mp4) — full newly rendered scene with leftward clock glance, realization pause, stopped reach and withdrawal; owner review pending.
+- [Discovery acting board](review/clock-discovery-board.png).
+
 - [Updated 24s phone review edit](review/lab-time-anomaly-clock-v2-24s.mp4) — revised clock insert, all other shots/audio retained; owner review pending. This is an assembled review edit, not a full LabTimeAnomalyV2 render.
 - [Revised 3s clock shot](review/cinematic-clock-v2-3s.mp4).
 - [Clock previous/revised comparison](review/cinematic-clock-v2-comparison.png) and [large close-up](review/cinematic-clock-v2.png).

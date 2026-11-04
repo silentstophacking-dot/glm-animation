@@ -1,5 +1,15 @@
 [
   {
+    "path": "review/clock-discovery-board.png",
+    "bytes": 2366115,
+    "sha256": "8c2cfd05e134fcc8b86cdf29e848721c6da42a739f2542d3faa939294721721d"
+  },
+  {
+    "path": "review/clock-discovery-24s.mp4",
+    "bytes": 2074025,
+    "sha256": "07a94e9f8979791eae78a9cc95d1e4ea88f37f6771b12cb89f1d2f14f1d297f1"
+  },
+  {
     "path": "review/lab-time-anomaly-clock-v2-24s.mp4",
     "bytes": 1819171,
     "sha256": "aceb0023276294223e2c0674a6a18b893143add417adada0cd1ee6d0a05a6233"
