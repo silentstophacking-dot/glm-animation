@@ -12,6 +12,8 @@ const dir = 'out/production';
 const revision = (process.env.GITHUB_SHA || 'local').slice(0, 12);
 const name = id + '-' + revision + '-' + (process.env.GITHUB_RUN_ID || 'local');
 const previewEntries = {
+  PerformanceV3Proof: 'src/performance-v3-entry.tsx',
+  PerformanceV3Board: 'src/performance-v3-entry.tsx',
   IfverseContactPreview: 'src/ifverse-preview.tsx',
   SlenderDesignSheet: 'src/slender-design-sheet.tsx',
   SlenderMotionBoard: 'src/slender-motion-board-entry.tsx',

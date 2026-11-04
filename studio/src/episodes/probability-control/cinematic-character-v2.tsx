@@ -1,16 +1,16 @@
 import React from 'react';
 import {CharacterV2Pose,v2HandLocal} from './character-v2-motion';
 import {limb,XY} from './slender-mechanics';
-export type CharacterMood='calm'|'curious'|'confident'|'surprised'|'concerned';
+export type CharacterMood='calm'|'curious'|'confident'|'surprised'|'concerned'|'focused'|'relieved';
 export type CharacterAction='stand'|'explain'|'reach'|'stride';
 export const CinematicCharacterV2:React.FC<{
  id:string;x:number;y:number;scale?:number;facing?:'right'|'front'|'left';
- mood?:CharacterMood;action?:CharacterAction;pose?:CharacterV2Pose;bodyYaw?:number;shadow?:boolean;
-}>=({id,x,y,scale=1,facing='right',mood='calm',action='stand',pose,bodyYaw,shadow=true})=>{
+ mood?:CharacterMood;action?:CharacterAction;pose?:CharacterV2Pose;bodyYaw?:number;headYaw?:number;shadow?:boolean;
+}>=({id,x,y,scale=1,facing='right',mood='calm',action='stand',pose,bodyYaw,headYaw,shadow=true})=>{
  const ink='#120F17',cream='#F5E8D0',rim='#E2B680';
  const view=bodyYaw===undefined?undefined:Math.max(0,Math.min(1,bodyYaw));
  const bodyWidth=view===undefined?1:1-.25*view;
- const yaw=view??pose?.yaw??(facing==='front'?0:.85);
+ const yaw=headYaw??view??pose?.yaw??(facing==='front'?0:.85);
  const mouthCenter=18*yaw;
  const front=facing==='front',surprise=mood==='surprised'||pose?.surprised;
  const drop=pose?.drop??0;
@@ -23,8 +23,10 @@ export const CinematicCharacterV2:React.FC<{
  const wrist={x:handTip.x-ux*11,y:handTip.y-uy*11};
  const arm=limb(shoulder,wrist,61,-1);
  const u=(s:string)=>`url(#${id+s})`;
- const farWrist={x:-23+12*(view??0)+(pose?.farSwing??0),y:-153};
- const farArm=pose||view!==undefined?limb({x:-15+6*(view??0),y:-269},farWrist,60,-1).path:'M-15 -269Q-26 -255 -27 -218L-23 -153';
+ const farWrist=pose?.farHand??{x:-23+12*(view??0)+(pose?.farSwing??0),y:-153};
+ const farIK=pose||view!==undefined?limb({x:-15+6*(view??0),y:-269},farWrist,60,-1):undefined;
+ const farHandAngle=farIK?Math.atan2(farWrist.y-farIK.knee.y,farWrist.x-farIK.knee.x)*180/Math.PI-90:0;
+ const farArm=farIK?farIK.path:'M-15 -269Q-26 -255 -27 -218L-23 -153';
  const legPath=(i:number)=>pose?limb({x:i?8:-8,y:-146+drop},feet[i],72).path:
   action==='stride'?limb({x:i?8:-8,y:-146+12},feet[i],72).path:
   i?'M8 -146Q14 -110 13 -80L14 -4':'M-8 -146Q-12 -105 -12 -77L-13 -4';
@@ -55,11 +57,17 @@ export const CinematicCharacterV2:React.FC<{
   {shoe(feet[1],true)}
   <g transform={`translate(0 ${drop+(action==='stride'&&!pose?12:0)}) rotate(${pose?.lean??0} 0 -146)`}>
    {sleeve(farArm,false)}
-   <path transform={`translate(${(pose?.farSwing??0)+12*(view??0)} 0)`} d="M-28 -159L-17 -159L-18 -151L-28 -151Z" fill="#AC423A" stroke={ink} strokeWidth="1"/>
-   <g transform={`translate(${farWrist.x} ${farWrist.y+4})`}>
+   {pose?.farHand?<g transform={`translate(${farWrist.x} ${farWrist.y}) rotate(${farHandAngle})`}>
+    <path d="M-5 -3h10" stroke="#B95744" strokeWidth="2"/>
+    <path d="M-3 0L3 0L4 3Q8 4 6 8L4 10Q0 13 -3 10L-5 5Z" fill={ink}/>
+    <path d="M-3 3v5" stroke={rim} strokeWidth=".8" opacity=".65"/>
+   </g>:<g>
+   <path transform={`translate(${farWrist.x+23} ${farWrist.y+153})`} d="M-28 -159L-17 -159L-18 -151L-28 -151Z" fill="#AC423A" stroke={ink} strokeWidth="1"/>
+   <g transform={`translate(${farWrist.x} ${farWrist.y+4}) rotate(0)`}>
     <path d="M-3 -4L3 -4L4 0Q8 1 6 5L4 7Q2 12 -3 9L-5 3Z" fill={ink}/>
     <path d="M-3 0v6" stroke={rim} strokeWidth=".8" opacity=".65"/>
    </g>
+   </g>}
    <g transform={`scale(${bodyWidth} 1)`}>
    {/* Hood wraps the nape rather than sticking out like a triangular backpack. */}
    <path d="M-10 -290Q-26 -287 -25 -273Q-24 -259 -16 -254L-6 -272L10 -278L7 -287Z"
@@ -85,16 +93,16 @@ export const CinematicCharacterV2:React.FC<{
    <path d="M-13 -276Q1 -267 14 -276" fill="none" stroke="#EFA482" strokeWidth="1.6"/>
    <path d="M-4 -268L-5 -246M7 -267L8 -248" stroke="#EFD9BC" strokeWidth="1.4" strokeLinecap="round"/>
    <circle cx="-5" cy="-246" r="1.2" fill="#EFD9BC"/>
-   <g transform={`translate(2 -326) rotate(${pose?.headTilt??(mood==='curious'?-5:0)}) scale(${view===undefined?1:1-.08*view} 1)`}>
+   <g transform={`translate(2 -326) rotate(${pose?.headTilt??(mood==='curious'?-5:0)}) scale(${headYaw===undefined?(view===undefined?1:1-.08*view):1-.08*headYaw} 1)`}>
     <ellipse rx={36-2*yaw} ry="36" fill={ink}/>
     <path d={front?'M-35 0Q-35 -27 -10 -35Q12 -41 29 -21':'M-34 0Q-34 -27 -10 -35Q12 -40 29 -20'}
      fill="none" stroke={rim} strokeWidth="1.8" strokeLinecap="round"/>
     {[-11+17*yaw,11+10*yaw].map((e,i)=><g key={e} opacity={i===0?1-(view===undefined?.4:.8)*yaw:1}>
-     {mood==='confident'?<path d={`M${e-4} -5h8q-1 6 -5 4Z`} fill={cream}/>:
-      <ellipse cx={e} cy="-5" rx={surprise?3.8:2.8} ry={surprise?6:mood==='curious'?4.6:3.6} fill={cream}/>}
+     {(pose?.blink??0)>.5?<path d={`M${e-4} -4h8`} stroke={cream} strokeWidth="1.8" strokeLinecap="round"/>:mood==='relieved'?<path d={`M${e-4} -4q4 -5 8 0`} stroke={cream} strokeWidth="1.8" strokeLinecap="round" fill="none"/>:mood==='confident'||mood==='focused'?<path d={`M${e-4} -5h8q-1 6 -5 4Z`} fill={cream}/>:
+      <ellipse cx={e+(pose?.gaze??0)*1.3} cy="-5" rx={surprise?3.8:2.8} ry={surprise?6:mood==='curious'?4.6:3.6} fill={cream}/>}
      {mood==='curious'||mood==='concerned'?<path d={`M${e-4} -14q4 ${mood==='curious'?-4:3} 8 -1`} fill="none" stroke={cream} strokeWidth="1.6" strokeLinecap="round"/>:null}
     </g>)}
-    {surprise?<ellipse cx={mouthCenter} cy="10" rx="3.7" ry="5.5" fill={cream}/>:
+    {mood==='focused'?<path d={`M${mouthCenter-5} 10h10`} stroke={cream} strokeWidth="1.8" strokeLinecap="round"/>:surprise?<ellipse cx={mouthCenter} cy="10" rx="3.7" ry="5.5" fill={cream}/>:
      <path d={mood==='concerned'?`M${mouthCenter-8} 12Q${mouthCenter} 4 ${mouthCenter+8} 12`:
       `M${mouthCenter-9} 8Q${mouthCenter} 17 ${mouthCenter+10} 7`} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>}
    </g>
