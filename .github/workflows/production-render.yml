@@ -5,10 +5,10 @@ on:
       composition:
         description: 'Exact composition ID (see studio/src/Root.tsx and episodes)'
         required: true
-        default: ClockInsertV2Proof
+        default: ClockDiscoveryPerformance
         type: string
   push:
-    branches: ['production/**', 'feature/ifverse-contact-preview', 'feature/balanced-motion-proof', 'feature/pseudo-depth-proof', 'feature/character-performance-v3', 'feature/character-turn-v5', 'feature/character-sunset-lighting', 'feature/combined-character-performance', 'feature/lab-room-depth', 'feature/puffer-lab-performance', 'feature/lab-time-anomaly', 'feature/cinematic-clock-insert']
+    branches: ['production/**', 'feature/ifverse-contact-preview', 'feature/balanced-motion-proof', 'feature/pseudo-depth-proof', 'feature/character-performance-v3', 'feature/character-turn-v5', 'feature/character-sunset-lighting', 'feature/combined-character-performance', 'feature/lab-room-depth', 'feature/puffer-lab-performance', 'feature/lab-time-anomaly', 'feature/cinematic-clock-insert', 'feature/clock-discovery-acting']
     paths: ['studio/**', 'scripts/render-production.mjs', 'scripts/verify-render.py', 'scripts/verify-anomaly-audio.py', '.github/workflows/production-render.yml']
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 330
     env:
-      COMPOSITION: ${{ inputs.composition || (github.ref_name == 'feature/cinematic-clock-insert' && 'ClockInsertV2Proof' || github.ref_name == 'feature/lab-time-anomaly' && 'LabTimeAnomaly' || github.ref_name == 'feature/puffer-lab-performance' && 'PufferRoomPerformance' || github.ref_name == 'feature/lab-room-depth' && 'LabRoomDepthProof' || github.ref_name == 'feature/combined-character-performance' && 'CombinedCharacterPerformance' || github.ref_name == 'feature/character-sunset-lighting' && 'CharacterSunsetLightingProof' || github.ref_name == 'feature/character-turn-v5' && 'CharacterTurnV5Proof' || github.ref_name == 'feature/character-performance-v3' && 'PerformanceV3Proof' || github.ref_name == 'feature/pseudo-depth-proof' && 'DepthCameraProof' || github.ref_name == 'feature/balanced-motion-proof' && 'BalancedMotionProof' || 'IfverseContactPreview') }}
+      COMPOSITION: ${{ inputs.composition || (github.ref_name == 'feature/clock-discovery-acting' && 'ClockDiscoveryPerformance' || github.ref_name == 'feature/cinematic-clock-insert' && 'ClockInsertV2Proof' || github.ref_name == 'feature/lab-time-anomaly' && 'LabTimeAnomaly' || github.ref_name == 'feature/puffer-lab-performance' && 'PufferRoomPerformance' || github.ref_name == 'feature/lab-room-depth' && 'LabRoomDepthProof' || github.ref_name == 'feature/combined-character-performance' && 'CombinedCharacterPerformance' || github.ref_name == 'feature/character-sunset-lighting' && 'CharacterSunsetLightingProof' || github.ref_name == 'feature/character-turn-v5' && 'CharacterTurnV5Proof' || github.ref_name == 'feature/character-performance-v3' && 'PerformanceV3Proof' || github.ref_name == 'feature/pseudo-depth-proof' && 'DepthCameraProof' || github.ref_name == 'feature/balanced-motion-proof' && 'BalancedMotionProof' || 'IfverseContactPreview') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -94,12 +94,19 @@ jobs:
           npx --no-install esbuild src/episodes/probability-control/lab-time-anomaly-motion.ts --bundle --platform=node --outfile=out/production/anomaly-audit.cjs
           node -e "console.log(JSON.stringify(require('./out/production/anomaly-audit.cjs').auditLabTimeAnomaly(),null,2))" | tee out/production/anomaly-audit.json
       - name: Audit clock case depth and insert camera
-        if: env.COMPOSITION == 'ClockInsertV2Proof' || env.COMPOSITION == 'LabTimeAnomalyV2'
+        if: env.COMPOSITION == 'ClockInsertV2Proof' || env.COMPOSITION == 'LabTimeAnomalyV2' || env.COMPOSITION == 'ClockDiscoveryPerformance'
         working-directory: studio
         run: |
           set -o pipefail
           npx --no-install esbuild src/episodes/probability-control/cinematic-lab-clock.tsx --bundle --platform=node --outfile=out/production/clock-audit.cjs
           node -e "console.log(require('./out/production/clock-audit.cjs').auditCinematicClock())" | tee out/production/clock-audit.log
+      - name: Audit discovery acting and preserved contacts
+        if: env.COMPOSITION == 'ClockDiscoveryPerformance'
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npx --no-install esbuild src/episodes/probability-control/clock-discovery-motion.ts --bundle --platform=node --outfile=out/production/discovery-audit.cjs
+          node -e "console.log(JSON.stringify(require('./out/production/discovery-audit.cjs').auditClockDiscovery(),null,2))" | tee out/production/anomaly-audit.json
       - name: Install verification tools
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Render selected composition in full
@@ -142,11 +149,15 @@ jobs:
         working-directory: studio
         run: npx remotion still src/lab-time-anomaly-entry.tsx LabTimeAnomalyBoard out/production/Lab-Time-Anomaly-Storyboard.png --frame=0
       - name: Render cinematic clock review
-        if: env.COMPOSITION == 'ClockInsertV2Proof' || env.COMPOSITION == 'LabTimeAnomalyV2'
+        if: env.COMPOSITION == 'ClockInsertV2Proof' || env.COMPOSITION == 'LabTimeAnomalyV2' || env.COMPOSITION == 'ClockDiscoveryPerformance'
         working-directory: studio
         run: |
           npx remotion still src/cinematic-clock-entry.tsx ClockInsertV2Board out/production/Clock-Insert-Comparison.png --frame=0
           npx remotion still src/cinematic-clock-entry.tsx CinematicClockStill out/production/Cinematic-Clock.png --frame=0
+      - name: Render discovery acting board
+        if: env.COMPOSITION == 'ClockDiscoveryPerformance'
+        working-directory: studio
+        run: npx remotion still src/clock-discovery-entry.tsx ClockDiscoveryBoard out/production/Discovery-Acting-Board.png --frame=0
       - name: Verify decoded MP4 and mobile metadata
         run: python3 scripts/verify-render.py studio/out/production
       - name: Verify mini-scene audio track and cue timing
@@ -163,6 +174,9 @@ jobs:
           assert a['codec_name']=='aac' and int(a['channels'])==2 and abs(float(a['duration'])-3)<.1
           print('Verified three-second AAC stereo review track')
           PYTHON
+      - name: Verify retimed discovery audio
+        if: env.COMPOSITION == 'ClockDiscoveryPerformance'
+        run: python3 scripts/verify-anomaly-audio.py studio/out/production studio/public/lab-discovery-v3/soundtrack.json
       - name: Upload verified movie
         uses: actions/upload-artifact@v4
         with:

@@ -29,3 +29,5 @@ Owner flagged the left-side hanging hand on the build comparison. The widened ga
 
 ## Close-up consistency — clock feedback
 The owner liked the 24-second mini-scene but rejected the simplified clock insert. Every hero insert must carry the same material, physical-depth, lighting and environmental context as the wider scene. Enlarging a flat icon onto a uniform wall is not an acceptable close-up treatment. Resolve case thickness, contact/cast shade, surface response and purposeful framing at the scale where the audience sees them. Clock V2 is the concrete correction; its visual review does not approve unrelated shots.
+
+The owner liked Clock V2 and explicitly said: “always do that for every new scene.” Apply this material/depth/lighting standard to all new scenes and inserts as an ongoing requirement.

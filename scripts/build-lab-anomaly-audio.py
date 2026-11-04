@@ -3,10 +3,11 @@ Run from repository root after bundling/running the motion audit:
  python3 scripts/build-lab-anomaly-audio.py studio/out/time-anomaly-audit.json
 The cue positions come from the same retimed animation used in Remotion.
 """
-import json, sys, wave, subprocess
+import json, sys, wave, subprocess, argparse
 from pathlib import Path
 import numpy as np
-cues=json.loads(Path(sys.argv[1]).read_text())
+parser=argparse.ArgumentParser();parser.add_argument('audit');parser.add_argument('--output-dir',default='studio/public/lab-time-anomaly');args=parser.parse_args()
+cues=json.loads(Path(args.audit).read_text())
 rate=48000; duration=cues['frames']/30
 rng=np.random.default_rng(4701)
 t=np.arange(round(rate*duration))/rate
@@ -36,7 +37,9 @@ for at,hz in [(0.8,293.66),(2.5,440),(6.9,349.23)]:
  u=np.arange(round(1.1*rate))/rate
  add(at,np.sin(2*np.pi*hz*u)*np.exp(-u*4)*np.minimum(u*60,1),.022,.25)
 # Clothing rustle follows the reach and sudden recoil.
-for at,gain in [(9.1,.03),(12,.06),(18.6,.035)]:
+cloth=cues.get('clothSeconds',[9.1,12,18.6])
+for i,at in enumerate(cloth):
+ gain=.06 if i==1 else (.035 if i==2 and 'clothSeconds' not in cues else .03)
  u=np.linspace(0,np.pi,round(.55*rate));add(at,noise(.55,55)*np.sin(u)**2,gain,-.15)
 u=np.arange(round(.09*rate))/rate
 add(cues['buttonFrame']/30,(noise(.09,3)+.35*np.sin(2*np.pi*170*u))*np.exp(-u*85),.22,.1)
@@ -60,10 +63,10 @@ fade=np.minimum(t/.25,1)*np.minimum((duration-t)/.65,1)
 mix*=fade[:,None]
 peak=float(np.max(np.abs(mix)))
 assert np.isfinite(mix).all() and peak<.9
-path=Path('studio/public/lab-time-anomaly/soundtrack.m4a');tmp=path.with_suffix('.wav')
+path=Path(args.output_dir)/'soundtrack.m4a';path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.wav')
 with wave.open(str(tmp),'wb') as w:
  w.setnchannels(2);w.setsampwidth(2);w.setframerate(rate);w.writeframes((mix*32767).astype('<i2').tobytes())
 subprocess.run(['ffmpeg','-y','-v','error','-i',str(tmp),'-af','loudnorm=I=-22:TP=-1.5:LRA=8','-ar',str(rate),'-c:a','aac','-b:a','192k','-movflags','+faststart',str(path)],check=True)
 tmp.unlink()
-path.with_suffix('.json').write_text(json.dumps({'duration':duration,'sampleRate':rate,'peakBeforeMaster':peak,'masterTargetLUFS':-22,'truePeakTargetDBTP':-1.5,'buttonFrame':cues['buttonFrame'],'activationFrame':cues['activationFrame'],'stepFrames':cues['stepFrames'],'clockTickSeconds':clock_events,'source':'original seeded procedural synthesis; no voice or external recordings'},indent=2)+'\n')
+path.with_suffix('.json').write_text(json.dumps({'duration':duration,'sampleRate':rate,'peakBeforeMaster':peak,'masterTargetLUFS':-22,'truePeakTargetDBTP':-1.5,'buttonFrame':cues['buttonFrame'],'activationFrame':cues['activationFrame'],'stepFrames':cues['stepFrames'],'clothSeconds':cloth,'clockTickSeconds':clock_events,'source':'original seeded procedural synthesis; no voice or external recordings'},indent=2)+'\n')
 print('Built',path,'duration',duration,'peak',peak)
