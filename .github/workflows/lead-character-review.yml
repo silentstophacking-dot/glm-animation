@@ -1,0 +1,60 @@
+name: Lead character outfit review
+on:
+  workflow_dispatch:
+  push:
+    branches: ['feature/lead-character-outfit']
+    paths: ['studio/**', '.github/workflows/lead-character-review.yml']
+permissions:
+  contents: read
+concurrency:
+  group: lead-character-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  design-sheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: mkdir -p studio/out/lead-review
+      - name: Install locked dependencies
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npm ci 2>&1 | tee out/lead-review/install.log
+      - name: Typecheck
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npm run typecheck 2>&1 | tee out/lead-review/typecheck.log
+      - name: Render lead-character comparison and lab study
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npx remotion still src/lead-character-entry.tsx LeadCharacterStudy out/lead-review/Lead-Comparison.png --frame=0 2>&1 | tee out/lead-review/comparison.log
+          npx remotion still src/lead-character-entry.tsx LeadCharacterLabStudy out/lead-review/Lead-Outfit-Lab.png --frame=0 2>&1 | tee out/lead-review/lab.log
+      - name: Verify PNG dimensions
+        run: |
+          python3 - <<'PY'
+          import pathlib, struct
+          root = pathlib.Path('studio/out/lead-review')
+          expected = {'Lead-Comparison.png': (1440, 1500), 'Lead-Outfit-Lab.png': (1920, 1080)}
+          assert {p.name for p in root.glob('*.png')} == set(expected)
+          for name, size in expected.items():
+              data = (root / name).read_bytes()
+              assert data[:8] == b'\x89PNG\r\n\x1a\n'
+              assert struct.unpack('>II', data[16:24]) == size
+              print('Verified outfit image:', name, size)
+          PY
+      - name: Upload design sheet and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LEAD-CHARACTER-${{ github.run_id }}
+          path: studio/out/lead-review/
+          if-no-files-found: error
+          retention-days: 14

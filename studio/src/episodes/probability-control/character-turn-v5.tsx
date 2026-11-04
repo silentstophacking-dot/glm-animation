@@ -58,9 +58,11 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
    {pose&&side>0?<g transform={`translate(${tip.x} ${tip.y}) rotate(${angle})`}>
     <path d="M-14 -4L-8 -4Q-5 -6 -2 -3L0 -1Q1 2 -3 4L-7 5Q-8 9 -11 7L-12 4H-14Z" fill={ink}/>
     <path d="M-14 -5V5" stroke={palette.cuff} strokeWidth="1.6"/>
+    {outfit==='cobalt-lead'?<path d="M-12 -4V4" stroke="#D5AD57" strokeWidth="1.4"/>:null}
     <path d="M-12 -4L-7 -4" stroke={rim} strokeWidth=".8" opacity=".6"/>
    </g>:<g transform={`translate(${tip.x} ${tip.y}) rotate(${pose?angle-90:0}) scale(${pose?1:side} 1)`}>
     <path d="M-8 -3H8V2H-8Z" fill={palette.cuff} stroke={ink} strokeWidth="1.2"/>
+    {outfit==='cobalt-lead'?<path d="M-7 -1H7" stroke="#D5AD57" strokeWidth="1.4"/>:null}
     <path d="M-5 2H5L6 11Q5 16 1 16Q-3 16 -4 12L-7 10Q-9 6 -5 5Z" fill={ink}/>
     <path d="M-5 6L-4 11" stroke={rim} strokeWidth=".8" opacity=".55"/>
    </g>}
