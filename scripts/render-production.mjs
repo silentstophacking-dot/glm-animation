@@ -11,7 +11,19 @@ if (!/^[A-Za-z0-9_-]+$/.test(id)) throw new Error('Invalid composition ID');
 const dir = 'out/production';
 const revision = (process.env.GITHUB_SHA || 'local').slice(0, 12);
 const name = id + '-' + revision + '-' + (process.env.GITHUB_RUN_ID || 'local');
-const serveUrl = await bundle({entryPoint: id === 'IfverseContactPreview' ? 'src/ifverse-preview.tsx' : id === 'SlenderDesignSheet' ? 'src/slender-design-sheet.tsx' : id === 'SlenderMotionBoard' ? 'src/slender-motion-board-entry.tsx' : id === 'CharacterBuildComparison' ? 'src/character-build-entry.tsx' : id === 'BalancedMotionProof' ? 'src/balanced-motion-entry.tsx' : (id === 'CinematicCharacterV2Sheet' || id === 'CinematicCharacterV2Board') ? 'src/cinematic-character-v2-entry.tsx' : 'src/index.ts'});
+const previewEntries = {
+  IfverseContactPreview: 'src/ifverse-preview.tsx',
+  SlenderDesignSheet: 'src/slender-design-sheet.tsx',
+  SlenderMotionBoard: 'src/slender-motion-board-entry.tsx',
+  CharacterBuildComparison: 'src/character-build-entry.tsx',
+  BalancedMotionProof: 'src/balanced-motion-entry.tsx',
+  CinematicCharacterV2Sheet: 'src/cinematic-character-v2-entry.tsx',
+  CinematicCharacterV2Board: 'src/cinematic-character-v2-entry.tsx',
+  DepthCameraProof: 'src/pseudo-depth-entry.tsx',
+  DepthCharacterStudy: 'src/pseudo-depth-entry.tsx',
+  DepthContactBoard: 'src/pseudo-depth-entry.tsx',
+};
+const serveUrl = await bundle({entryPoint: previewEntries[id] || 'src/index.ts'});
 const composition = await selectComposition({serveUrl, id});
 writeFileSync(dir + '/composition.json', JSON.stringify(composition, null, 2));
 const options = {serveUrl, composition};
