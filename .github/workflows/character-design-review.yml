@@ -1,0 +1,57 @@
+name: Character design review
+on:
+  workflow_dispatch:
+  push:
+    branches: ['feature/character-silhouette-v4']
+    paths: ['studio/**', '.github/workflows/character-design-review.yml']
+permissions:
+  contents: read
+concurrency:
+  group: character-design-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  design-sheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: mkdir -p studio/out/design-review
+      - name: Install locked dependencies
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npm ci 2>&1 | tee out/design-review/install.log
+      - name: Typecheck
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npm run typecheck 2>&1 | tee out/design-review/typecheck.log
+      - name: Render equal-height design sheet
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npx remotion still src/character-silhouette-v4-entry.tsx CharacterSilhouetteV4Sheet out/design-review/Character-Silhouette-V4-${{ github.run_id }}.png --frame=0 2>&1 | tee out/design-review/render.log
+      - name: Verify PNG dimensions
+        run: |
+          python3 - <<'PY'
+          import pathlib, struct
+          files = list(pathlib.Path('studio/out/design-review').glob('*.png'))
+          assert len(files) == 1, files
+          data = files[0].read_bytes()
+          assert data[:8] == b'\x89PNG\r\n\x1a\n'
+          assert struct.unpack('>II', data[16:24]) == (1920, 1230)
+          print('Verified design sheet:', files[0].name)
+          PY
+      - name: Upload design sheet and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CHARACTER-DESIGN-V4-${{ github.run_id }}
+          path: studio/out/design-review/
+          if-no-files-found: error
+          retention-days: 14
