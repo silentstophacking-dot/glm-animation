@@ -15,7 +15,7 @@ export function turnV5Geometry(yaw:number){
  return {c,s,width:Math.hypot(24*c,15*s),nearShoulder:26*c+8*s,farShoulder:-26*c-8*s,
   nearWrist:34*c+12*s,farWrist:-34*c-12*s,hips:[-8*c-4*s,8*c+4*s],heels:[-16,16]};
 }
-export function auditTurnV5(){
+export function auditTurnV5(lighting:'baseline'|'sunset'='baseline'){
  let maxHeelDrift=0;
  for(let f=0;f<TURN_FRAMES;f++){
   const {body}=turnV5At(f),g=turnV5Geometry(body);
@@ -23,12 +23,13 @@ export function auditTurnV5(){
   maxHeelDrift=Math.max(maxHeelDrift,...g.heels.map((x,i)=>Math.abs(x-[-16,16][i])));
   limb({x:g.nearShoulder,y:-270},{x:g.nearWrist,y:-151},61);
   limb({x:g.farShoulder,y:-270},{x:g.farWrist,y:-151},61);
-  CharacterTurnV5({id:'turn-audit',x:0,y:0,yaw:body,headYaw:turnV5At(f).head});
+  CharacterTurnV5({id:'turn-audit',x:0,y:0,yaw:body,headYaw:turnV5At(f).head,lighting});
   if(!Number.isFinite(g.width)||g.width<15||g.width>24.001)throw new Error('Invalid torso width '+f);
  }
- return {frames:TURN_FRAMES,maxHeelDrift,headDiameter:72,floorY:0,footAction:'heels planted; toes pivot on floor'};
+ return {lighting,frames:TURN_FRAMES,maxHeelDrift,headDiameter:72,floorY:0,footAction:'heels planted; toes pivot on floor'};
 }
-export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false})=>{
+export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset'}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline'})=>{
+ const lit=lighting==='sunset';
  const g=turnV5Geometry(yaw),{c,s,width:w}=g,ink='#120F17',rim='#E2B680',cream='#F5E8D0';
  const ha=clamp(headYaw)*Math.PI/2,hc=Math.cos(ha),hs=Math.sin(ha),seam=w*.8*s;
  const u=(n:string)=>`url(#${id+n})`;
@@ -56,13 +57,22 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
  };
  return <g transform={`translate(${x} ${y}) scale(${scale})`} filter={solid?u('solid'):undefined}>
   <defs>
-   <linearGradient id={id+'cloth'} x2="1" y2=".3"><stop stopColor="#E36A50"/><stop offset=".3" stopColor="#D85845"/><stop offset="1" stopColor="#AA3E38"/></linearGradient>
-   <linearGradient id={id+'far'} x2="1"><stop stopColor="#D65B47"/><stop offset="1" stopColor="#A7413B"/></linearGradient>
-   <linearGradient id={id+'pants'} x2="1"><stop stopColor="#302632"/><stop offset="1" stopColor="#101521"/></linearGradient>
+   <linearGradient id={id+'cloth'} x2="1" y2=".3"><stop stopColor={lit?"#F28A60":"#E36A50"}/><stop offset=".3" stopColor={lit?"#DC6049":"#D85845"}/><stop offset="1" stopColor={lit?"#803D49":"#AA3E38"}/></linearGradient>
+   <linearGradient id={id+'far'} x2="1"><stop stopColor={lit?"#CD7055":"#D65B47"}/><stop offset="1" stopColor={lit?"#703D4B":"#A7413B"}/></linearGradient>
+   <linearGradient id={id+'pants'} x2="1"><stop stopColor={lit?"#38303A":"#302632"}/><stop offset="1" stopColor={lit?"#131D2C":"#101521"}/></linearGradient>
+   <radialGradient id={id+'headLight'} cx=".2" cy=".18" r=".9"><stop stopColor="#20202C"/><stop offset=".55" stopColor="#12121E"/><stop offset="1" stopColor="#090E18"/></radialGradient>
+   <filter id={id+'sunRim'} x="-15%" y="-5%" width="130%" height="110%" colorInterpolationFilters="sRGB">
+    <feOffset in="SourceAlpha" dx="1.25" dy="1" result="inset"/>
+    <feComposite in="SourceAlpha" in2="inset" operator="out" result="litEdge"/>
+    <feFlood floodColor="#FFD095" floodOpacity=".92" result="warm"/>
+    <feComposite in="warm" in2="litEdge" operator="in" result="rim"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="rim"/></feMerge>
+   </filter>
    <clipPath id={id+'face'}><ellipse rx="35.5" ry="35.5"/></clipPath>
    <filter id={id+'solid'}><feColorMatrix type="matrix" values="0 0 0 0 .08 0 0 0 0 .08 0 0 0 0 .1 0 0 0 1 0"/></filter>
   </defs>
   <ellipse cx="0" cy="2" rx="42" ry="4" fill="#090C15" opacity=".3"/>
+  <g filter={lit?u('sunRim'):undefined}>
   {g.hips.map((hip,i)=><g key={i}>
    <path d={limb({x:hip,y:-147.4},{x:g.heels[i],y:-4},72,i?1:-1).path} fill="none" stroke="#10131E" strokeWidth="15.5" strokeLinecap="round"/>
    <path d={limb({x:hip,y:-147.4},{x:g.heels[i],y:-4},72,i?1:-1).path} fill="none" stroke={u('pants')} strokeWidth="13" strokeLinecap="round"/>
@@ -79,8 +89,8 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
   <path d="M-4 -288V-277" stroke={rim} strokeWidth="1" opacity=".75"/>
   <path d={`M${seam-9*c} -268l${-c} 22M${seam+6*c} -267l${c} 20`} stroke="#EFD9BC" strokeWidth="1.4" strokeLinecap="round"/>
   <g transform="translate(2 -326)">
-   <ellipse rx="36" ry="36" fill={ink}/>
-   <path d="M-35 0Q-35 -27 -10 -35Q12 -41 29 -21" fill="none" stroke={rim} strokeWidth="1.8" strokeLinecap="round"/>
+   <ellipse rx="36" ry="36" fill={lit?u('headLight'):ink}/>
+   <path d="M-35 0Q-35 -27 -10 -35Q12 -41 29 -21" fill="none" stroke={rim} strokeWidth={lit?1.05:1.8} strokeLinecap="round"/>
    <g clipPath={u('face')}>
     {[-.32,.32].map((offset,i)=>{
      const a=ha+offset;
@@ -91,5 +101,6 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
    </g>
   </g>
   {arm(1)}
+  </g>
  </g>;
 };
