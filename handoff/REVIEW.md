@@ -4,6 +4,9 @@ These are small review copies, not 1080p masters. They are tracked in this repos
 
 ## Start here
 
+- [New 11s puffer/lab acting proof](review/puffer-lab-performance-11s.mp4) — walking, hesitation, console press, recoil and recovery in the projected room; owner review pending.
+- [Puffer performance key poses](review/puffer-lab-performance-board.png).
+
 - [Latest 7s room camera move](review/lab-room-depth-7s.mp4) — owner loved this background direction; stationary puffer actor.
 - [11s combined performance](review/combined-performance-11s.mp4) — acting reference for the next integration; hoodie and older DepthScene, not the puffer/new room combination.
 - [Puffer colour options and construction detail](review/puffer-options.png).

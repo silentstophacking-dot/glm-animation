@@ -1,5 +1,15 @@
 [
   {
+    "path": "review/puffer-lab-performance-board.png",
+    "bytes": 1820394,
+    "sha256": "f58d41b24f8110efff6fbe079b8a00d463ed0dd72dc258c7fe8470887d8cf04e"
+  },
+  {
+    "path": "review/puffer-lab-performance-11s.mp4",
+    "bytes": 1118150,
+    "sha256": "1f6934e3130bfa0f22489cb43fb131ff045e7ffb1bc4dd77ac2f1d9608ff9c69"
+  },
+  {
     "path": "review/lab-room-depth-7s.mp4",
     "bytes": 838942,
     "sha256": "87d93c9efee6672d02b2f09094a1d3ac907d828d99e055ba26b489686a842658"
