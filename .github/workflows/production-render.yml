@@ -5,10 +5,10 @@ on:
       composition:
         description: 'Exact composition ID (see studio/src/Root.tsx and episodes)'
         required: true
-        default: IfverseContactPreview
+        default: BalancedMotionProof
         type: string
   push:
-    branches: ['production/**', 'feature/ifverse-contact-preview']
+    branches: ['production/**', 'feature/ifverse-contact-preview', 'feature/balanced-motion-proof']
     paths: ['studio/**', 'scripts/render-production.mjs', 'scripts/verify-render.py', '.github/workflows/production-render.yml']
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 330
     env:
-      COMPOSITION: ${{ inputs.composition || 'IfverseContactPreview' }}
+      COMPOSITION: ${{ inputs.composition || (github.ref_name == 'feature/balanced-motion-proof' && 'BalancedMotionProof' || 'IfverseContactPreview') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,6 +39,12 @@ jobs:
         run: |
           set -o pipefail
           npm run typecheck 2>&1 | tee out/production/typecheck.log
+      - name: Audit balanced motion contacts
+        if: env.COMPOSITION == 'BalancedMotionProof'
+        working-directory: studio
+        run: |
+          npx --no-install esbuild src/episodes/probability-control/slender-mechanics.ts --bundle --platform=node --outfile=out/production/audit.cjs
+          node -e "console.log(require('./out/production/audit.cjs').auditBalanced())"
       - name: Install verification tools
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Render selected composition in full

@@ -44,3 +44,20 @@ export function auditSlender(){
  if(maxContact>.001)throw new Error('Button contact drift');
  return {frames:270,maxContact};
 }
+
+/** Contact target is the leading edge of the palm; sleeve ends at the wrist. */
+export function nearHandRig(pose:SlenderPose){
+ const tip={x:pose.hand.x,y:pose.hand.y-pose.drop};
+ const dx=tip.x-10,dy=tip.y+269,d=Math.hypot(dx,dy);
+ const ux=dx/d,uy=dy/d;
+ const wrist={x:tip.x-ux*10,y:tip.y-uy*10};
+ const chain=limb({x:10,y:-269},wrist,60,-1);
+ return {tip,wrist,chain,angle:Math.atan2(uy,ux)*180/Math.PI};
+}
+export function auditBalanced(){
+ const result=auditSlender();
+ for(let f=0;f<270;f++){
+  const {pose}=slenderAt(f);nearHandRig(pose);
+ }
+ return {...result,hand:'palm tip and sleeve wrist checked on every frame'};
+}

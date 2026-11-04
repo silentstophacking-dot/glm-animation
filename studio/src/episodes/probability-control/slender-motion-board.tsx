@@ -5,12 +5,12 @@ import {LabBackground,LabForeground} from './cinematic-lab';
 import {LabConsole} from './lab-console';
 import {camT} from '../../engine/anim';
 auditSlender();
-const Scene:React.FC<{frame:number;id:string;camera:string}>=({frame,id,camera})=>{
+export const SlenderMotionScene:React.FC<{frame:number;id:string;camera:string;build?:'slim'|'balanced'|'fuller'}>=({frame,id,camera,build='slim'})=>{
  const {x,pose}=slenderAt(frame),active=frame>=174;
  return <g transform={camera}>
   <LabBackground id={id} soft={frame>=132}/>
   <LabConsole id={id} active={active}/>
-  <g filter={`url(#${id}rim)`}><SlenderCharacter x={x} y={890} scale={1.5} pose={pose}/></g>
+  <g filter={`url(#${id}rim)`}><SlenderCharacter x={x} y={890} scale={1.5} pose={pose} build={build}/></g>
   <LabForeground id={id}/>
  </g>;
 };
@@ -23,6 +23,6 @@ export const SlenderMotionBoard:React.FC=()=> <svg viewBox="0 0 1920 1230" width
   {f:214,label:'04  REACT & SETTLE',cam:camT(770,395,2.05)},
  ].map((s,i)=><g key={s.f} transform={`translate(${i%2*960} ${Math.floor(i/2)*615})`}>
   <text x="40" y="45" fontFamily="Arial,sans-serif" fontSize="29" fill="#FFF0DB">{s.label}</text>
-  <svg x="12" y="65" width="936" height="526.5" viewBox="0 0 1920 1080"><Scene frame={s.f} id={'board'+i} camera={s.cam}/></svg>
+  <svg x="12" y="65" width="936" height="526.5" viewBox="0 0 1920 1080"><SlenderMotionScene frame={s.f} id={'board'+i} camera={s.cam}/></svg>
  </g>)}
 </svg>;
