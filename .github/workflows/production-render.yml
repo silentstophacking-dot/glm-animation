@@ -107,6 +107,13 @@ jobs:
           set -o pipefail
           npx --no-install esbuild src/episodes/probability-control/clock-discovery-motion.ts --bundle --platform=node --outfile=out/production/discovery-audit.cjs
           node -e "console.log(JSON.stringify(require('./out/production/discovery-audit.cjs').auditClockDiscovery(),null,2))" | tee out/production/anomaly-audit.json
+      - name: Audit autonomous press with fixed world-space support
+        if: env.COMPOSITION == 'UntouchedPressProof'
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npx --no-install esbuild src/episodes/probability-control/untouched-press-proof.tsx --bundle --platform=node --outfile=out/production/untouched-audit.cjs
+          node -e "console.log(JSON.stringify(require('./out/production/untouched-audit.cjs').auditUntouchedPress(),null,2))" | tee out/production/untouched-audit.log
       - name: Install verification tools
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Render selected composition in full
@@ -158,6 +165,10 @@ jobs:
         if: env.COMPOSITION == 'ClockDiscoveryPerformance'
         working-directory: studio
         run: npx remotion still src/clock-discovery-entry.tsx ClockDiscoveryBoard out/production/Discovery-Acting-Board.png --frame=0
+      - name: Render six-frame untouched press storyboard
+        if: env.COMPOSITION == 'UntouchedPressProof'
+        working-directory: studio
+        run: npx remotion still src/untouched-press-entry.tsx UntouchedPressBoard out/production/Untouched-Press-Storyboard.png --frame=0
       - name: Verify decoded MP4 and mobile metadata
         run: python3 scripts/verify-render.py studio/out/production
       - name: Verify mini-scene audio track and cue timing

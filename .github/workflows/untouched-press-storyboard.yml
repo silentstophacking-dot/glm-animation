@@ -1,0 +1,46 @@
+name: Untouched press storyboard review
+on:
+  push:
+    branches: ['feature/untouched-press-proof']
+    paths:
+      - 'studio/src/untouched-press-entry.tsx'
+      - 'studio/src/episodes/probability-control/untouched-press-proof.tsx'
+      - '.github/workflows/untouched-press-storyboard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  board:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install pinned Remotion dependencies
+        working-directory: studio
+        run: npm ci --no-audit --no-fund
+      - name: Typecheck
+        working-directory: studio
+        run: npm run typecheck
+      - name: Audit continuity and untouched press
+        working-directory: studio
+        run: |
+          mkdir -p out/storyboard
+          npx --no-install esbuild src/episodes/probability-control/untouched-press-proof.tsx --bundle --platform=node --outfile=out/storyboard/audit.cjs
+          node -e "console.log(require('./out/storyboard/audit.cjs').auditUntouchedPress())"
+      - name: Render six actual key poses without movie
+        working-directory: studio
+        run: |
+          mkdir -p out/storyboard
+          npx remotion still src/untouched-press-entry.tsx UntouchedPressBoard out/storyboard/Untouched-Press-Storyboard.png --frame=0
+      - name: Upload iPhone review image
+        uses: actions/upload-artifact@v4
+        with:
+          name: UNTOUCHED-STORYBOARD
+          path: studio/out/storyboard/Untouched-Press-Storyboard.png
+          if-no-files-found: error
+          retention-days: 14
