@@ -1,6 +1,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {LabWindowScenery,LabBenchGlassware} from './cinematic-lab';
+import {LabClock} from './lab-clock';
 import {LabConsole} from './lab-console';
 import {CharacterTurnV5} from './character-turn-v5';
 import {planeTransform,floorPolygon,WorldCamera} from './pseudo-depth-camera';
@@ -14,7 +15,7 @@ const Glass:React.FC<{id:string;x:number;y:number;z:number;camera:WorldCamera}>=
  <ellipse cy="-190" rx="15" ry="4" fill="#213A46" stroke="#AEAAA0" strokeWidth="1.5"/>
 </g>;
 
-export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCamera;performance?:RoomActorPerformance}>=({id,frame,camera,performance})=>{
+export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCamera;performance?:RoomActorPerformance;clockSeconds?:number;signal?:number}>=({id,frame,camera,performance,clockSeconds,signal})=>{
  const c=camera??roomCameraAt(frame),origin=performance?.origin??ROOM_ACTOR.origin,actorScale=performance?.scale??ROOM_ACTOR.scale,u=(s:string)=>`url(#${id+s})`;
  const windowPoints=[W(-1100,340,800),W(-100,340,800),W(-100,940,800),W(-1100,940,800)];
  return <g>
@@ -51,7 +52,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   {/* Existing chart and clock motifs now have a wall attachment plane. */}
   <Box box={{x0:200,x1:500,y0:470,y1:680,z0:765,z1:800}} camera={c} front="#202C3D" top="#655365" side="#3E3A4D"/>
   <g transform={planeTransform(W(200,680,764),c)}><path d="M25 165L75 125L132 142L195 70L270 94" fill="none" stroke="#84969D" strokeWidth="3"/>{[40,80,120,160].map(y=><path key={y} d={`M20 ${y}H280`} stroke="#9A9B9E" opacity=".14"/>)}</g>
-  <g transform={planeTransform(W(-1320,800,775),c)}><circle r="42" fill="#2E2E3D" stroke="#7B6A70" strokeWidth="4"/><path d="M0 -26V0L20 12" fill="none" stroke="#C0A99B" strokeWidth="3"/></g>
+  <LabClock camera={c} seconds={clockSeconds}/>
   {/* Recessed open storage: rear board, individual books and depth-bearing shelves. */}
   <Box box={{x0:600,x1:960,y0:0,y1:720,z0:590,z1:610}} camera={c} front="#192536" side="#172333" top="#5F5363"/>
   {[100,285,470].map((y,row)=><g key={y}>
@@ -82,7 +83,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   {[-110,100].map(x=><Box key={'front-leg'+x} box={{x0:x,x1:x+12,y0:0,y1:300,z0:-25,z1:-13}} camera={c} front="#565460" top="#AA9482" side="#30384A"/>)}
   <Box box={{x0:-122,x1:140,y0:300,y1:315,z0:-40,z1:120}} camera={c} front="#62606B" top="#8A7C7C" side="#333D50"/>
   <Box box={{x0:-130,x1:-12,y0:315,y1:381,z0:0,z1:80}} camera={c} front="#353F50" top="#7A737D" side="#243347"/>
-  <g transform={planeTransform(W(0,885,0),c)}><g transform="translate(-960 0)" clipPath={u('consoleFace')}><LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadow={false}/></g></g>
+  <g transform={planeTransform(W(0,885,0),c)}><g transform="translate(-960 0)" clipPath={u('consoleFace')}><LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadow={false} signal={signal}/></g></g>
   <g transform={planeTransform(W(-36,315,-41),c)}><path d="M0 0C0 28 64 22 64 52V195Q64 222 32 224" fill="none" stroke="#0D1926" strokeWidth="4"/><path d="M0 0C0 28 64 22 64 52" fill="none" stroke="#9B8B80" strokeWidth=".8" opacity=".5"/></g>
   {/* Actor and sole shadows share physical floor anchors; the original depth proof is still; performance is opt-in. */}
   <path d={floorEllipse(origin.x,origin.z,75,32,c)} fill="#07101D" opacity=".3"/>

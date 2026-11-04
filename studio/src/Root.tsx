@@ -1,3 +1,4 @@
+import {LabTimeAnomaly,LabTimeAnomalyBoard} from './episodes/probability-control/lab-time-anomaly-proof';
 import {PufferRoomPerformance,PufferRoomPerformanceBoard} from './episodes/probability-control/puffer-room-performance-proof';
 import React from 'react';
 import { Composition } from 'remotion';
@@ -41,6 +42,8 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} fps={e.fps} width={e.width} height={e.height} />
         </React.Fragment>
       ))}
+      <Composition id="LabTimeAnomaly" component={LabTimeAnomaly} durationInFrames={720} fps={30} width={1920} height={1080}/>
+      <Composition id="LabTimeAnomalyBoard" component={LabTimeAnomalyBoard} durationInFrames={1} fps={30} width={1920} height={1848}/>
       <Composition id="PufferRoomPerformance" component={PufferRoomPerformance} durationInFrames={330} fps={30} width={1920} height={1080}/>
       <Composition id="PufferRoomPerformanceBoard" component={PufferRoomPerformanceBoard} durationInFrames={1} fps={30} width={1920} height={1230}/>
       <Composition id="LabRoomDepthProof" component={LabRoomDepthProof} durationInFrames={210} fps={30} width={1920} height={1080}/>

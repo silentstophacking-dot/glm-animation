@@ -1,5 +1,15 @@
 [
   {
+    "path": "review/lab-time-anomaly-board.png",
+    "bytes": 2232537,
+    "sha256": "6ca8a2de090b5a84621e2d568e65bb535f2e2ee70a72000431b60a6a2d612a93"
+  },
+  {
+    "path": "review/lab-time-anomaly-24s.mp4",
+    "bytes": 1502256,
+    "sha256": "fc9c86841a71db6536059f7fbb936b5aa68b4657497d5c74ef7ee87ac4924033"
+  },
+  {
     "path": "review/puffer-lab-performance-board.png",
     "bytes": 1820394,
     "sha256": "f58d41b24f8110efff6fbe079b8a00d463ed0dd72dc258c7fe8470887d8cf04e"

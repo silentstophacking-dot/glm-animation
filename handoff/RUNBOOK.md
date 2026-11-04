@@ -1,3 +1,5 @@
+Latest continuation: branch `feature/lab-time-anomaly`, draft PR #39. The owner liked the 11-second puffer proof; the new 24-second LabTimeAnomaly mini-scene adds six shots, the backward-clock story and synchronized original synthesized sound. Read CONTINUE_HERE.md and production/style/LAB_TIME_ANOMALY.md; this new scene still awaits owner review. Earlier notes below preserve prior stages.
+
 Latest integration branch: `feature/puffer-lab-performance`. Render composition `PufferRoomPerformance` (330 frames / 11 seconds) or its `PufferRoomPerformanceBoard`. Dedicated entry: `studio/src/puffer-room-performance-entry.tsx`. Draft PR #38 is based on `feature/project-handoff`. See production/style/PUFFER_ROOM_PERFORMANCE.md for scope and checks.
 
 # Technical continuation runbook
