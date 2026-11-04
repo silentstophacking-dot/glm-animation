@@ -5,10 +5,10 @@ on:
       composition:
         description: 'Exact composition ID (see studio/src/Root.tsx and episodes)'
         required: true
-        default: DepthCameraProof
+        default: PerformanceV3Proof
         type: string
   push:
-    branches: ['production/**', 'feature/ifverse-contact-preview', 'feature/balanced-motion-proof', 'feature/pseudo-depth-proof']
+    branches: ['production/**', 'feature/ifverse-contact-preview', 'feature/balanced-motion-proof', 'feature/pseudo-depth-proof', 'feature/character-performance-v3']
     paths: ['studio/**', 'scripts/render-production.mjs', 'scripts/verify-render.py', '.github/workflows/production-render.yml']
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 330
     env:
-      COMPOSITION: ${{ inputs.composition || (github.ref_name == 'feature/pseudo-depth-proof' && 'DepthCameraProof' || github.ref_name == 'feature/balanced-motion-proof' && 'BalancedMotionProof' || 'IfverseContactPreview') }}
+      COMPOSITION: ${{ inputs.composition || (github.ref_name == 'feature/character-performance-v3' && 'PerformanceV3Proof' || github.ref_name == 'feature/pseudo-depth-proof' && 'DepthCameraProof' || github.ref_name == 'feature/balanced-motion-proof' && 'BalancedMotionProof' || 'IfverseContactPreview') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,6 +51,13 @@ jobs:
         run: |
           npx --no-install esbuild src/episodes/probability-control/pseudo-depth-audit.ts --bundle --platform=node --outfile=out/production/depth-audit.cjs
           node -e "console.log(require('./out/production/depth-audit.cjs').auditDepthCharacter())" | tee out/production/depth-audit.log
+      - name: Audit performance support and rendered rig
+        if: env.COMPOSITION == 'PerformanceV3Proof'
+        working-directory: studio
+        run: |
+          set -o pipefail
+          npx --no-install esbuild src/episodes/probability-control/performance-v3-audit.ts --bundle --platform=node --outfile=out/production/performance-audit.cjs
+          node -e "console.log(require('./out/production/performance-audit.cjs').auditPerformanceRig())" | tee out/production/performance-audit.log
       - name: Install verification tools
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Render selected composition in full
@@ -64,6 +71,10 @@ jobs:
         run: |
           npx remotion still src/pseudo-depth-entry.tsx DepthCharacterStudy out/production/Character-Depth-Views.png --frame=0
           npx remotion still src/pseudo-depth-entry.tsx DepthContactBoard out/production/Depth-Contact-Board.png --frame=0
+      - name: Render performance key poses
+        if: env.COMPOSITION == 'PerformanceV3Proof'
+        working-directory: studio
+        run: npx remotion still src/performance-v3-entry.tsx PerformanceV3Board out/production/Performance-Key-Poses.png --frame=0
       - name: Verify decoded MP4 and mobile metadata
         run: python3 scripts/verify-render.py studio/out/production
       - name: Upload verified movie

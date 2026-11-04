@@ -1,6 +1,6 @@
 import {balancedAt,auditBalanced,limb,SlenderPose,BUTTON,XY} from './slender-mechanics';
 import {kf} from '../../engine/anim';
-export type CharacterV2Pose=SlenderPose & {lean?:number;yaw?:number;farSwing?:number;shoeAngles?:[number,number]};
+export type CharacterV2Pose=SlenderPose & {lean?:number;yaw?:number;farSwing?:number;shoeAngles?:[number,number];torsoYaw?:number;farHand?:XY;blink?:number;gaze?:number};
 export function characterV2At(f:number){
  const state=balancedAt(f),feet=state.pose.feet;
  // Lift the pelvis over the support leg instead of holding a crouch for the walk.

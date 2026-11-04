@@ -2,7 +2,7 @@ import React from 'react';
 import {BUTTON} from './slender-mechanics';
 
 /** A supported steel trolley and enamel control unit, on the actor's contact plane. */
-export const LabConsole:React.FC<{id:string;active:boolean;shadowY?:number;shadow?:boolean}>=({id,active,shadowY=890,shadow=true})=>{
+export const LabConsole:React.FC<{id:string;active:boolean;shadowY?:number;shadow?:boolean;press?:number}>=({id,active,shadowY=890,shadow=true,press=0})=>{
  const u=(s:string)=>`url(#${id+s})`;
  return <g>
  <defs>
@@ -42,8 +42,10 @@ export const LabConsole:React.FC<{id:string;active:boolean;shadowY?:number;shado
  <path d="M833 512V560" stroke="#AD8B77" strokeWidth="1.2" opacity=".55"/>
  <rect x="842" y="516" width="40" height="42" rx="4" fill="#2A303F" stroke="#1A2230" strokeWidth="1.5"/>
  <circle cx={BUTTON.x} cy={BUTTON.y} r="13" fill="#151D2A" stroke="#7B7778" strokeWidth="2"/>
+ <g transform={`translate(${press*.7} ${press*1.4})`}>
  <circle cx={BUTTON.x} cy={BUTTON.y} r="10" fill={u('button')} stroke="#E4C69E" strokeWidth="1.5"/>
  <path d="M857 532Q862 529 867 532" stroke="#F8E0B8" opacity=".65" strokeWidth="1.5" fill="none"/>
+ </g>
  <rect x="892" y="515" width="44" height="19" rx="2" fill="#101B27" stroke="#667072" strokeWidth="1.3"/>
  <rect x="895" y="518" width="38" height="13" rx="1" fill={u('glass')}/>
  <path d={active?'M898 525h6l2 -4l3 7l3 -5h17':'M898 526h31'} stroke={active?'#A2DBC6':'#859386'} strokeWidth="1.2" fill="none"/>

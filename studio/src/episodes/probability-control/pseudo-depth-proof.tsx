@@ -1,4 +1,5 @@
 import React from 'react';
+import {performanceV3At} from './performance-v3-motion';
 import {useCurrentFrame} from 'remotion';
 import {CinematicCharacterV2} from './cinematic-character-v2';
 import {LabBackground} from './cinematic-lab';
@@ -9,9 +10,10 @@ const P=(x:number,z:number):WorldPoint=>({x,y:0,z});
 function shadow(x:number,z:number,rx:number,rz:number,c:WorldCamera){
  return floorPolygon(Array.from({length:30},(_,i)=>{const a=i/30*Math.PI*2;return P(x+Math.cos(a)*rx,z+Math.sin(a)*rz);}),c);
 }
-export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera}>=({t,id,camera})=>{
- const c=camera??depthCameraAt(t),view=.15+.8*t;
- const state=characterV2At(166);
+export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera;performanceFrame?:number}>=({t,id,camera,performanceFrame})=>{
+ const performance=performanceFrame===undefined?null:performanceV3At(performanceFrame);
+ const c=camera??depthCameraAt(t),view=performance?.pose.torsoYaw??(.15+.8*t);
+ const state=performance??characterV2At(166);
  // Correct the original drawing's floor baseline without changing the console anchor.
  const pose={...state.pose,hand:{...state.pose.hand,y:state.pose.hand.y+3.5/1.5},yaw:view};
  const u=(s:string)=>`url(#${id+s})`;
@@ -41,12 +43,12 @@ export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera}>=({t,i
   </g>
   {/* Ground shadows are polygons on the floor, rather than camera-facing ellipses. */}
   <path d={shadow(0,0,145,32,c)} fill="#090E19" opacity=".35"/>
-  <path d={shadow(-230,-22,65,26,c)} fill="#090E19" opacity=".2"/>
-  {[-259.5,-219].map(x=><path key={x} d={shadow(x,0,16,8,c)} fill="#080C16" opacity=".4"/>)}
+  <path d={shadow(state.x-950,-22,65,26,c)} fill="#090E19" opacity=".2"/>
+  {state.pose.feet.map((foot,i)=><path key={i} d={shadow(state.x-960+foot.x*1.5,0,16,8,c)} fill="#080C16" opacity={foot.y< -4.01?.15:.4}/>)}
   {/* Character, hand and console share this exact interaction transform. */}
   <g transform={planeTransform(P(0,0),c)}><g transform="translate(-960 -885)">
-   <LabConsole id={id+'console'} active shadowY={885} shadow={false}/>
-   <CinematicCharacterV2 id={id+'actor'} x={720} y={886.5} scale={1.5} pose={pose} bodyYaw={view} shadow={false}/>
+   <LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadowY={885} shadow={false}/>
+   <CinematicCharacterV2 id={id+'actor'} x={state.x} y={886.5} scale={1.5} pose={pose} bodyYaw={view} headYaw={performance?.pose.yaw} mood={performance?.mood??'calm'} shadow={false}/>
   </g></g>
   {/* Glass on a physically nearer plane moves more for the same camera translation. */}
   {[-650,650].map((x,i)=><g key={x} transform={planeTransform(P(x,-300),c)} opacity=".66" filter={u('fg')}>
