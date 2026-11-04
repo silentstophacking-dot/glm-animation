@@ -39,3 +39,11 @@ This is a candidate next scene, not an authorized full-film rebuild. The final v
 - Compose `ReversalEvidenceFrame` (510 frames, 1920×1080) for selected stills only before approval.
 
 **Feedback gate:** Show the six-panel storyboard and close-ups to the owner, compare against `ClockDiscoveryPerformance`, and request explicit visual approval before adding new full-render triggers.
+
+## Revised material and continuity verification — 5 November 2026
+
+The first rebuilt stills were rendered successfully by GitHub Actions run `41923175382`, after replacing the misleading fully intact ghost bottle with a fractured lower bowl, bench-resting shards, thicker tinted faces, a fixed support bracket, a shrinking spilled pool, and deterministic droplets returning through the same vial opening. The actor, camera projection, and approved 24-second scene were not changed.
+
+Second pass: fade glass fragments out as the material seals instead of leaving heavy overlapping interior outlines; lighten the transparent shell's edge; capture the moving-shards panel at frame 254 (rather than the prematurely static 222), and inspect a nearly complete frame 374 instead of labeling the still-incomplete frame 350 as restored. Frame 254 is exported separately to inspect the lifted shard trajectories.
+
+**Visual acceptance is still pending.** Typecheck and source audits are necessary but not proof of credible frame-by-frame physical motion. The 17-second video remains intentionally unrendered until storyboard review.

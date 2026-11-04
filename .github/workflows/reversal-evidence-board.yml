@@ -40,10 +40,14 @@ jobs:
         run: |
           npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceStoryBoard \
             out/reversal-evidence/Reversal-Evidence-StoryBoard.png --frame=0 --scale=0.6666666666666666
-      - name: Render detailed intact prop keyframe
+      - name: Render fully reconstructed prop keyframe
         run: |
           npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \
-            out/reversal-evidence/Restored-Glass-Closeup.png --frame=350 --scale=0.6666666666666666
+            out/reversal-evidence/Restored-Glass-Closeup.png --frame=374 --scale=0.6666666666666666
+      - name: Render lifted-glass trajectory keyframe
+        run: |
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \
+            out/reversal-evidence/Lifting-Shards-Closeup.png --frame=254 --scale=0.6666666666666666
       - name: Render broken prop keyframe
         run: |
           npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \

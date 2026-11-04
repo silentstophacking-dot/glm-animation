@@ -51,7 +51,7 @@ export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   const pose={...latest.pose};
   pose.yaw=kf(f,[[0,latest.pose.yaw??0],[87,-.40],[375,-.40],[431,-.28],[509,-.46]]);
   pose.gaze=kf(f,[[0,latest.pose.gaze??0],[80,-1.1],[400,-1.1],[447,-.35],[509,-.9]]);
-  pose.gazeY=-.8*q;
+  pose.gazeY=(latest.pose.gazeY??0)-.8*q;
   pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[83,-9],[382,-9],[431,-5],[509,-10]]);
   pose.blink=Math.max(...[91,418,484].map(t=>clamp(1-Math.abs(f-t)/2)));
   return {...latest,pose,headYaw:pose.yaw??-.4,mood:look>.5?'surprised':'concerned'};
@@ -77,7 +77,7 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
   const inner='M-15 -145V-107L-43 -50Q-58 -23 -39 -13Q-22 0 0 1Q22 0 39 -13Q58 -23 43 -50L15 -107V-145Z';
   const liquidTop=-23-32*w+Math.sin(f*.12)*.6*(1-w);
   const puddle=1-w;
-  const fragmentVisibility=clamp((.91-m)/.61);
+  const fragmentVisibility=clamp((.73-m)/.47);
   const pieces=[
     {x:-27,y:-119,bx:-112,by:-9,rot:-86,shape:'M-13 -17 L4 -25 L15 -6 L3 16 L-16 9 Z'},
     {x:24,y:-120,bx:106,by:-4,rot:68,shape:'M-10 -24 L12 -19 L17 4 L-4 19 L-16 3 Z'},
@@ -144,7 +144,7 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
     <g clipPath={u('rebuild')}>
       <path d={shell} transform="translate(5 2)"
         fill="#122F40" stroke="#1B3547" strokeWidth="4.5" opacity=".67"/>
-      <path d={shell} fill={u('glass')} stroke="#83BBC3" strokeWidth="2.6"/>
+      <path d={shell} fill={u('glass')} stroke="#7EAEB6" strokeWidth="2.15"/>
       <path d={inner} fill="#A8CCCF" fillOpacity=".095" stroke="#F1DBC2"
         strokeWidth="1.25" strokeOpacity=".4"/>
       <g clipPath={u('inside')}>
@@ -236,7 +236,7 @@ export const EvidenceScene:React.FC<{frame:number;id:string}>=({frame:f,id})=>{
 };
 export const ReversalEvidenceStoryBoard:React.FC=()=> <svg viewBox="0 0 1920 1848" width="100%" height="100%">
   <rect width="1920" height="1848" fill="#101622"/>
-  {[56,129,222,341,419,484].map((f,i)=>{
+  {[56,129,254,341,419,484].map((f,i)=>{
     const label=EVIDENCE_SHOTS[i].label;
     return <g key={f} transform={'translate('+(i%2*960)+' '+(Math.floor(i/2)*616)+')'}>
       <text x="29" y="40" fontFamily="Arial,sans-serif" fontSize="25" fontWeight="600" fill="#F4E6D5">
@@ -255,6 +255,16 @@ export const ReversalEvidenceFrame:React.FC=()=>{
 export const auditReversalEvidence=()=>{
   if(EVIDENCE_SHOTS[0].from!==0||EVIDENCE_SHOTS.at(-1)!.to!==REVERSAL_FRAMES)
     throw new Error('Story beat boundaries incorrect');
+  if(evidenceProgress(173).returnShards!==0||
+     evidenceProgress(318).returnShards!==1||
+     evidenceProgress(378).restore!==1||
+     evidenceProgress(380).water!==1)
+    throw new Error('Glass and liquid reconstruction did not reach exact phase limits');
+  const initial=evidenceActorAt(0),baseline=discoveryActorAt(719);
+  if(initial.pose.yaw!==baseline.pose.yaw||
+     initial.pose.gaze!==baseline.pose.gaze||
+     initial.pose.gazeY!==baseline.pose.gazeY)
+    throw new Error('Actor eyeline not continuous with approved ending');
   let last=0;
   for(let f=0;f<REVERSAL_FRAMES;f++){
     const shot=evidenceShotAt(f),phase=evidenceProgress(f);
