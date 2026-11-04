@@ -18,7 +18,7 @@ const options = {serveUrl, composition};
 for (const frame of [...new Set([0, Math.floor((composition.durationInFrames-1)/2), composition.durationInFrames-1])]) {
   await renderStill({...options, frame, output: dir + '/frame-' + frame + '.png'});
 }
-await renderMedia({...options, codec: 'h264', pixelFormat: 'yuv420p',
+await renderMedia({...options, codec: 'h264', pixelFormat: 'yuv420p', imageFormat: 'png', colorSpace: 'bt709',
   outputLocation: dir + '/' + name + '.mp4', crf: 20, concurrency: 2,
   onProgress: ({progress}) => {
     const percent = Math.floor(progress * 100);
