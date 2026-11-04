@@ -19,3 +19,5 @@ A transition review caught the free arm returning to rest abruptly at frame 412.
 The older six-shot storyboard was rendered after the shared face changes and compared in RGB: pixel-identical. This confirms prior nonnegative-yaw/default-gaze output is preserved for those poses.
 
 The local full-scene phone movie passed complete 720-frame decode, 1280×720 / 30fps / 24-second video, H.264/yuv420p/faststart and AAC stereo/cue verification. Audio is 24.043 seconds including encoder padding; decoded peak is −1.1 dBFS. Fifteen extracted movie frames around the glance, cuts, recognition and stopped reach were inspected, plus consecutive transition frames 410–415. Owner visual/sound feedback remains pending.
+
+GitHub Actions [41861478629](https://github.com/silentstophacking-dot/glm-animation/actions/runs/41861478629) completed every listed step successfully, including rendering, video/audio verification, both artifact uploads and Complete job. The API still reported overall in_progress at the last check, so only the successful step results and available artifacts are asserted here. Rendered source commit: cea02fb; subsequent changes save media/docs.

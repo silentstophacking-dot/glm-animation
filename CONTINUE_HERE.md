@@ -52,6 +52,10 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 5. Review key poses first; then one short local phone proof and one designated GitHub production render. Audit feet/contact and inspect actual frames, especially walking, wrists, sleeve/torso overlap, quilt deformation, press/release and recovery. Keep lighting and floor shadows coherent across the camera move.
 6. Ask for visual feedback on the concrete proof. Only after final combined design/motion approval move into the long-form storyboard/shot planning.
 
+## Latest discovery verification
+
+ClockDiscoveryPerformance passed the 720-frame acting audit and local full-video/audio verification. GitHub run https://github.com/silentstophacking-dot/glm-animation/actions/runs/41861478629 reports all listed steps successful, including rendering, verification and artifact uploads; its overall status was still finalizing at the last API check. PR #41 preserves this full-scene revision. The latest movie and board are handoff/review/clock-discovery-24s.mp4 and clock-discovery-board.png. Owner review remains pending.
+
 ## Clock correction verification
 
 ClockInsertV2Proof passed local 90-frame decode/metadata/audio checks and GitHub 1080p rendering: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41858356847 . PR #40 preserves the correction. The 24-second phone review edit replaces only frames 450–539, passed 720-frame/video/audio verification, and is saved in handoff/review. Full LabTimeAnomalyV2 is manually renderable but has not been rendered as a new full master.
