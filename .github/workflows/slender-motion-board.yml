@@ -6,6 +6,7 @@ on:
     paths:
       - studio/src/episodes/probability-control/slender-character.tsx
       - studio/src/episodes/probability-control/slender-mechanics.ts
+      - studio/src/episodes/probability-control/cinematic-lab.tsx
       - studio/src/episodes/probability-control/slender-motion-board.tsx
       - studio/src/slender-motion-board-entry.tsx
       - .github/workflows/slender-motion-board.yml
