@@ -1,3 +1,5 @@
+Latest integration branch: `feature/puffer-lab-performance`. Render composition `PufferRoomPerformance` (330 frames / 11 seconds) or its `PufferRoomPerformanceBoard`. Dedicated entry: `studio/src/puffer-room-performance-entry.tsx`. Draft PR #38 is based on `feature/project-handoff`. See production/style/PUFFER_ROOM_PERFORMANCE.md for scope and checks.
+
 # Technical continuation runbook
 
 ## Environment

@@ -2,6 +2,10 @@
 
 **Cross-account handover, 4 November 2026.** Read this before relying on the default branch or older chat summaries.
 
+## Latest development after handover
+
+**Active branch: `feature/puffer-lab-performance`**, based on `feature/project-handoff`. The new `PufferRoomPerformance` is the next 11-second integration candidate: animated black puffer, depth lab, moving camera and shared console contact. See [implementation and review notes](production/style/PUFFER_ROOM_PERFORMANCE.md). Earlier media and branches below remain preserved. The owner has not yet reviewed this new motion proof; do not treat it as episode approval.
+
 ## Open the right version
 
 Repository: https://github.com/silentstophacking-dot/glm-animation
@@ -42,11 +46,15 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 ## The next integration needs real retargeting
 
 1. Read the rig skill and relevant `production/style/` documents. Watch the saved room and combined-acting clips in the gallery before editing.
-2. Extend the puffer's quilting and sleeve shape to follow posed shoulder/elbow/wrist chains. **Current resting sleeve stitches are guarded by `puffer && !pose`; a posed puffer would lose them.** Do not call the costume animation-ready yet.
+2. Extend the puffer's quilting and sleeve shape to follow posed shoulder/elbow/wrist chains. **This was the handover limitation; the active puffer-performance branch now adds IK-linked posed stitching.** Do not call the costume animation-ready yet.
 3. Combine that costume with the established notice → walk → hesitate → reach → press → recoil → recovery sequence in the **new** room geometry. The existing combined proof is not already in that room.
 4. Retarget camera/actor/prop contact in world space. The new standing actor is at `(-260, 0, -40)`, while the console front is at `z=0`; the old 2D hand target cannot simply be pasted across those different planes. Align the interaction or solve the projected target correctly.
 5. Review key poses first; then one short local phone proof and one designated GitHub production render. Audit feet/contact and inspect actual frames, especially walking, wrists, sleeve/torso overlap, quilt deformation, press/release and recovery. Keep lighting and floor shadows coherent across the camera move.
 6. Ask for visual feedback on the concrete proof. Only after final combined design/motion approval move into the long-form storyboard/shot planning.
+
+## Latest verification
+
+The new puffer performance passed local 720p decoding/metadata checks and GitHub’s full-resolution render/verification: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41852035320 . Draft PR #38 and handoff/review preserve the candidate; owner visual review remains pending.
 
 ## Verified results at handover
 
