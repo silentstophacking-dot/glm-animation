@@ -1,5 +1,25 @@
 [
   {
+    "path": "review/lab-time-anomaly-clock-v2-24s.mp4",
+    "bytes": 1819171,
+    "sha256": "aceb0023276294223e2c0674a6a18b893143add417adada0cd1ee6d0a05a6233"
+  },
+  {
+    "path": "review/cinematic-clock-v2.png",
+    "bytes": 1038527,
+    "sha256": "689d8a4195c3cb9da2a82bb408e0090256f3eb9e3c94cdce44b66362c2085d09"
+  },
+  {
+    "path": "review/cinematic-clock-v2-comparison.png",
+    "bytes": 423181,
+    "sha256": "0b38845e92d8c747d7edf16e1a903c05e3d92a153e4e95ccacbde90922ee619f"
+  },
+  {
+    "path": "review/cinematic-clock-v2-3s.mp4",
+    "bytes": 394048,
+    "sha256": "ab1a18a3ef5cb4d7a381f36475c9fccac0c6e3da20e721ec150cd21905ef9824"
+  },
+  {
     "path": "review/lab-time-anomaly-board.png",
     "bytes": 2232537,
     "sha256": "6ca8a2de090b5a84621e2d568e65bb535f2e2ee70a72000431b60a6a2d612a93"
