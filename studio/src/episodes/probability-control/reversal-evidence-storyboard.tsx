@@ -31,9 +31,9 @@ const close:WorldCamera={x:-645,y:475,z:240,focal:1200};
 const actorCam:WorldCamera={x:-105,y:360,z:135,focal:1200};
 export const EVIDENCE_SHOTS:Shot[]=[
  {from:0,to:100,beat:'notice',label:'THE GLASS BREAKS — SOUND FROM THE BENCH',camera:wide,crop:[60,100,1680,945]},
- {from:100,to:174,beat:'broken',label:'A REAL GLASS VIAL, SHATTERED',camera:close,crop:[585,420,450,253.125]},
- {from:174,to:286,beat:'lift',label:'GLASS SHARDS MOVE BACK TO THEIR ORIGIN',camera:close,crop:[585,420,450,253.125]},
- {from:286,to:376,beat:'mend',label:'THE CRACKS SEAL; LIQUID RETURNS',camera:close,crop:[585,420,450,253.125]},
+ {from:100,to:174,beat:'broken',label:'A REAL GLASS VIAL, SHATTERED',camera:close,crop:[585,515,450,253.125]},
+ {from:174,to:286,beat:'lift',label:'GLASS SHARDS MOVE BACK TO THEIR ORIGIN',camera:close,crop:[585,515,450,253.125]},
+ {from:286,to:376,beat:'mend',label:'THE CRACKS SEAL; LIQUID RETURNS',camera:close,crop:[585,515,450,253.125]},
  {from:376,to:458,beat:'reaction',label:'HE UNDERSTANDS THE CLOCK AFFECTS MATTER',camera:actorCam,crop:[400,180,1020,573.75]},
  {from:458,to:510,beat:'clock',label:'CLOCK & RESTORED VIAL — A NEW THREAT',camera:wide,crop:[60,80,1680,945]},
 ];
@@ -46,7 +46,6 @@ export const evidenceProgress=(f:number)=>{
 };
 export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   const latest=discoveryActorAt(719);
-  const actor:{[key:string]:unknown}={...latest};
   const q=amount(f,42,90),look=amount(f,380,414),recover=amount(f,452,506);
   // Copy source pose before adapting. Never mutate the approved baseline.
   const pose={...latest.pose};
@@ -66,7 +65,6 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
   const {returnShards:t,restore:m,water:w}=evidenceProgress(f);
   const u=(name:string)=>'url(#'+id+name+')';
   const origin=planeTransform(BASE,c);
-  const fluct=Math.max(0,1-t);
   const pieces=[
     {x:-22,y:-108,dx:-43,dy:-58,rot:-37,path:'M-12 -15L1 -28L8 0L-4 18Z'},
     {x:22,y:-113,dx:58,dy:-72,rot:51,path:'M-7 -20L10 -11L10 14L-12 10Z'},
