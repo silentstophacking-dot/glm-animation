@@ -1,0 +1,52 @@
+name: Slender motion storyboard
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/slender-motion-board]
+    paths:
+      - studio/src/episodes/probability-control/slender-character.tsx
+      - studio/src/episodes/probability-control/slender-mechanics.ts
+      - studio/src/episodes/probability-control/slender-motion-board.tsx
+      - studio/src/slender-motion-board-entry.tsx
+      - .github/workflows/slender-motion-board.yml
+permissions:
+  contents: read
+jobs:
+  sheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Audit every planned pose
+        run: |
+          mkdir -p out/slender
+          npx --no-install esbuild src/episodes/probability-control/slender-mechanics.ts --bundle --platform=node --outfile=out/slender/audit.cjs
+          node -e "console.log(require('./out/slender/audit.cjs').auditSlender())"
+      - name: Render four-pose motion storyboard
+        run: |
+          mkdir -p out/slender
+          set -o pipefail
+          npx remotion still src/slender-motion-board-entry.tsx SlenderMotionBoard out/slender/Slender-Motion-Storyboard.png --frame=0 2>&1 | tee out/slender/render.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MOTION-STORYBOARD-${{ github.run_id }}
+          path: studio/out/slender/*.png
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SHEET-LOG-${{ github.run_id }}
+          path: studio/out/slender/*.log
+          if-no-files-found: warn
