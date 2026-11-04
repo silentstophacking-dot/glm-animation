@@ -11,3 +11,6 @@ The candidate is an opt-in `design="silhouette-v4"` on CinematicCharacterV2. Def
 This is a still design candidate. The revised shoulder geometry has not been integrated into the 330-frame performance. Its contacts and sleeve/torso overlaps must be retuned and visually reviewed if this silhouette is selected. Probability Control, Performance V3 and earlier proofs retain their existing default design.
 
 The dedicated Character design review workflow renders one PNG on this feature branch, verifies its dimensions and uploads diagnostics. It avoids spending Actions minutes on another movie while reviewing the figure. Existing production MP4 rendering and manual composition selection are preserved.
+
+## Frontal-arm correction
+Owner correctly identified that the front sample retained three-quarter arm geometry. The revised frontal resting pose now uses mirrored shoulder/elbow/wrist paths, matching sleeve widths and lighting, inward-facing thumbs and both arms drawn at the same depth in front of the torso. The directional side panel is suppressed for this resting front view. This correction is scoped to the opt-in V4 frontal rest; posed motion and the default character are unchanged. The corrected full-resolution sheet was rendered and inspected locally, and TypeScript passed.

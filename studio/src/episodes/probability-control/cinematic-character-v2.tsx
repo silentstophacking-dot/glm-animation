@@ -14,6 +14,8 @@ export const CinematicCharacterV2:React.FC<{
  const yaw=headYaw??view??pose?.yaw??(facing==='front'?0:.85);
  const mouthCenter=18*yaw;
  const front=facing==='front',surprise=mood==='surprised'||pose?.surprised;
+ // A frontal resting pose needs frontal limb geometry and shared draw order.
+ const frontRest=revised&&front&&!pose&&action==='stand';
  const drop=pose?.drop??0;
  const feet:XY[]=pose?.feet??(action==='stride'?[{x:-29,y:-4},{x:36,y:-4}]:(revised?[{x:-14,y:-4},{x:18,y:-4}]:[{x:-13,y:-4},{x:14,y:-4}]));
  const handTip:XY=pose?v2HandLocal(pose):
@@ -57,8 +59,8 @@ export const CinematicCharacterV2:React.FC<{
   <path d={legPath(1)} stroke={u('trousers')} strokeWidth={revised?13:9.7} strokeLinecap="round" fill="none"/>
   {shoe(feet[1],true)}
   <g transform={`translate(0 ${drop+(action==='stride'&&!pose?12:0)}) rotate(${pose?.lean??0} 0 -146)`}>
-   {sleeve(farArm,false)}
-   {pose?.farHand?<g transform={`translate(${farWrist.x} ${farWrist.y}) rotate(${farHandAngle})`}>
+   {!frontRest&&sleeve(farArm,false)}
+   {!frontRest&&(pose?.farHand?<g transform={`translate(${farWrist.x} ${farWrist.y}) rotate(${farHandAngle})`}>
     <path d="M-5 -3h10" stroke="#B95744" strokeWidth="2"/>
     <path d="M-3 0L3 0L4 3Q8 4 6 8L4 10Q0 13 -3 10L-5 5Z" fill={ink}/>
     <path d="M-3 3v5" stroke={rim} strokeWidth=".8" opacity=".65"/>
@@ -68,7 +70,7 @@ export const CinematicCharacterV2:React.FC<{
     <path d="M-3 -4L3 -4L4 0Q8 1 6 5L4 7Q2 12 -3 9L-5 3Z" fill={ink}/>
     <path d="M-3 0v6" stroke={rim} strokeWidth=".8" opacity=".65"/>
    </g>
-   </g>}
+   </g>)}
    <g transform={`scale(${bodyWidth} 1)`}>
    {/* Hood wraps the nape rather than sticking out like a triangular backpack. */}
    <path d="M-10 -290Q-26 -287 -25 -273Q-24 -259 -16 -254L-6 -272L10 -278L7 -287Z"
@@ -83,7 +85,7 @@ export const CinematicCharacterV2:React.FC<{
    <path d="M3 -265L4 -169" stroke="#A63C34" strokeWidth="1" opacity=".6"/>
    <path d="M-10 -184L-6 -198H10L14 -183" fill="none" stroke="#A03932" strokeWidth="1.5" strokeLinecap="round"/>
    <path d="M-8 -184L-5 -193M12 -185L9 -193" stroke="#F08E69" strokeWidth=".7" opacity=".5"/>
-   {view!==undefined?<g>
+   {view!==undefined&&!frontRest?<g>
     <path d={`M${18-12*view} -277Q22 -274 22 -254L20 -155Q${12-9*view} -149 ${9-10*view} -153L${12-9*view} -225Z`}
       fill="#8D3537" opacity={.12+.46*view}/>
     <path d={`M${18-12*view} -273L${12-9*view} -225L${9-10*view} -157`} fill="none" stroke="#893036" strokeWidth="1.2" opacity=".65"/>
@@ -107,12 +109,19 @@ export const CinematicCharacterV2:React.FC<{
      <path d={mood==='concerned'?`M${mouthCenter-8} 12Q${mouthCenter} 4 ${mouthCenter+8} 12`:
       `M${mouthCenter-9} 8Q${mouthCenter} 17 ${mouthCenter+10} 7`} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>}
    </g>
+   {frontRest?[-1,1].map(side=><g key={side} transform={`scale(${side} 1)`}>
+    {sleeve('M26 -270Q31 -244 31 -211Q32 -179 34 -151',true)}
+    <path d="M26 -154H42V-149H26Z" fill="#B94A3E" stroke={ink} strokeWidth="1.2"/>
+    <path d="M29 -149H39L40 -140Q39 -135 35 -135Q31 -135 30 -139L27 -141Q25 -145 29 -146Z" fill={ink}/>
+    <path d="M29 -145L30 -140" stroke={rim} strokeWidth=".8" opacity=".55"/>
+   </g>):<g>
    {sleeve(arm.path,true)}
    <g transform={`translate(${handTip.x} ${handTip.y}) rotate(${Math.atan2(uy,ux)*180/Math.PI})`}>
     <path d="M-14 -4L-8 -4Q-5 -6 -2 -3L0 -1Q1 2 -3 4L-7 5Q-8 9 -11 7L-12 4H-14Z" fill={ink}/>
     <path d="M-14 -5V5" stroke="#B94A3E" strokeWidth="1.6"/>
     <path d="M-12 -4L-7 -4" stroke={rim} strokeWidth=".8" opacity=".6"/>
    </g>
+   </g>}
   </g>
  </g>;
 };
