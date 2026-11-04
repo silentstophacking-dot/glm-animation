@@ -1,12 +1,12 @@
 import React from 'react';
 import {SlenderCharacter} from './slender-character';
-import {slenderAt,auditSlender} from './slender-mechanics';
+import {slenderAt,balancedAt,auditSlender} from './slender-mechanics';
 import {LabBackground,LabForeground} from './cinematic-lab';
 import {LabConsole} from './lab-console';
 import {camT} from '../../engine/anim';
 auditSlender();
 export const SlenderMotionScene:React.FC<{frame:number;id:string;camera:string;build?:'slim'|'balanced'|'fuller'}>=({frame,id,camera,build='slim'})=>{
- const {x,pose}=slenderAt(frame),active=frame>=174;
+ const {x,pose}=build==='balanced'?balancedAt(frame):slenderAt(frame),active=frame>=174;
  return <g transform={camera}>
   <LabBackground id={id} soft={frame>=132}/>
   <LabConsole id={id} active={active}/>
