@@ -1,0 +1,111 @@
+name: Glass Reversal — 17s motion proof (single review render)
+on:
+  push:
+    branches: ['feature/reversal-evidence-motion-proof']
+    paths:
+      - '.github/workflows/reversal-evidence-motion.yml'
+      - 'studio/src/reversal-evidence-entry.tsx'
+      - 'studio/src/episodes/probability-control/reversal-evidence-storyboard.tsx'
+      - 'studio/scripts/generate-reversal-audio.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glass-reversal-motion-proof
+  cancel-in-progress: true
+
+jobs:
+  render-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install exact existing dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Preserve previously approved source and typecheck
+        run: npm run typecheck
+      - name: Geometry, support and reconstructed-fluid audit
+        run: |
+          mkdir -p out/reversal-motion
+          npx --no-install esbuild src/episodes/probability-control/reversal-evidence-storyboard.tsx --bundle --platform=node --outfile=out/reversal-motion/audit.cjs
+          node -e "console.log(JSON.stringify(require('./out/reversal-motion/audit.cjs').auditReversalEvidence(),null,2))" | tee out/reversal-motion/audit.log
+      - name: Generate original 17-second synced stereo sound (no music)
+        run: |
+          python3 scripts/generate-reversal-audio.py | tee out/reversal-motion/audio-generation.log
+          python3 - <<'PY'
+          import wave,json
+          with wave.open('public/reversal-evidence/soundtrack.wav') as w:
+            assert w.getframerate() == 24000 and w.getnchannels() == 2
+            assert w.getnframes() == 17*24000
+          d=json.load(open('public/reversal-evidence/soundtrack.json'))
+          assert len(d['cues']) >= 6 and d['original_synthesized'] and not d['music']
+          assert -35 < d['peak_dbfs_estimate'] < -2
+          print('Audio cue duration, peak, origin and channel checks passed')
+          PY
+      - name: Ensure ffmpeg for completed-movie verification
+        run: |
+          command -v ffprobe && command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+      - name: Render the single designated 17-second 720p review movie with audio
+        run: |
+          npx remotion render src/reversal-evidence-entry.tsx ReversalEvidenceMotionProof \
+            out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 \
+            --codec=h264 --pixel-format=yuv420p --crf=21 --concurrency=2 \
+            --scale=0.6666666666666666 2>&1 | tee out/reversal-motion/render.log
+      - name: Decode all frames and validate movie and soundtrack metadata
+        run: |
+          python3 - <<'PY'
+          import json,subprocess
+          p='out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4'
+          raw=subprocess.check_output(['ffprobe','-v','error','-show_streams','-show_format','-of','json',p])
+          d=json.loads(raw)
+          v=next(s for s in d['streams'] if s['codec_type']=='video')
+          a=next(s for s in d['streams'] if s['codec_type']=='audio')
+          assert (v['codec_name'],v.get('pix_fmt'),v['width'],v['height']) == ('h264','yuv420p',1280,720),v
+          num,den=map(int,v['avg_frame_rate'].split('/'))
+          assert abs(num/den-30)<.001,v
+          assert int(v.get('nb_frames',510))==510,v
+          assert a['codec_name']=='aac' and int(a['channels'])==2,a
+          duration=float(d['format']['duration'])
+          assert abs(duration-17)<.25,duration
+          print(json.dumps({'video':v['codec_name'],'dimensions':[v['width'],v['height']],
+            'frames':v.get('nb_frames'),'fps':num/den,'audio':a['codec_name'],
+            'channels':a['channels'],'duration':duration},indent=2))
+          PY
+          ffmpeg -nostdin -v error -xerror -i out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 -f null -
+          echo "All decoded video and audio frames verified"
+      - name: Contact sheet of actual rendered moving frames (mobile inspection)
+        run: |
+          ffmpeg -y -nostdin -v error \
+            -i out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 \
+            -vf "fps=1/2,scale=640:-1,tile=3x3" -frames:v 1 -an \
+            out/reversal-motion/Glass-Reversal-Motion-Contact-Sheet.png
+          cp public/reversal-evidence/soundtrack.json out/reversal-motion/soundtrack.json
+      - name: Upload phone-ready actual motion proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: GLASS-REVERSAL-17S-MP4
+          path: studio/out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4
+          retention-days: 14
+          if-no-files-found: error
+          compression-level: 0
+      - name: Upload movie contact and verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GLASS-REVERSAL-MOTION-REVIEW
+          path: |
+            studio/out/reversal-motion/*.png
+            studio/out/reversal-motion/*.json
+            studio/out/reversal-motion/*.log
+          retention-days: 14
+          if-no-files-found: warn
