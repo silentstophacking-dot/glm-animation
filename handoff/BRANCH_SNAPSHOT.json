@@ -1,0 +1,226 @@
+[
+  {
+    "ref": "refs/heads/feature/balanced-motion-proof",
+    "sha": "0d6b8f91eaaa0a731c45eb0291373ef9c0646625"
+  },
+  {
+    "ref": "refs/heads/feature/character-build-balance",
+    "sha": "952fc50da8026a1d799866ec8f98b06913399132"
+  },
+  {
+    "ref": "refs/heads/feature/character-outfit-study",
+    "sha": "a393069954900794b8be7e196f5225672ac19669"
+  },
+  {
+    "ref": "refs/heads/feature/character-performance-v3",
+    "sha": "4f993e0e9df88babb64717b87a288d9f194834eb"
+  },
+  {
+    "ref": "refs/heads/feature/character-silhouette-v4",
+    "sha": "2d208b095481d2f84f935ef8a2d5f93a43e17acb"
+  },
+  {
+    "ref": "refs/heads/feature/character-sunset-lighting",
+    "sha": "8f3721196a9293b78088cbd17aa7e839127beaf3"
+  },
+  {
+    "ref": "refs/heads/feature/character-turn-v5",
+    "sha": "09760ed0337349d5aac96c6d779ebd7449f530af"
+  },
+  {
+    "ref": "refs/heads/feature/cinematic-character-v2",
+    "sha": "ff048459537f382d07a5bf8a552dda230f335ffe"
+  },
+  {
+    "ref": "refs/heads/feature/combined-character-performance",
+    "sha": "2758ebff2870bd9f479865d53c13ba1f326bbaa6"
+  },
+  {
+    "ref": "refs/heads/feature/ifverse-contact-preview",
+    "sha": "77512866ba8bdd4ebfa15b8a3c27c2d06852eac1"
+  },
+  {
+    "ref": "refs/heads/feature/ifverse-slender-design-sheet",
+    "sha": "0850b66acacb1a9804d03969ef98961e90815a0e"
+  },
+  {
+    "ref": "refs/heads/feature/lab-room-depth",
+    "sha": "548367ab4e7d89a0c6f471521fd22f708aa09f50"
+  },
+  {
+    "ref": "refs/heads/feature/lead-character-outfit",
+    "sha": "35658f5b65ed79af798a2065d66b6d412198204a"
+  },
+  {
+    "ref": "refs/heads/feature/production-render-audit",
+    "sha": "534cc3668976f4ceb59520d35fac9e0fb750ab4b"
+  },
+  {
+    "ref": "refs/heads/feature/pseudo-depth-proof",
+    "sha": "2ee4d968142fe83fd39eb1981a7083206b1aacb7"
+  },
+  {
+    "ref": "refs/heads/feature/puffer-jacket-study",
+    "sha": "03232b51a70712fefc398e4ed5a513359aeef967"
+  },
+  {
+    "ref": "refs/heads/feature/remotion-25d-rig-skill",
+    "sha": "61165504c5e9ac2a8d8e8d54fd9935386e71a82c"
+  },
+  {
+    "ref": "refs/heads/feature/slender-motion-board",
+    "sha": "7ec135b2f7d75d6e4b732730d0e7a7161303335e"
+  },
+  {
+    "ref": "refs/remotes/origin/HEAD",
+    "sha": "89a57b68d4343b4b5fcb3eb4179a63921674fdeb"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/2p5d-cafe-polish-v2",
+    "sha": "0c4c25317de18de97cfe9621988e639c3f0dfd79"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/2p5d-locked-subject-v3",
+    "sha": "71870b723f6a47526ec4447b29b820fdf527ab21"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/balanced-motion-proof",
+    "sha": "0d6b8f91eaaa0a731c45eb0291373ef9c0646625"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-acting-v3-weight-and-props",
+    "sha": "5919420868e633a1a430fbf8bd7a429e285f01d2"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-acting-v4-grounded-staging",
+    "sha": "04a8756bfa6f3fa35a22352ff166e77df0e33d5b"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-build-balance",
+    "sha": "952fc50da8026a1d799866ec8f98b06913399132"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-outfit-study",
+    "sha": "a393069954900794b8be7e196f5225672ac19669"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-performance-v3",
+    "sha": "4f993e0e9df88babb64717b87a288d9f194834eb"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-rig-v2-acting-proof",
+    "sha": "f8036ab4cf1030874cf3d6cfe7a65139c5f3a3cd"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-rig-v5-skill-guided-mechanics",
+    "sha": "dd4232a0cc6ea50410cc4c45f5743dc1e2be5bae"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-silhouette-v4",
+    "sha": "2d208b095481d2f84f935ef8a2d5f93a43e17acb"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-sunset-lighting",
+    "sha": "8f3721196a9293b78088cbd17aa7e839127beaf3"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/character-turn-v5",
+    "sha": "09760ed0337349d5aac96c6d779ebd7449f530af"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/cinematic-character-v2",
+    "sha": "ff048459537f382d07a5bf8a552dda230f335ffe"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/combined-character-performance",
+    "sha": "2758ebff2870bd9f479865d53c13ba1f326bbaa6"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/ifverse-character-reference-match",
+    "sha": "86c102baf53bb78b0d55073876868b6c6864590b"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/ifverse-contact-preview",
+    "sha": "77512866ba8bdd4ebfa15b8a3c27c2d06852eac1"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/ifverse-inspired-style-bible-v1",
+    "sha": "e9b476a6820e46c776188adea4755f1bd8cec73c"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/ifverse-slender-design-sheet",
+    "sha": "0850b66acacb1a9804d03969ef98961e90815a0e"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/lab-room-depth",
+    "sha": "548367ab4e7d89a0c6f471521fd22f708aa09f50"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/lead-character-outfit",
+    "sha": "35658f5b65ed79af798a2065d66b6d412198204a"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-2p5d-parallax",
+    "sha": "f006b8780d73a5e2b4966f298ae8ea44e2c2e1dd"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-longform-edit-assembly",
+    "sha": "5ff0ca4e2420a2aac727429cab1c9c6d61f77d87"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-longform-episode-01",
+    "sha": "efdfe1207ea7f95c1f9a2a84b9f49bc2ee6453ad"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-longform-first-full-render",
+    "sha": "a1f077e31dd0f892a7e47fee16927d6ed676b643"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-longform-local-tts",
+    "sha": "a2b416406b6b8e4ac3889fe008d1cd3382c5c787"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-longform-quality-fixes",
+    "sha": "61a3ac77f60c45925853141222b5888a28e9fd03"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-longform-sound-design",
+    "sha": "3db33d7b6b1551d3583565cc7cbe87044d3dc474"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/probability-skill-pipeline",
+    "sha": "dcd376d5055d82b5514abf89846fc7f553a56f2b"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/production-render-audit",
+    "sha": "534cc3668976f4ceb59520d35fac9e0fb750ab4b"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/pseudo-depth-proof",
+    "sha": "2ee4d968142fe83fd39eb1981a7083206b1aacb7"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/puffer-jacket-study",
+    "sha": "03232b51a70712fefc398e4ed5a513359aeef967"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/reference-stick-characters",
+    "sha": "2ba21356ad9896b2a6c98d07d067112654b020a4"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/remotion-25d-rig-skill",
+    "sha": "61165504c5e9ac2a8d8e8d54fd9935386e71a82c"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/rewind-grade-coin-proof",
+    "sha": "707636898a5937f250b95ef6758547ca08934928"
+  },
+  {
+    "ref": "refs/remotes/origin/feature/slender-motion-board",
+    "sha": "7ec135b2f7d75d6e4b732730d0e7a7161303335e"
+  },
+  {
+    "ref": "refs/remotes/origin/main",
+    "sha": "89a57b68d4343b4b5fcb3eb4179a63921674fdeb"
+  }
+]

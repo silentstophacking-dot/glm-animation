@@ -1,0 +1,290 @@
+[
+  {
+    "number": 36,
+    "title": "Lab depth: shared camera, furniture surfaces and layered window scenery",
+    "head": "feature/lab-room-depth",
+    "base": "feature/puffer-jacket-study",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/36"
+  },
+  {
+    "number": 35,
+    "title": "Study quilted puffer jackets in black, cobalt and teal",
+    "head": "feature/puffer-jacket-study",
+    "base": "feature/lead-character-outfit",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/35"
+  },
+  {
+    "number": 34,
+    "title": "Create a stronger cobalt-and-gold lead-character outfit",
+    "head": "feature/lead-character-outfit",
+    "base": "feature/character-outfit-study",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/34"
+  },
+  {
+    "number": 33,
+    "title": "Compare original character outfits and teal overshirt in the lab",
+    "head": "feature/character-outfit-study",
+    "base": "feature/combined-character-performance",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/33"
+  },
+  {
+    "number": 32,
+    "title": "Combine revised character, sunset lighting and console acting",
+    "head": "feature/combined-character-performance",
+    "base": "feature/character-sunset-lighting",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/32"
+  },
+  {
+    "number": 31,
+    "title": "Sunset character lighting: warm rim, cool fill and floor shadows",
+    "head": "feature/character-sunset-lighting",
+    "base": "feature/character-turn-v5",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/31"
+  },
+  {
+    "number": 30,
+    "title": "Character turn V5: front to profile with view-aware body geometry",
+    "head": "feature/character-turn-v5",
+    "base": "feature/remotion-25d-rig-skill",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/30"
+  },
+  {
+    "number": 29,
+    "title": "Add Remotion 2.5D character rig skill",
+    "head": "feature/remotion-25d-rig-skill",
+    "base": "feature/character-silhouette-v4",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/29"
+  },
+  {
+    "number": 28,
+    "title": "Character silhouette V4: fuller proportions and a natural resting stance",
+    "head": "feature/character-silhouette-v4",
+    "base": "feature/character-performance-v3",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/28"
+  },
+  {
+    "number": 27,
+    "title": "Character performance V3: grounded steps and clearer acting",
+    "head": "feature/character-performance-v3",
+    "base": "feature/pseudo-depth-proof",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/27"
+  },
+  {
+    "number": 26,
+    "title": "Add shared-camera 2.5D depth and character-view proof",
+    "head": "feature/pseudo-depth-proof",
+    "base": "feature/cinematic-character-v2",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/26"
+  },
+  {
+    "number": 25,
+    "title": "Rebuild character styling and prepare improved cinematic body poses",
+    "head": "feature/cinematic-character-v2",
+    "base": "feature/balanced-motion-proof",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/25"
+  },
+  {
+    "number": 24,
+    "title": "Render nine-second balanced character motion proof",
+    "head": "feature/balanced-motion-proof",
+    "base": "feature/character-build-balance",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/24"
+  },
+  {
+    "number": 23,
+    "title": "Compare balanced character builds without changing accepted height and head proportions",
+    "head": "feature/character-build-balance",
+    "base": "feature/slender-motion-board",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/23"
+  },
+  {
+    "number": 22,
+    "title": "Add slender motion storyboard with cinematic lab lighting",
+    "head": "feature/slender-motion-board",
+    "base": "feature/ifverse-slender-design-sheet",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/22"
+  },
+  {
+    "number": 21,
+    "title": "Replace bulky character proportions with slender reference-based design sheet",
+    "head": "feature/ifverse-slender-design-sheet",
+    "base": "feature/ifverse-contact-preview",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/21"
+  },
+  {
+    "number": 20,
+    "title": "Add reference-informed grounded character contact preview",
+    "head": "feature/ifverse-contact-preview",
+    "base": "feature/production-render-audit",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/20"
+  },
+  {
+    "number": 19,
+    "title": "Add verified iPhone-compatible production renders and repository audit",
+    "head": "feature/production-render-audit",
+    "base": "feature/ifverse-character-reference-match",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/19"
+  },
+  {
+    "number": 18,
+    "title": "Replace bulky V5 cast with direct-reference Ifverse character appearance study",
+    "head": "feature/ifverse-character-reference-match",
+    "base": "feature/character-rig-v5-skill-guided-mechanics",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/18"
+  },
+  {
+    "number": 17,
+    "title": "Character Rig V5 — skill-guided original skeleton and body mechanics acting proof",
+    "head": "feature/character-rig-v5-skill-guided-mechanics",
+    "base": "feature/character-acting-v4-grounded-staging",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/17"
+  },
+  {
+    "number": 16,
+    "title": "Character Acting V4 — planted-foot gait, supported squat, cinematic pickup insert",
+    "head": "feature/character-acting-v4-grounded-staging",
+    "base": "feature/character-acting-v3-weight-and-props",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/16"
+  },
+  {
+    "number": 15,
+    "title": "Character Acting V3 — world-anchored 12-second physical performance test",
+    "head": "feature/character-acting-v3-weight-and-props",
+    "base": "feature/character-rig-v2-acting-proof",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/15"
+  },
+  {
+    "number": 14,
+    "title": "Character Rig V2 — original SVG acting, IK hand/foot contact, five visual approval frames",
+    "head": "feature/character-rig-v2-acting-proof",
+    "base": "feature/ifverse-inspired-style-bible-v1",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/14"
+  },
+  {
+    "number": 13,
+    "title": "Reference-led cinematic 2.5D Style Bible V1 — characters, camera, motion, visual QA",
+    "head": "feature/ifverse-inspired-style-bible-v1",
+    "base": "feature/probability-longform-first-full-render",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/13"
+  },
+  {
+    "number": 12,
+    "title": "First complete Probability Control film — 3:50 widescreen, audio + motion QA",
+    "head": "feature/probability-longform-first-full-render",
+    "base": "feature/probability-longform-quality-fixes",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/12"
+  },
+  {
+    "number": 11,
+    "title": "Fix Probability longform physical continuity, sound timing and original Foley (no video)",
+    "head": "feature/probability-longform-quality-fixes",
+    "base": "feature/probability-longform-edit-assembly",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/11"
+  },
+  {
+    "number": 10,
+    "title": "Long-form Probability: audio-synced edit map and production preflight (no video render)",
+    "head": "feature/probability-longform-edit-assembly",
+    "base": "feature/probability-longform-local-tts",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/10"
+  },
+  {
+    "number": 9,
+    "title": "Long-form Probability cinematic soundscape — original SFX + approved narration (audio-only)",
+    "head": "feature/probability-longform-sound-design",
+    "base": "feature/probability-longform-local-tts",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/9"
+  },
+  {
+    "number": 8,
+    "title": "Generate Probability long-form voiceover automatically with free Piper TTS (audio only)",
+    "head": "feature/probability-longform-local-tts",
+    "base": "feature/probability-longform-episode-01",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/8"
+  },
+  {
+    "number": 7,
+    "title": "First long-form episode: Probability Control — 3:50 / 27 scenes (source only, no render)",
+    "head": "feature/probability-longform-episode-01",
+    "base": "feature/2p5d-locked-subject-v3",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/7"
+  },
+  {
+    "number": 6,
+    "title": "Fix 2.5D drift: lock character, chair and table while scenery moves",
+    "head": "feature/2p5d-locked-subject-v3",
+    "base": "feature/2p5d-cafe-polish-v2",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/6"
+  },
+  {
+    "number": 5,
+    "title": "Polish 2.5D café: true window parallax, controlled foreground, better acting",
+    "head": "feature/2p5d-cafe-polish-v2",
+    "base": "feature/probability-2p5d-parallax",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/5"
+  },
+  {
+    "number": 4,
+    "title": "Add reusable 2.5D camera, SVG perspective props and cinematic café proof",
+    "head": "feature/probability-2p5d-parallax",
+    "base": "feature/reference-stick-characters",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/4"
+  },
+  {
+    "number": 3,
+    "title": "Character redesign: minimal black-head SVG actors from user references",
+    "head": "feature/reference-stick-characters",
+    "base": "feature/rewind-grade-coin-proof",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/3"
+  },
+  {
+    "number": 2,
+    "title": "Quality gate: five-second Rewind-grade probability coin interaction",
+    "head": "feature/rewind-grade-coin-proof",
+    "base": "feature/probability-skill-pipeline",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/2"
+  },
+  {
+    "number": 1,
+    "title": "Rebuild Probability Control with original What If skill pipeline",
+    "head": "feature/probability-skill-pipeline",
+    "base": "main",
+    "draft": true,
+    "url": "https://github.com/silentstophacking-dot/glm-animation/pull/1"
+  }
+]
