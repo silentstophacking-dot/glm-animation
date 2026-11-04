@@ -1,0 +1,62 @@
+name: Reversal evidence — storyboard stills ONLY
+
+on:
+  push:
+    branches: [feature/reversal-evidence-storyboard]
+    paths:
+      - 'studio/src/episodes/probability-control/reversal-evidence-storyboard.tsx'
+      - 'studio/src/reversal-evidence-entry.tsx'
+      - 'studio/src/Root.tsx'
+      - '.github/workflows/reversal-evidence-board.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-stills:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install pinned dependencies
+        run: npm ci
+      - name: Typecheck without changing existing films
+        run: npx tsc --noEmit
+      - name: Run deterministic scene geometry audit
+        run: |
+          mkdir -p out/reversal-evidence
+          npx --no-install esbuild src/episodes/probability-control/reversal-evidence-storyboard.tsx --bundle --platform=node --outfile=out/reversal-evidence/audit.cjs
+          node -e "console.log(require('./out/reversal-evidence/audit.cjs').auditReversalEvidence())"
+      - name: Render six storyboard shots as one JPG-friendly sheet
+        run: |
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceStoryBoard \
+            out/reversal-evidence/Reversal-Evidence-StoryBoard.png --frame=0 --scale=0.6666666666666666
+      - name: Render fully reconstructed prop keyframe
+        run: |
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \
+            out/reversal-evidence/Restored-Glass-Closeup.png --frame=374 --scale=0.6666666666666666
+      - name: Render lifted-glass trajectory keyframe
+        run: |
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \
+            out/reversal-evidence/Lifting-Shards-Closeup.png --frame=254 --scale=0.6666666666666666
+      - name: Render broken prop keyframe
+        run: |
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \
+            out/reversal-evidence/Broken-Glass-Closeup.png --frame=135 --scale=0.6666666666666666
+      - name: Upload storyboard images (no movie)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: REVERSAL-EVIDENCE-STORYBOARD-ONLY
+          path: studio/out/reversal-evidence/*.png
+          retention-days: 14
+          if-no-files-found: warn
