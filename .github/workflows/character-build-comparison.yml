@@ -1,0 +1,46 @@
+name: Character body build comparison
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/character-build-balance]
+    paths:
+      - studio/src/episodes/probability-control/slender-character.tsx
+      - studio/src/episodes/probability-control/character-build-comparison.tsx
+      - studio/src/character-build-entry.tsx
+      - .github/workflows/character-build-comparison.yml
+permissions:
+  contents: read
+jobs:
+  sheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Render equal-height comparison for appearance review
+        run: |
+          mkdir -p out/slender
+          set -o pipefail
+          npx remotion still src/character-build-entry.tsx CharacterBuildComparison out/slender/Character-Build-Comparison.png --frame=0 2>&1 | tee out/slender/render.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CHARACTER-BUILD-COMPARISON-${{ github.run_id }}
+          path: studio/out/slender/*.png
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SHEET-LOG-${{ github.run_id }}
+          path: studio/out/slender/*.log
+          if-no-files-found: warn

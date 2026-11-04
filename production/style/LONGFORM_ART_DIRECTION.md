@@ -18,3 +18,11 @@ The exact hand/button target stays fixed through this visual work. All physical 
 
 ## Next visual checks before long-form production
 Review the hero prop in a contact insert, a face reaction, a wide with grounded furniture and a real motion sequence. Check physical continuity, limb silhouettes and lighting consistency between those views. Resolve the reference gap before propagating assets across the existing Probability Control episode. Preserve all prior compositions and film versions.
+
+## Body-build correction after detailed lab review
+Owner liked the material/prop revision, then identified that the figure had become too skinny relative to Ifverse. Preserve the accepted small head, visible neck, standing height and long legs while restoring garment and limb volume. Do not resolve this by globally stretching the actor or restoring the oversized head.
+
+Added opt-in slim / balanced / fuller build variants and an equal-height comparison sheet. Balanced widens the garment 35%, sleeve strokes 45% and leg strokes 50%; fuller widens them 60%, 65% and 80% respectively. Joint coordinates, head and foot anchors are unchanged, so this is a visual-build comparison rather than a new gait or a validated garment-contact rig. Current scene remains on the existing slim default until the owner chooses the build. Wider sleeves need inspection during the full motion proof for overlaps. No film or animation rerender is included in this revision.
+
+### Hand visibility correction
+Owner flagged the left-side hanging hand on the build comparison. The widened garment was occluding the far forearm/wrist, while the old oval hand merged into the rounded sleeve cap. For the balanced/fuller static candidates, the far sleeve now follows the garment width, cuffs have a separate edge, and compact palm/thumb silhouettes connect through a visible wrist. Resting near/far thumbs face inward. A pointing silhouette replaces the old dot-and-line hand on the static reach sample. The previous slim reference and contact-constrained pose rendering stay unchanged; these candidate hand shapes must be integrated with contact constraints after selection. Rendered sheet and typecheck reviewed before pushing.
