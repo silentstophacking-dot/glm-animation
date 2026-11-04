@@ -2,7 +2,7 @@ import React from 'react';
 import {BUTTON} from './slender-mechanics';
 
 /** A supported steel trolley and enamel control unit, on the actor's contact plane. */
-export const LabConsole:React.FC<{id:string;active:boolean}>=({id,active})=>{
+export const LabConsole:React.FC<{id:string;active:boolean;shadowY?:number;shadow?:boolean}>=({id,active,shadowY=890,shadow=true})=>{
  const u=(s:string)=>`url(#${id+s})`;
  return <g>
  <defs>
@@ -12,7 +12,7 @@ export const LabConsole:React.FC<{id:string;active:boolean}>=({id,active})=>{
   <linearGradient id={id+'glass'} x2=".6" y2="1"><stop stopColor="#496568"/><stop offset=".22" stopColor="#192B35"/><stop offset="1" stopColor="#101B27"/></linearGradient>
   <radialGradient id={id+'button'} cx=".35" cy=".25"><stop stopColor={active?'#CEF8D7':'#F4D3A0'}/><stop offset="1" stopColor={active?'#579E91':'#A67051'}/></radialGradient>
  </defs>
- <ellipse cx="960" cy="890" rx="145" ry="12" fill="#0E121C" opacity=".5"/>
+ {shadow?<ellipse cx="960" cy={shadowY} rx="145" ry="12" fill="#0E121C" opacity=".5"/>:null}
  {/* Rear legs, brace and lower tray precede the front legs. */}
  <path d="M871 573V874M1080 573V874" stroke="#181E2C" strokeWidth="11"/>
  <path d="M863 817H1084L1072 835H851Z" fill="#373544" stroke="#222433" strokeWidth="3"/>
