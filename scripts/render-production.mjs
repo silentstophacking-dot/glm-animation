@@ -11,7 +11,7 @@ if (!/^[A-Za-z0-9_-]+$/.test(id)) throw new Error('Invalid composition ID');
 const dir = 'out/production';
 const revision = (process.env.GITHUB_SHA || 'local').slice(0, 12);
 const name = id + '-' + revision + '-' + (process.env.GITHUB_RUN_ID || 'local');
-const serveUrl = await bundle({entryPoint: id === 'IfverseContactPreview' ? 'src/ifverse-preview.tsx' : id === 'SlenderDesignSheet' ? 'src/slender-design-sheet.tsx' : id === 'SlenderMotionBoard' ? 'src/slender-motion-board-entry.tsx' : 'src/index.ts'});
+const serveUrl = await bundle({entryPoint: id === 'IfverseContactPreview' ? 'src/ifverse-preview.tsx' : id === 'SlenderDesignSheet' ? 'src/slender-design-sheet.tsx' : id === 'SlenderMotionBoard' ? 'src/slender-motion-board-entry.tsx' : id === 'CharacterBuildComparison' ? 'src/character-build-entry.tsx' : 'src/index.ts'});
 const composition = await selectComposition({serveUrl, id});
 writeFileSync(dir + '/composition.json', JSON.stringify(composition, null, 2));
 const options = {serveUrl, composition};
