@@ -1,9 +1,11 @@
 import React from 'react';
 import {kf,clamp} from '../../engine/anim';
+import {CharacterV2Pose,v2HandLocal} from './character-v2-motion';
+import type {CharacterMood} from './cinematic-character-v2';
 import {limb} from './slender-mechanics';
 
 // V4 garment/proportion construction, with an independent view-aware rest rig.
-// A controlled turn only: this does not replace the contact/acting rig.
+// Default is the original controlled turn; optional pose drives the combined performance.
 export const TURN_FRAMES=180;
 export function turnV5At(f:number){
  const body=kf(f,[[0,0],[18,0],[59,.5],[76,.5],[122,1],[179,1]]);
@@ -28,29 +30,45 @@ export function auditTurnV5(lighting:'baseline'|'sunset'='baseline'){
  }
  return {lighting,frames:TURN_FRAMES,maxHeelDrift,headDiameter:72,floorY:0,footAction:'heels planted; toes pivot on floor'};
 }
-export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset'}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline'})=>{
+export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset';pose?:CharacterV2Pose;mood?:CharacterMood;shadow?:boolean}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline',pose,mood='calm',shadow=true})=>{
  const lit=lighting==='sunset';
  const g=turnV5Geometry(yaw),{c,s,width:w}=g,ink='#120F17',rim='#E2B680',cream='#F5E8D0';
  const ha=clamp(headYaw)*Math.PI/2,hc=Math.cos(ha),hs=Math.sin(ha),seam=w*.8*s;
+ const drop=pose?.drop??0;
+ const feet=pose?.feet??g.heels.map(x=>({x,y:0}));
+ const surprise=mood==='surprised'||pose?.surprised;
  const u=(n:string)=>`url(#${id+n})`;
  const arm=(side:number)=>{
   const sh=side>0?g.nearShoulder:g.farShoulder,wr=side>0?g.nearWrist:g.farWrist;
-  // The elbow bows outward in the front plane, rather than keeping a profile bend.
   const elbow=side*(31*c+10*s);
+  let path=`M${sh} -270Q${elbow} -242 ${elbow} -211Q${wr} -178 ${wr} -151`;
+  let tip={x:wr,y:-151},angle=90;
+  if(pose){
+   tip=side>0?v2HandLocal(pose):(pose.farHand??{x:wr,y:-151});
+   const dx=tip.x-sh,dy=tip.y+270,d=Math.hypot(dx,dy);
+   const wrist=side>0?{x:tip.x-dx/d*11,y:tip.y-dy/d*11}:tip;
+   const ik=limb({x:sh,y:-270},wrist,side>0?61:60,-1);
+   path=ik.path;
+   angle=(side>0?Math.atan2(dy,dx):Math.atan2(tip.y-ik.knee.y,tip.x-ik.knee.x))*180/Math.PI;
+  }
   return <g>
-   <path d={`M${sh} -270Q${elbow} -242 ${elbow} -211Q${wr} -178 ${wr} -151`} fill="none" stroke={ink} strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"/>
-   <path d={`M${sh} -270Q${elbow} -242 ${elbow} -211Q${wr} -178 ${wr} -151`} fill="none" stroke={u(side>0?'cloth':'far')} strokeWidth="16.5" strokeLinecap="round"/>
-   <g transform={`translate(${wr} -151) scale(${side} 1)`}>
+   <path d={path} fill="none" stroke={ink} strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"/>
+   <path d={path} fill="none" stroke={u(side>0?'cloth':'far')} strokeWidth="16.5" strokeLinecap="round" strokeLinejoin="round"/>
+   {pose&&side>0?<g transform={`translate(${tip.x} ${tip.y}) rotate(${angle})`}>
+    <path d="M-14 -4L-8 -4Q-5 -6 -2 -3L0 -1Q1 2 -3 4L-7 5Q-8 9 -11 7L-12 4H-14Z" fill={ink}/>
+    <path d="M-14 -5V5" stroke="#B94A3E" strokeWidth="1.6"/>
+    <path d="M-12 -4L-7 -4" stroke={rim} strokeWidth=".8" opacity=".6"/>
+   </g>:<g transform={`translate(${tip.x} ${tip.y}) rotate(${pose?angle-90:0}) scale(${pose?1:side} 1)`}>
     <path d="M-8 -3H8V2H-8Z" fill="#B94A3E" stroke={ink} strokeWidth="1.2"/>
     <path d="M-5 2H5L6 11Q5 16 1 16Q-3 16 -4 12L-7 10Q-9 6 -5 5Z" fill={ink}/>
     <path d="M-5 6L-4 11" stroke={rim} strokeWidth=".8" opacity=".55"/>
-   </g>
+   </g>}
   </g>;
  };
- const shoe=(heel:number)=>{
-  // Heel anchor is stationary; the floor-projected toe swings around it.
+ const shoe=(at:{x:number;y:number},i:number)=>{
+  // Turn: planted heel pivot. Performance: the supplied world-space sole target drives each shoe.
   const toe=17*s,half=8*c+5*s;
-  return <g transform={`translate(${heel} 0)`}>
+  return <g transform={`translate(${at.x} ${at.y}) rotate(${pose?.shoeAngles?.[i]??0})`}>
    <path d={`M-6 -8Q0 -11 6 -8L${toe+half} -5Q${toe+half+2} -1 ${toe+half} 0H${-half}Q${-half-2} -3 -6 -8Z`} fill="#1D1B26" stroke="#0E111C" strokeWidth="1.5"/>
    <path d={`M${-half} -1H${toe+half}`} stroke={rim} strokeWidth="1.1" opacity=".7"/>
   </g>;
@@ -71,13 +89,14 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
    <clipPath id={id+'face'}><ellipse rx="35.5" ry="35.5"/></clipPath>
    <filter id={id+'solid'}><feColorMatrix type="matrix" values="0 0 0 0 .08 0 0 0 0 .08 0 0 0 0 .1 0 0 0 1 0"/></filter>
   </defs>
-  <ellipse cx="0" cy="2" rx="42" ry="4" fill="#090C15" opacity=".3"/>
+  {shadow?<ellipse cx="0" cy="2" rx="42" ry="4" fill="#090C15" opacity=".3"/>:null}
   <g filter={lit?u('sunRim'):undefined}>
   {g.hips.map((hip,i)=><g key={i}>
-   <path d={limb({x:hip,y:-147.4},{x:g.heels[i],y:-4},72,i?1:-1).path} fill="none" stroke="#10131E" strokeWidth="15.5" strokeLinecap="round"/>
-   <path d={limb({x:hip,y:-147.4},{x:g.heels[i],y:-4},72,i?1:-1).path} fill="none" stroke={u('pants')} strokeWidth="13" strokeLinecap="round"/>
-   {shoe(g.heels[i])}
+   <path d={limb({x:hip,y:-147.4+drop},{x:feet[i].x,y:feet[i].y-4},72,pose?1:i?1:-1).path} fill="none" stroke="#10131E" strokeWidth="15.5" strokeLinecap="round"/>
+   <path d={limb({x:hip,y:-147.4+drop},{x:feet[i].x,y:feet[i].y-4},72,pose?1:i?1:-1).path} fill="none" stroke={u('pants')} strokeWidth="13" strokeLinecap="round"/>
+   {shoe(feet[i],i)}
   </g>)}
+  <g transform={`translate(0 ${drop}) rotate(${pose?.lean??0} 0 -146)`}>
   {arm(-1)}
   <path d={`M${-w*.65} -290Q${-w-8} -285 ${-w-4} -270L${-w*.6} -254L${w*.5} -273L${w*.55} -287Z`} fill="#B7463C" stroke={ink} strokeWidth="1.4"/>
   <path d={`M${-w} -272Q${-w*.8} -278 ${-w*.42} -280L0 -277L${w*.46} -280Q${w*.83} -277 ${w} -270L${w*.93} -237L${w*.83} -207L${w*.87} -155Q0 -149 ${-w*.87} -155L${-w*.83} -207Z`} fill={u('cloth')} stroke={ink} strokeWidth="1.5"/>
@@ -88,19 +107,24 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
   <path d="M-6 -297H6L7 -274Q1 -269 -6 -275Z" fill={ink}/>
   <path d="M-4 -288V-277" stroke={rim} strokeWidth="1" opacity=".75"/>
   <path d={`M${seam-9*c} -268l${-c} 22M${seam+6*c} -267l${c} 20`} stroke="#EFD9BC" strokeWidth="1.4" strokeLinecap="round"/>
-  <g transform="translate(2 -326)">
+  <g transform={`translate(2 -326) rotate(${pose?.headTilt??0})`}>
    <ellipse rx="36" ry="36" fill={lit?u('headLight'):ink}/>
    <path d="M-35 0Q-35 -27 -10 -35Q12 -41 29 -21" fill="none" stroke={rim} strokeWidth={lit?1.05:1.8} strokeLinecap="round"/>
    <g clipPath={u('face')}>
     {[-.32,.32].map((offset,i)=>{
      const a=ha+offset;
      // The far eye disappears behind the head surface; visible eyes never fade.
-     return Math.cos(a)>0?<ellipse key={i} cx={35.4*Math.sin(a)} cy="-5" rx={2.8*Math.max(.25,Math.cos(a))} ry="3.6" fill={cream}/>:null;
+     const e=35.4*Math.sin(a)+(pose?.gaze??0)*.7,ex=Math.max(.25,Math.cos(a));
+     return Math.cos(a)>0?<g key={i}>
+      {(pose?.blink??0)>.5?<path d={`M${e-3*ex} -4h${6*ex}`} stroke={cream} strokeWidth="1.8" strokeLinecap="round"/>:mood==='relieved'?<path d={`M${e-3*ex} -4q${3*ex} -4 ${6*ex} 0`} fill="none" stroke={cream} strokeWidth="1.8"/>:mood==='focused'?<path d={`M${e-4*ex} -5h${8*ex}q${-ex} 6 ${-5*ex} 4Z`} fill={cream}/>:<ellipse cx={e} cy="-5" rx={(surprise?3.8:2.8)*ex} ry={surprise?6:mood==='curious'?4.6:3.6} fill={cream}/>}
+      {mood==='curious'||mood==='concerned'?<path d={`M${e-4*ex} -14q${4*ex} ${mood==='curious'?-4:3} ${8*ex} -1`} fill="none" stroke={cream} strokeWidth="1.5"/>:null}
+     </g>:null;
     })}
-    <path d={`M${24*hs-9*Math.max(.5,hc)} 9Q${24*hs} ${13+4*hc} ${24*hs+9*Math.max(.5,hc)} 8`} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>
+    {mood==='focused'?<path d={`M${24*hs-5} 10h10`} stroke={cream} strokeWidth="1.8" strokeLinecap="round"/>:surprise?<ellipse cx={24*hs} cy="10" rx="3.7" ry="5.5" fill={cream}/>:mood==='concerned'?<path d={`M${24*hs-7} 12q7 -7 14 0`} fill="none" stroke={cream} strokeWidth="2"/>:<path d={`M${24*hs-9*Math.max(.5,hc)} 9Q${24*hs} ${13+4*hc} ${24*hs+9*Math.max(.5,hc)} 8`} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>}
    </g>
   </g>
   {arm(1)}
+  </g>
   </g>
  </g>;
 };

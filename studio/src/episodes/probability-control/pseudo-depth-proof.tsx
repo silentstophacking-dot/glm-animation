@@ -1,4 +1,6 @@
 import React from 'react';
+import {combinedPerformanceAt} from './combined-performance-motion';
+import {CharacterTurnV5} from './character-turn-v5';
 import {performanceV3At} from './performance-v3-motion';
 import {useCurrentFrame} from 'remotion';
 import {CinematicCharacterV2} from './cinematic-character-v2';
@@ -10,12 +12,13 @@ const P=(x:number,z:number):WorldPoint=>({x,y:0,z});
 function shadow(x:number,z:number,rx:number,rz:number,c:WorldCamera){
  return floorPolygon(Array.from({length:30},(_,i)=>{const a=i/30*Math.PI*2;return P(x+Math.cos(a)*rx,z+Math.sin(a)*rz);}),c);
 }
-export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera;performanceFrame?:number}>=({t,id,camera,performanceFrame})=>{
- const performance=performanceFrame===undefined?null:performanceV3At(performanceFrame);
+export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera;performanceFrame?:number;combinedFrame?:number}>=({t,id,camera,performanceFrame,combinedFrame})=>{
+ const combined=combinedFrame===undefined?null:combinedPerformanceAt(combinedFrame);
+ const performance=combined??(performanceFrame===undefined?null:performanceV3At(performanceFrame));
  const c=camera??depthCameraAt(t),view=performance?.pose.torsoYaw??(.15+.8*t);
  const state=performance??characterV2At(166);
  // Correct the original drawing's floor baseline without changing the console anchor.
- const pose={...state.pose,hand:{...state.pose.hand,y:state.pose.hand.y+3.5/1.5},yaw:view};
+ const pose=combined?combined.pose:{...state.pose,hand:{...state.pose.hand,y:state.pose.hand.y+3.5/1.5},yaw:view};
  const u=(s:string)=>`url(#${id+s})`;
  return <g>
   <defs>
@@ -23,6 +26,7 @@ export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera;perform
    <linearGradient id={id+'glass'} x2="1" y2=".1"><stop stopColor="#8A705E" stopOpacity=".1"/><stop offset=".24" stopColor="#B0A183" stopOpacity=".36"/><stop offset=".4" stopColor="#5B737D" stopOpacity=".14"/><stop offset="1" stopColor="#263D50" stopOpacity=".45"/></linearGradient>
    <filter id={id+'fg'} x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="5"/></filter>
    <clipPath id={id+'wallClip'}><rect x="-2000" y="-2000" width="6000" height="2802"/></clipPath>
+   <filter id={id+'castSoft'} x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>
    <radialGradient id={id+'vignette'}><stop offset=".4" stopColor="#070C16" stopOpacity="0"/><stop offset="1" stopColor="#070C16" stopOpacity=".58"/></radialGradient>
   </defs>
   <rect width="1920" height="1080" fill="#182131"/>
@@ -42,13 +46,14 @@ export const DepthScene:React.FC<{t:number;id:string;camera?:WorldCamera;perform
    })}
   </g>
   {/* Ground shadows are polygons on the floor, rather than camera-facing ellipses. */}
+  {combined?<path d={floorPolygon([P(state.x-990,0),P(state.x-910,0),P(state.x-720,-150),P(state.x-805,-170)],c)} fill="#070E1A" opacity=".32" filter={u('castSoft')}/>:null}
   <path d={shadow(0,0,145,32,c)} fill="#090E19" opacity=".35"/>
   <path d={shadow(state.x-950,-22,65,26,c)} fill="#090E19" opacity=".2"/>
   {state.pose.feet.map((foot,i)=><path key={i} d={shadow(state.x-960+foot.x*1.5,0,16,8,c)} fill="#080C16" opacity={foot.y< -4.01?.15:.4}/>)}
   {/* Character, hand and console share this exact interaction transform. */}
   <g transform={planeTransform(P(0,0),c)}><g transform="translate(-960 -885)">
    <LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadowY={885} shadow={false}/>
-   <CinematicCharacterV2 id={id+'actor'} x={state.x} y={886.5} scale={1.5} pose={pose} bodyYaw={view} headYaw={performance?.pose.yaw} mood={performance?.mood??'calm'} shadow={false}/>
+   {combined?<CharacterTurnV5 id={id+'actor'} x={state.x} y={886.5} scale={1.5} pose={pose} yaw={view} headYaw={combined.pose.yaw} mood={combined.mood} lighting="sunset" shadow={false}/>:<CinematicCharacterV2 id={id+'actor'} x={state.x} y={886.5} scale={1.5} pose={pose} bodyYaw={view} headYaw={performance?.pose.yaw} mood={performance?.mood??'calm'} shadow={false}/>}
   </g></g>
   {/* Glass on a physically nearer plane moves more for the same camera translation. */}
   {[-650,650].map((x,i)=><g key={x} transform={planeTransform(P(x,-300),c)} opacity=".66" filter={u('fg')}>
