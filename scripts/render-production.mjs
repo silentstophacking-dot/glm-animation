@@ -12,6 +12,8 @@ const dir = 'out/production';
 const revision = (process.env.GITHUB_SHA || 'local').slice(0, 12);
 const name = id + '-' + revision + '-' + (process.env.GITHUB_RUN_ID || 'local');
 const previewEntries = {
+  LabRoomDepthProof: 'src/lab-room-depth-entry.tsx',
+  LabRoomDepthBoard: 'src/lab-room-depth-entry.tsx',
   PufferJacketStudy: 'src/puffer-jacket-entry.tsx',
   PufferLabStudy: 'src/puffer-jacket-entry.tsx',
   LeadCharacterStudy: 'src/lead-character-entry.tsx',
