@@ -9,6 +9,7 @@ export const CinematicCharacterV2:React.FC<{
 }>=({id,x,y,scale=1,facing='right',mood='calm',action='stand',pose})=>{
  const ink='#120F17',cream='#F5E8D0',rim='#E2B680';
  const yaw=pose?.yaw??(facing==='front'?0:.85);
+ const mouthCenter=18*yaw;
  const front=facing==='front',surprise=mood==='surprised'||pose?.surprised;
  const drop=pose?.drop??0;
  const feet:XY[]=pose?.feet??(action==='stride'?[{x:-29,y:-4},{x:36,y:-4}]:[{x:-13,y:-4},{x:14,y:-4}]);
@@ -84,9 +85,9 @@ export const CinematicCharacterV2:React.FC<{
       <ellipse cx={e} cy="-5" rx={surprise?3.8:2.8} ry={surprise?6:mood==='curious'?4.6:3.6} fill={cream}/>}
      {mood==='curious'||mood==='concerned'?<path d={`M${e-4} -14q4 ${mood==='curious'?-4:3} 8 -1`} fill="none" stroke={cream} strokeWidth="1.6" strokeLinecap="round"/>:null}
     </g>)}
-    {surprise?<ellipse cx={front?1:18} cy="10" rx="3.7" ry="5.5" fill={cream}/>:
-     <path d={mood==='concerned'?(front?'M-8 12Q0 4 8 12':'M12 12Q19 5 26 10'):
-      front?'M-9 8Q0 17 10 8':'M10 9Q19 17 28 6'} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>}
+    {surprise?<ellipse cx={mouthCenter} cy="10" rx="3.7" ry="5.5" fill={cream}/>:
+     <path d={mood==='concerned'?`M${mouthCenter-8} 12Q${mouthCenter} 4 ${mouthCenter+8} 12`:
+      `M${mouthCenter-9} 8Q${mouthCenter} 17 ${mouthCenter+10} 7`} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>}
    </g>
    {sleeve(arm.path,true)}
    <g transform={`translate(${handTip.x} ${handTip.y}) rotate(${Math.atan2(uy,ux)*180/Math.PI})`}>
