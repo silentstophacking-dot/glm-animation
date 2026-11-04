@@ -21,3 +21,14 @@ The older six-shot storyboard was rendered after the shared face changes and com
 The local full-scene phone movie passed complete 720-frame decode, 1280×720 / 30fps / 24-second video, H.264/yuv420p/faststart and AAC stereo/cue verification. Audio is 24.043 seconds including encoder padding; decoded peak is −1.1 dBFS. Fifteen extracted movie frames around the glance, cuts, recognition and stopped reach were inspected, plus consecutive transition frames 410–415. Owner visual/sound feedback remains pending.
 
 GitHub Actions [41861478629](https://github.com/silentstophacking-dot/glm-animation/actions/runs/41861478629) completed every listed step successfully, including rendering, video/audio verification, both artifact uploads and Complete job. The API still reported overall in_progress at the last check, so only the successful step results and available artifacts are asserted here. Rendered source commit: cea02fb; subsequent changes save media/docs.
+
+
+## Owner approval after handover — 5 November 2026
+
+The owner reviewed the latest **full 24-second ClockDiscoveryPerformance** and explicitly said **“Looks great.”** This newer feedback supersedes the pending-review statements above and in the 4 November handover. Treat the current scene as the **approved visual/acting baseline** for subsequent animation work, not as authorization to overwrite previous episodes or to rebuild the complete Probability Control film.
+
+Approval covers the actual rendered black-puffer performance, eye-led clock discovery, recognition hold, look-back, second reach that stops short, withdrawal, and existing sound cue timing. Preserve the approved source and 24-second rendered video as immutable comparison material while developing new scenes.
+
+**Mandatory visual bar for each new scene and insert:** match the physically constructed 2.5D material treatment of the cinematic clock V2 and lab: projected front/side/top planes when relevant, case thickness, recessed/enamel/metal/glass surfaces, coherent warm window rim and cool fill, grounded feet with support shadows, continuous shoulder-to-wrist puffer sewing and prop contact, and a single camera/projection space. Flat icon close-ups, bare gradient walls, sliding scenery, simplified cartoon objects, or changed character proportions do not pass. Inspect actual stills and movie frames at phone size as well as 1080p; typecheck is not visual acceptance.
+
+**Next safe stage:** develop and review the following story beat on a new feature branch descending from `feature/clock-discovery-acting`, keeping the approved composition intact. Create a detailed visual storyboard and key poses before running one designated GitHub Actions movie render. Do not assume that approval of this scene approves a whole long-form episode.
