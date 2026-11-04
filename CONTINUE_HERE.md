@@ -52,6 +52,10 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 5. Review key poses first; then one short local phone proof and one designated GitHub production render. Audit feet/contact and inspect actual frames, especially walking, wrists, sleeve/torso overlap, quilt deformation, press/release and recovery. Keep lighting and floor shadows coherent across the camera move.
 6. Ask for visual feedback on the concrete proof. Only after final combined design/motion approval move into the long-form storyboard/shot planning.
 
+## Latest verification
+
+The new puffer performance passed local 720p decoding/metadata checks and GitHub’s full-resolution render/verification: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41852035320 . Draft PR #38 and handoff/review preserve the candidate; owner visual review remains pending.
+
 ## Verified results at handover
 
 The latest room proof passed TypeScript, a 210-frame projection/support/parallax audit, extracted-frame review, full MP4 decode, expected frame count/dimensions/fps/duration, H.264/yuv420p/BT.709 and faststart. GitHub's 1080p run passed: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41824949708

@@ -17,3 +17,5 @@ The four-pose rendered board was inspected at notice, walk, press and recoil. No
 GitHub Actions supports manual `PufferRoomPerformance` selection and automatic rendering on `feature/puffer-lab-performance`; it includes the audit, key-pose board, full decode/metadata verification and diagnostic artifacts. Existing long-form selection and other production branches remain supported.
 
 The local 720p movie passed complete decode, 330-frame count, 30fps/11-second duration, H.264/yuv420p and faststart verification. Twelve extracted movie frames and consecutive release frames 221–226 were inspected for support, cuff continuity and sleeve/torso overlap. No detached wrist or missing quilting was seen in those frames. The simplified hand and authored gait remain candidates for owner feedback.
+
+Full-resolution GitHub Actions run [41852035320](https://github.com/silentstophacking-dot/glm-animation/actions/runs/41852035320) passed, including MP4 verification and movie/review artifact uploads. Rendered source commit: `1b7e55e`; subsequent commits only save review media and documentation. Draft PR: #38.
