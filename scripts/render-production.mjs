@@ -12,6 +12,8 @@ const dir = 'out/production';
 const revision = (process.env.GITHUB_SHA || 'local').slice(0, 12);
 const name = id + '-' + revision + '-' + (process.env.GITHUB_RUN_ID || 'local');
 const previewEntries = {
+  CharacterOutfitSheet: 'src/character-outfit-entry.tsx',
+  TealOutfitLabStudy: 'src/character-outfit-entry.tsx',
   CombinedCharacterPerformance: 'src/combined-performance-entry.tsx',
   CombinedCharacterBoard: 'src/combined-performance-entry.tsx',
   CharacterSunsetLightingProof: 'src/character-lighting-entry.tsx',
