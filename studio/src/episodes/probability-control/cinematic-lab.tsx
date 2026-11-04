@@ -8,6 +8,7 @@ export const LabBackground:React.FC<{id:string;soft?:boolean}>=({id,soft=false})
   <linearGradient id={id+'sky'} x2="0" y2="1"><stop stopColor="#A77880"/><stop offset=".5" stopColor="#E6AF85"/><stop offset="1" stopColor="#655773"/></linearGradient>
   <linearGradient id={id+'floor'} x2="0" y2="1"><stop stopColor="#50404B"/><stop offset="1" stopColor="#191C2A"/></linearGradient>
   <linearGradient id={id+'wood'} x2="0" y2="1"><stop stopColor="#655052"/><stop offset=".1" stopColor="#3E303C"/><stop offset="1" stopColor="#231F2E"/></linearGradient>
+  <linearGradient id={id+'cabinet'} x2="1" y2=".3"><stop stopColor="#4A4555"/><stop offset=".2" stopColor="#292F43"/><stop offset="1" stopColor="#161E30"/></linearGradient>
   <linearGradient id={id+'beam'} x2="0" y2="1"><stop stopColor="#F5CCA0" stopOpacity=".16"/><stop offset="1" stopColor="#F5CCA0" stopOpacity="0"/></linearGradient>
   <radialGradient id={id+'sun'}><stop stopColor="#FFF1C2"/><stop offset=".14" stopColor="#F9DBA4" stopOpacity=".85"/><stop offset=".5" stopColor="#EDB780" stopOpacity=".23"/><stop offset="1" stopColor="#E8B482" stopOpacity="0"/></radialGradient>
   <radialGradient id={id+'pool'}><stop stopColor="#D9A376" stopOpacity=".22"/><stop offset="1" stopColor="#D9A376" stopOpacity="0"/></radialGradient>
@@ -42,9 +43,22 @@ export const LabBackground:React.FC<{id:string;soft?:boolean}>=({id,soft=false})
   <path d="M200 686H926" stroke="#D6AB88" strokeWidth="3" opacity=".45"/>
   {/* Recessed side wall and storage give the room a second plane. */}
   <path d="M1710 130L1920 30V780L1710 734Z" fill="#192332"/>
-  <rect x="1515" y="199" width="175" height="522" fill="#141E2C" stroke="#403E51" strokeWidth="9"/>
+  <path d="M1512 199L1530 182H1704L1689 199Z" fill="#4F4755" stroke="#28283B" strokeWidth="3"/>
+  <path d="M1689 198L1704 182V702L1689 721Z" fill="#101A2B"/>
+  <rect x="1515" y="199" width="175" height="522" rx="3" fill={u('cabinet')} stroke="#403E51" strokeWidth="7"/>
+  <path d="M1518 206V713" stroke="#897169" strokeWidth="2" opacity=".5"/>
   {[0,1,2].map(i=><g key={i}><rect x="1533" y={225+i*150} width="140" height="125" fill="#263044"/>
-   {[0,1,2,3,4].map(j=><rect key={j} x={1540+j*24} y={263+i*150-(j%2)*18} width="15" height={70+(j%2)*18} fill={['#615064','#665F65','#3C5365'][j%3]}/>)}
+   {[0,1,2,3,4].map(j=>{
+    const x=1540+j*24,y=263+i*150-(j%2)*18,h=70+(j%2)*18;
+    return <g key={j}><rect x={x} y={y} width="15" height={h} rx="1" fill={['#615064','#665F65','#3C5365'][j%3]}/>
+     <path d={`M${x+2} ${y+2}v${h-4}`} stroke="#A7938C" strokeWidth="1.2" opacity=".45"/>
+     <path d={`M${x+4} ${y+12}h7m-7 5h7m-7 ${h-27}h7`} stroke="#C0A99A" strokeWidth="1.5" opacity=".5"/>
+    </g>;
+   })}
+   <path d={`M1530 ${350+i*150}h143v7h-143Z`} fill="#464352"/>
+   <path d={`M1532 ${350+i*150}h139`} stroke="#9C8175" strokeWidth="1.4" opacity=".4"/>
+   <rect x="1531" y={225+i*150} width="141" height="121" fill="#779398" opacity=".025"/>
+   <path d={`M1545 ${226+i*150}l48 121h18l-48 -121Z`} fill="#A4B8B5" opacity=".035"/>
   </g>)}
   <rect x="1100" y="216" width="300" height="206" rx="4" fill="#1C2333" stroke="#554B5A" strokeWidth="7"/>
   {[0,1,2,3,4].map(i=><path key={i} d={`M1120 ${240+i*34}H1382`} stroke="#73747D" strokeWidth="1" opacity=".15"/>)}

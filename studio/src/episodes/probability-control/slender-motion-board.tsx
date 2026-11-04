@@ -1,24 +1,15 @@
 import React from 'react';
 import {SlenderCharacter} from './slender-character';
-import {slenderAt,BUTTON,auditSlender} from './slender-mechanics';
+import {slenderAt,auditSlender} from './slender-mechanics';
 import {LabBackground,LabForeground} from './cinematic-lab';
+import {LabConsole} from './lab-console';
 import {camT} from '../../engine/anim';
 auditSlender();
 const Scene:React.FC<{frame:number;id:string;camera:string}>=({frame,id,camera})=>{
  const {x,pose}=slenderAt(frame),active=frame>=174;
  return <g transform={camera}>
   <LabBackground id={id} soft={frame>=132}/>
-  <ellipse cx="950" cy="888" rx="160" ry="14" fill="#10121D" opacity=".5"/>
-  <path d="M850 580V883M1070 580V883" stroke="#171C28" strokeWidth="18"/>
-  <path d="M838 578H1090" stroke="#65606A" strokeWidth="18" strokeLinecap="round"/>
-  <path d="M850 854H1070" stroke="#232735" strokeWidth="10"/>
-  <rect x="830" y="504" width="118" height="66" rx="7" fill="#292E3D" stroke="#191C28" strokeWidth="5"/>
-  <circle cx={BUTTON.x} cy={BUTTON.y} r="11" fill={active?'#88DBBE':'#CF986C'} stroke="#E5C398" strokeWidth="2"/>
-  <path d="M843 572H1084" stroke="#B19A86" strokeWidth="2" opacity=".5"/>
-  <path d="M850 583L1074 583L1060 595H858Z" fill="#141722" opacity=".6"/>
-  <path d="M922 566V577H966V583" stroke="#0F1723" strokeWidth="4" fill="none"/>
-  <rect x="897" y="519" width="35" height="12" rx="2" fill="#121F2B"/>
-  <path d="M901 525H928" stroke={active?'#86CDB6':'#7C746A'} strokeWidth="2"/>
+  <LabConsole id={id} active={active}/>
   <g filter={`url(#${id}rim)`}><SlenderCharacter x={x} y={890} scale={1.5} pose={pose}/></g>
   <LabForeground id={id}/>
  </g>;
