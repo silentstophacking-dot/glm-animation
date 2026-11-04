@@ -35,7 +35,7 @@ export function auditTurnV5(lighting:'baseline'|'sunset'='baseline'){
 export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number;yaw:number;headYaw?:number;solid?:boolean;lighting?:'baseline'|'sunset';pose?:CharacterV2Pose;mood?:CharacterMood;shadow?:boolean;outfit?:CharacterOutfit}>=({id,x,y,scale=1,yaw,headYaw=yaw,solid=false,lighting='baseline',pose,mood='calm',shadow=true,outfit='hoodie'})=>{
  const lit=lighting==='sunset',palette=outfitPalette(outfit,lighting==='sunset'),puffer=isPufferOutfit(outfit);
  const g=turnV5Geometry(yaw),{c,s,width:w}=g,ink='#120F17',rim='#E2B680',cream='#F5E8D0';
- const ha=clamp(headYaw)*Math.PI/2,hc=Math.cos(ha),hs=Math.sin(ha),seam=w*.8*s;
+ const ha=clamp(headYaw,-1,1)*Math.PI/2,hc=Math.cos(ha),hs=Math.sin(ha),seam=w*.8*s;
  const drop=pose?.drop??0;
  const feet=pose?.feet??g.heels.map(x=>({x,y:0}));
  const surprise=mood==='surprised'||pose?.surprised;
@@ -128,6 +128,7 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
    <ellipse rx="36" ry="36" fill={lit?u('headLight'):ink}/>
    <path d="M-35 0Q-35 -27 -10 -35Q12 -41 29 -21" fill="none" stroke={rim} strokeWidth={lit?1.05:1.8} strokeLinecap="round"/>
    <g clipPath={u('face')}>
+    <g transform={pose?.gazeY?`translate(0 ${pose.gazeY})`:undefined}>
     {[-.32,.32].map((offset,i)=>{
      const a=ha+offset;
      // The far eye disappears behind the head surface; visible eyes never fade.
@@ -137,6 +138,7 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
       {mood==='curious'||mood==='concerned'?<path d={`M${e-4*ex} -14q${4*ex} ${mood==='curious'?-4:3} ${8*ex} -1`} fill="none" stroke={cream} strokeWidth="1.5"/>:null}
      </g>:null;
     })}
+    </g>
     {mood==='focused'?<path d={`M${24*hs-5} 10h10`} stroke={cream} strokeWidth="1.8" strokeLinecap="round"/>:surprise?<ellipse cx={24*hs} cy="10" rx="3.7" ry="5.5" fill={cream}/>:mood==='concerned'?<path d={`M${24*hs-7} 12q7 -7 14 0`} fill="none" stroke={cream} strokeWidth="2"/>:<path d={`M${24*hs-9*Math.max(.5,hc)} 9Q${24*hs} ${13+4*hc} ${24*hs+9*Math.max(.5,hc)} 8`} fill="none" stroke={cream} strokeWidth="2" strokeLinecap="round"/>}
    </g>
   </g>

@@ -1,14 +1,15 @@
 import React from 'react';
 import {AbsoluteFill,Audio,staticFile,useCurrentFrame} from 'remotion';
+import type {RoomActorPerformance} from './lab-room-geometry';
 import {LabRoomDepthScene} from './lab-room-depth';
 import {CinematicLabClock,ClockWallDetail,clockInsertCameraAt,CLOCK_INSERT_CROP} from './cinematic-lab-clock';
 import {LabClock} from './lab-clock';
 import {anomalyActorAt,anomalyShotAt,clockSecondsAt,ANOMALY_SHOTS,ACTIVATION_FRAME} from './lab-time-anomaly-motion';
-export const AnomalyScene:React.FC<{frame:number;id:string;refinedClock?:boolean}>=({frame,id,refinedClock=false})=>{
+export const AnomalyScene:React.FC<{frame:number;id:string;refinedClock?:boolean;performance?:RoomActorPerformance}>=({frame,id,refinedClock=false,performance})=>{
  const shot=anomalyShotAt(frame),signal=frame<ACTIVATION_FRAME?.5+.45*Math.sin(frame*.23):.95;
  const clockCamera=clockInsertCameraAt(frame),crop=shot.clock&&refinedClock?CLOCK_INSERT_CROP:shot.crop;
  return <svg viewBox={crop.join(' ')} width="100%" height="100%">
- {shot.clock?refinedClock?<><ClockWallDetail id={id+'wall'} camera={clockCamera} backdrop/><CinematicLabClock id={id+'clock'} camera={clockCamera} seconds={clockSecondsAt(frame)}/></>:<><rect x="-10000" y="-10000" width="20000" height="20000" fill="#302C3D"/><LabClock camera={shot.camera} seconds={clockSecondsAt(frame)}/></>:<LabRoomDepthScene id={id} frame={frame} camera={shot.camera} performance={anomalyActorAt(frame)} clockSeconds={clockSecondsAt(frame)} signal={signal} clockStyle={refinedClock?'cinematic':'simple'}/>}
+ {shot.clock?refinedClock?<><ClockWallDetail id={id+'wall'} camera={clockCamera} backdrop/><CinematicLabClock id={id+'clock'} camera={clockCamera} seconds={clockSecondsAt(frame)}/></>:<><rect x="-10000" y="-10000" width="20000" height="20000" fill="#302C3D"/><LabClock camera={shot.camera} seconds={clockSecondsAt(frame)}/></>:<LabRoomDepthScene id={id} frame={frame} camera={shot.camera} performance={performance??anomalyActorAt(frame)} clockSeconds={clockSecondsAt(frame)} signal={signal} clockStyle={refinedClock?'cinematic':'simple'}/>}
  </svg>;
 };
 export const LabTimeAnomaly:React.FC=()=>{const f=useCurrentFrame();return <AbsoluteFill style={{backgroundColor:'#161C2A'}}><AnomalyScene frame={f} id="time-anomaly"/><Audio src={staticFile('lab-time-anomaly/soundtrack.m4a')}/></AbsoluteFill>};

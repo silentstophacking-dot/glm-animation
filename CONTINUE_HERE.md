@@ -4,7 +4,7 @@
 
 ## Latest development after handover
 
-**Active branch: `feature/cinematic-clock-insert`**, based on `feature/puffer-lab-performance`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). The owner liked the scene but rejected its overly simple clock insert. ClockInsertV2Proof is the detailed replacement shot; LabTimeAnomalyV2 applies it in the full scene. Read production/style/CINEMATIC_CLOCK_INSERT.md. Owner review of the replacement is pending. Earlier compositions, films and branches remain preserved.
+**Active branch: `feature/clock-discovery-acting`**, based on `feature/cinematic-clock-insert`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). The owner liked the scene but rejected its overly simple clock insert. ClockInsertV2Proof is the detailed replacement shot; LabTimeAnomalyV2 applies it in the full scene. Read production/style/CINEMATIC_CLOCK_INSERT.md. The owner liked the clock correction and required the same visual standard for every new scene. ClockDiscoveryPerformance is the approved full-scene baseline (owner: “Looks great” after the handover): eyes/head/chest lead toward the clock, recognition hold, hesitant second reach and withdrawal. See production/style/CLOCK_DISCOVERY_ACTING.md; preserve this approved 24-second version and match its 2.5D material, lighting and physical-contact standard in every new scene. Earlier compositions, films and branches remain preserved.
 
 ## Open the right version
 
@@ -51,6 +51,10 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 4. Retarget camera/actor/prop contact in world space. The new standing actor is at `(-260, 0, -40)`, while the console front is at `z=0`; the old 2D hand target cannot simply be pasted across those different planes. Align the interaction or solve the projected target correctly.
 5. Review key poses first; then one short local phone proof and one designated GitHub production render. Audit feet/contact and inspect actual frames, especially walking, wrists, sleeve/torso overlap, quilt deformation, press/release and recovery. Keep lighting and floor shadows coherent across the camera move.
 6. Ask for visual feedback on the concrete proof. Only after final combined design/motion approval move into the long-form storyboard/shot planning.
+
+## Latest discovery verification
+
+ClockDiscoveryPerformance passed the 720-frame acting audit and local full-video/audio verification. GitHub run https://github.com/silentstophacking-dot/glm-animation/actions/runs/41861478629 reports all listed steps successful, including rendering, verification and artifact uploads; its overall status was still finalizing at the last API check. PR #41 preserves this full-scene revision. The latest movie and board are handoff/review/clock-discovery-24s.mp4 and clock-discovery-board.png. Owner review remains pending.
 
 ## Clock correction verification
 
