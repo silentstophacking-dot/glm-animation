@@ -12,6 +12,10 @@ const dir = 'out/production';
 const revision = (process.env.GITHUB_SHA || 'local').slice(0, 12);
 const name = id + '-' + revision + '-' + (process.env.GITHUB_RUN_ID || 'local');
 const previewEntries = {
+  LabTimeAnomalyV2: 'src/cinematic-clock-entry.tsx',
+  ClockInsertV2Proof: 'src/cinematic-clock-entry.tsx',
+  ClockInsertV2Board: 'src/cinematic-clock-entry.tsx',
+  CinematicClockStill: 'src/cinematic-clock-entry.tsx',
   LabTimeAnomaly: 'src/lab-time-anomaly-entry.tsx',
   LabTimeAnomalyBoard: 'src/lab-time-anomaly-entry.tsx',
   PufferRoomPerformance: 'src/puffer-room-performance-entry.tsx',

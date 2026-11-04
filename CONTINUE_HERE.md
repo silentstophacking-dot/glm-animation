@@ -4,7 +4,7 @@
 
 ## Latest development after handover
 
-**Active branch: `feature/lab-time-anomaly`**, based on `feature/puffer-lab-performance`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). Visual review of this new scene is pending. Earlier compositions, films and branches remain preserved.
+**Active branch: `feature/cinematic-clock-insert`**, based on `feature/puffer-lab-performance`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). The owner liked the scene but rejected its overly simple clock insert. ClockInsertV2Proof is the detailed replacement shot; LabTimeAnomalyV2 applies it in the full scene. Read production/style/CINEMATIC_CLOCK_INSERT.md. Owner review of the replacement is pending. Earlier compositions, films and branches remain preserved.
 
 ## Open the right version
 
