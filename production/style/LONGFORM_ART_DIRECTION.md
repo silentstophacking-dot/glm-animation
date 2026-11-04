@@ -26,3 +26,6 @@ Added opt-in slim / balanced / fuller build variants and an equal-height compari
 
 ### Hand visibility correction
 Owner flagged the left-side hanging hand on the build comparison. The widened garment was occluding the far forearm/wrist, while the old oval hand merged into the rounded sleeve cap. For the balanced/fuller static candidates, the far sleeve now follows the garment width, cuffs have a separate edge, and compact palm/thumb silhouettes connect through a visible wrist. Resting near/far thumbs face inward. A pointing silhouette replaces the old dot-and-line hand on the static reach sample. The previous slim reference and contact-constrained pose rendering stay unchanged; these candidate hand shapes must be integrated with contact constraints after selection. Rendered sheet and typecheck reviewed before pushing.
+
+## Close-up consistency — clock feedback
+The owner liked the 24-second mini-scene but rejected the simplified clock insert. Every hero insert must carry the same material, physical-depth, lighting and environmental context as the wider scene. Enlarging a flat icon onto a uniform wall is not an acceptable close-up treatment. Resolve case thickness, contact/cast shade, surface response and purposeful framing at the scale where the audience sees them. Clock V2 is the concrete correction; its visual review does not approve unrelated shots.

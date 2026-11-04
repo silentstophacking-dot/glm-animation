@@ -4,6 +4,10 @@ These are small review copies, not 1080p masters. They are tracked in this repos
 
 ## Start here
 
+- [Updated 24s phone review edit](review/lab-time-anomaly-clock-v2-24s.mp4) — revised clock insert, all other shots/audio retained; owner review pending. This is an assembled review edit, not a full LabTimeAnomalyV2 render.
+- [Revised 3s clock shot](review/cinematic-clock-v2-3s.mp4).
+- [Clock previous/revised comparison](review/cinematic-clock-v2-comparison.png) and [large close-up](review/cinematic-clock-v2.png).
+
 - [24s backward-clock mini-scene with sound](review/lab-time-anomaly-24s.mp4) — six-shot story following the liked puffer proof; owner review pending.
 - [Six-shot storyboard](review/lab-time-anomaly-board.png).
 

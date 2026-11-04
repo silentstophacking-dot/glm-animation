@@ -4,7 +4,7 @@
 
 ## Latest development after handover
 
-**Active branch: `feature/lab-time-anomaly`**, based on `feature/puffer-lab-performance`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). Visual review of this new scene is pending. Earlier compositions, films and branches remain preserved.
+**Active branch: `feature/cinematic-clock-insert`**, based on `feature/puffer-lab-performance`. The owner liked the 11-second puffer/lab result and authorized the next 20–30-second mini-scene. `LabTimeAnomaly` is the new 24-second candidate: approach, hesitation, press, recoil, backward-clock insert and uncertain reaction, with an original synthesized soundtrack. See [mini-scene notes](production/style/LAB_TIME_ANOMALY.md). The owner liked the scene but rejected its overly simple clock insert. ClockInsertV2Proof is the detailed replacement shot; LabTimeAnomalyV2 applies it in the full scene. Read production/style/CINEMATIC_CLOCK_INSERT.md. Owner review of the replacement is pending. Earlier compositions, films and branches remain preserved.
 
 ## Open the right version
 
@@ -51,6 +51,10 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 4. Retarget camera/actor/prop contact in world space. The new standing actor is at `(-260, 0, -40)`, while the console front is at `z=0`; the old 2D hand target cannot simply be pasted across those different planes. Align the interaction or solve the projected target correctly.
 5. Review key poses first; then one short local phone proof and one designated GitHub production render. Audit feet/contact and inspect actual frames, especially walking, wrists, sleeve/torso overlap, quilt deformation, press/release and recovery. Keep lighting and floor shadows coherent across the camera move.
 6. Ask for visual feedback on the concrete proof. Only after final combined design/motion approval move into the long-form storyboard/shot planning.
+
+## Clock correction verification
+
+ClockInsertV2Proof passed local 90-frame decode/metadata/audio checks and GitHub 1080p rendering: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41858356847 . PR #40 preserves the correction. The 24-second phone review edit replaces only frames 450–539, passed 720-frame/video/audio verification, and is saved in handoff/review. Full LabTimeAnomalyV2 is manually renderable but has not been rendered as a new full master.
 
 ## Mini-scene verification
 
