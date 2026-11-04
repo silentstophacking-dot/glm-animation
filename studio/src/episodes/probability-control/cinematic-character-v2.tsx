@@ -100,7 +100,7 @@ export const CinematicCharacterV2:React.FC<{
     <ellipse rx={36-2*yaw} ry="36" fill={ink}/>
     <path d={front?'M-35 0Q-35 -27 -10 -35Q12 -41 29 -21':'M-34 0Q-34 -27 -10 -35Q12 -40 29 -20'}
      fill="none" stroke={rim} strokeWidth="1.8" strokeLinecap="round"/>
-    {[-11+17*yaw,11+10*yaw].map((e,i)=><g key={e} opacity={i===0?1-(view===undefined?.4:.8)*yaw:1}>
+    {[-11+17*yaw,11+10*yaw].map((e,i)=><g key={e} opacity={revised?1:i===0?1-(view===undefined?.4:.8)*yaw:1}>
      {(pose?.blink??0)>.5?<path d={`M${e-4} -4h8`} stroke={cream} strokeWidth="1.8" strokeLinecap="round"/>:mood==='relieved'?<path d={`M${e-4} -4q4 -5 8 0`} stroke={cream} strokeWidth="1.8" strokeLinecap="round" fill="none"/>:mood==='confident'||mood==='focused'?<path d={`M${e-4} -5h8q-1 6 -5 4Z`} fill={cream}/>:
       <ellipse cx={e+(pose?.gaze??0)*1.3} cy="-5" rx={surprise?3.8:2.8} ry={surprise?6:mood==='curious'?4.6:3.6} fill={cream}/>}
      {mood==='curious'||mood==='concerned'?<path d={`M${e-4} -14q4 ${mood==='curious'?-4:3} 8 -1`} fill="none" stroke={cream} strokeWidth="1.6" strokeLinecap="round"/>:null}
