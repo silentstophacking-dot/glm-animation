@@ -1,3 +1,5 @@
+Latest continuation: use `feature/puffer-lab-performance` for the new integrated puffer/lab acting candidate; read CONTINUE_HERE.md and production/style/PUFFER_ROOM_PERFORMANCE.md. Visual approval is pending. The earlier handover snapshot below remains useful background.
+
 Continue my existing Remotion animation project:
 https://github.com/silentstophacking-dot/glm-animation
 

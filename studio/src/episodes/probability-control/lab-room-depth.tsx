@@ -4,7 +4,7 @@ import {LabWindowScenery,LabBenchGlassware} from './cinematic-lab';
 import {LabConsole} from './lab-console';
 import {CharacterTurnV5} from './character-turn-v5';
 import {planeTransform,floorPolygon,WorldCamera} from './pseudo-depth-camera';
-import {RoomCuboid as Box,RoomFace,RoomLine,floorEllipse,roomCameraAt,W,ROOM_ACTOR,FOREGROUND_BENCHES} from './lab-room-geometry';
+import {RoomCuboid as Box,RoomFace,RoomLine,floorEllipse,roomCameraAt,W,ROOM_ACTOR,FOREGROUND_BENCHES,RoomActorPerformance} from './lab-room-geometry';
 
 const Glass:React.FC<{id:string;x:number;y:number;z:number;camera:WorldCamera}>=({id,x,y,z,camera})=><g transform={planeTransform(W(x,y,z),camera)}>
  <defs><linearGradient id={id+'glass'} x2="1"><stop stopColor="#C7B491" stopOpacity=".12"/><stop offset=".3" stopColor="#CABCA1" stopOpacity=".3"/><stop offset="1" stopColor="#497782" stopOpacity=".22"/></linearGradient></defs>
@@ -14,8 +14,8 @@ const Glass:React.FC<{id:string;x:number;y:number;z:number;camera:WorldCamera}>=
  <ellipse cy="-190" rx="15" ry="4" fill="#213A46" stroke="#AEAAA0" strokeWidth="1.5"/>
 </g>;
 
-export const LabRoomDepthScene:React.FC<{id:string;frame:number}>=({id,frame})=>{
- const c=roomCameraAt(frame),u=(s:string)=>`url(#${id+s})`;
+export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCamera;performance?:RoomActorPerformance}>=({id,frame,camera,performance})=>{
+ const c=camera??roomCameraAt(frame),origin=performance?.origin??ROOM_ACTOR.origin,actorScale=performance?.scale??ROOM_ACTOR.scale,u=(s:string)=>`url(#${id+s})`;
  const windowPoints=[W(-1100,340,800),W(-100,340,800),W(-100,940,800),W(-1100,940,800)];
  return <g>
   <defs>
@@ -82,13 +82,13 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number}>=({id,frame})=>
   {[-110,100].map(x=><Box key={'front-leg'+x} box={{x0:x,x1:x+12,y0:0,y1:300,z0:-25,z1:-13}} camera={c} front="#565460" top="#AA9482" side="#30384A"/>)}
   <Box box={{x0:-122,x1:140,y0:300,y1:315,z0:-40,z1:120}} camera={c} front="#62606B" top="#8A7C7C" side="#333D50"/>
   <Box box={{x0:-130,x1:-12,y0:315,y1:381,z0:0,z1:80}} camera={c} front="#353F50" top="#7A737D" side="#243347"/>
-  <g transform={planeTransform(W(0,885,0),c)}><g transform="translate(-960 0)" clipPath={u('consoleFace')}><LabConsole id={id+'console'} active shadow={false}/></g></g>
+  <g transform={planeTransform(W(0,885,0),c)}><g transform="translate(-960 0)" clipPath={u('consoleFace')}><LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadow={false}/></g></g>
   <g transform={planeTransform(W(-36,315,-41),c)}><path d="M0 0C0 28 64 22 64 52V195Q64 222 32 224" fill="none" stroke="#0D1926" strokeWidth="4"/><path d="M0 0C0 28 64 22 64 52" fill="none" stroke="#9B8B80" strokeWidth=".8" opacity=".5"/></g>
-  {/* Actor and sole shadows share physical floor anchors; the figure is intentionally still. */}
-  <path d={floorEllipse(-260,-40,75,32,c)} fill="#07101D" opacity=".3"/>
-  <path d={floorPolygon([W(-290,0,-40),W(-225,0,-40),W(0,0,-200),W(-75,0,-220)],c)} fill="#091220" opacity=".28" filter={u('shade')}/>
-  {[-16,16].map(h=><path key={h} d={floorEllipse(-260+h*1.5,-40,19,8,c)} fill="#070F1B" opacity=".65"/>)}
-  <g transform={planeTransform(ROOM_ACTOR.origin,c)}><CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={ROOM_ACTOR.scale} yaw={.45} outfit="puffer-black" lighting="sunset" shadow={false}/></g>
+  {/* Actor and sole shadows share physical floor anchors; the original depth proof is still; performance is opt-in. */}
+  <path d={floorEllipse(origin.x,origin.z,75,32,c)} fill="#07101D" opacity=".3"/>
+  <path d={floorPolygon([W(origin.x-30,0,origin.z),W(origin.x+35,0,origin.z),W(origin.x+260,0,origin.z-160),W(origin.x+185,0,origin.z-180)],c)} fill="#091220" opacity=".28" filter={u('shade')}/>
+  {(performance?.soleWorld??[-16,16].map(h=>W(origin.x+h*actorScale,0,origin.z))).map((p,i)=><path key={i} d={floorEllipse(p.x,p.z,19,8,c)} fill="#070F1B" opacity={performance?.supportOpacity[i]??.65}/>)}
+  <g transform={planeTransform(origin,c)}><CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={actorScale} yaw={performance?.yaw??.45} headYaw={performance?.headYaw} pose={performance?.pose} mood={performance?.mood} outfit="puffer-black" lighting="sunset" shadow={false}/></g>
   {/* Bench surfaces and glass bases stay attached even at the stronger foreground parallax. */}
   <g filter={u('fg')}>
    {FOREGROUND_BENCHES.map((b,i)=><g key={i}>{[b.x0+30,b.x1-48].map(x=><g key={x}>{[b.z0+20,b.z1-38].map(z=><Box key={z} box={{x0:x,x1:x+18,y0:0,y1:b.y0,z0:z,z1:z+18}} camera={c} front="#243141" side="#162435" top="#58606A"/>)}</g>)}<Box box={b} camera={c} front="#1D2937" top="#4B4E57" side="#172537"/><Glass id={id+'fgGlass'+i} x={i?520:-620} y={205} z={-350} camera={c}/></g>)}

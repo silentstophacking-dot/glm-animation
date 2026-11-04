@@ -1,4 +1,5 @@
 import React from 'react';
+import {pufferSleeveSeams} from './puffer-sleeve-seams';
 import {CharacterOutfit,OutfitGarment,outfitPalette,isPufferOutfit} from './character-outfits';
 import {kf,clamp} from '../../engine/anim';
 import {CharacterV2Pose,v2HandLocal} from './character-v2-motion';
@@ -44,12 +45,14 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
   const elbow=side*(31*c+10*s);
   let path=`M${sh} -270Q${elbow} -242 ${elbow} -211Q${wr} -178 ${wr} -151`;
   let tip={x:wr,y:-151},angle=90;
+  let stitchChain:{elbow:{x:number;y:number};wrist:{x:number;y:number}}|undefined;
   if(pose){
    tip=side>0?v2HandLocal(pose):(pose.farHand??{x:wr,y:-151});
    const dx=tip.x-sh,dy=tip.y+270,d=Math.hypot(dx,dy);
    const wrist=side>0?{x:tip.x-dx/d*11,y:tip.y-dy/d*11}:tip;
    const ik=limb({x:sh,y:-270},wrist,side>0?61:60,-1);
    path=ik.path;
+   stitchChain={elbow:ik.knee,wrist};
    angle=(side>0?Math.atan2(dy,dx):Math.atan2(tip.y-ik.knee.y,tip.x-ik.knee.x))*180/Math.PI;
   }
   return <g>
@@ -59,12 +62,16 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
     const x=sh+(wr-sh)*(y+270)/119;
     return <g key={y}><path d={`M${x-9} ${y}q9 4 18 0`} fill="none" stroke="#101D2B" strokeWidth="1.2" opacity=".7"/><path d={`M${x-8} ${y-2}q8 3 16 0`} fill="none" stroke="#C2D6D8" strokeWidth=".8" opacity=".18"/></g>;
    }):null}
+   {puffer&&stitchChain?pufferSleeveSeams({x:sh,y:-270},stitchChain.elbow,stitchChain.wrist).map((seam,i)=><g key={i}>
+    <path d={seam.path} fill="none" stroke="#101D2B" strokeWidth="1.2" opacity=".7"/>
+    <path d={seam.highlight} fill="none" stroke="#C2D6D8" strokeWidth=".8" opacity=".18"/>
+   </g>):null}
    {pose&&side>0?<g transform={`translate(${tip.x} ${tip.y}) rotate(${angle})`}>
     <path d="M-14 -4L-8 -4Q-5 -6 -2 -3L0 -1Q1 2 -3 4L-7 5Q-8 9 -11 7L-12 4H-14Z" fill={ink}/>
     <path d="M-14 -5V5" stroke={palette.cuff} strokeWidth="1.6"/>
     {outfit==='cobalt-lead'?<path d="M-12 -4V4" stroke="#D5AD57" strokeWidth="1.4"/>:null}
     <path d="M-12 -4L-7 -4" stroke={rim} strokeWidth=".8" opacity=".6"/>
-   </g>:<g transform={`translate(${tip.x} ${tip.y}) rotate(${pose?angle-90:0}) scale(${pose?1:side} 1)`}>
+   </g>:<g transform={`translate(${tip.x} ${tip.y}) rotate(${pose?angle-90:0}) scale(${pose?(puffer?-1:1):side} 1)`}>
     <path d="M-8 -3H8V2H-8Z" fill={palette.cuff} stroke={ink} strokeWidth="1.2"/>
     {outfit==='cobalt-lead'?<path d="M-7 -1H7" stroke="#D5AD57" strokeWidth="1.4"/>:null}
     <path d="M-5 2H5L6 11Q5 16 1 16Q-3 16 -4 12L-7 10Q-9 6 -5 5Z" fill={ink}/>
