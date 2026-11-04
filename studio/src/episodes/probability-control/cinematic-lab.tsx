@@ -1,4 +1,30 @@
 import React from 'react';
+export const LabBenchGlassware:React.FC=()=> <g>
+  <g stroke="#91818A" strokeWidth="3" fill="none">
+   <path d="M285 707v-87h55v87M284 634h57M298 619v-36h27v36"/>
+   <path d="M365 705v-112m-21 2h44m-11 0v70"/>
+   <path d="M428 704q-31 -9 -20 -36l17 -24v-35h16v35l15 24q14 28 -13 36Z"/>
+  </g>
+  <path d="M410 685Q435 672 453 685L444 701H423Z" fill="#A89258" opacity=".8"/>
+</g>;
+// Existing window artwork, reusable behind a separately projected window frame.
+export const LabWindowScenery:React.FC<{id:string;sunX?:number}>=({id,sunX=665})=>{
+ const u=(n:string)=>`url(#${id+n})`;
+ return <g><defs>
+  <linearGradient id={id+'sky'} x2="0" y2="1"><stop stopColor="#A77880"/><stop offset=".5" stopColor="#E6AF85"/><stop offset="1" stopColor="#655773"/></linearGradient>
+  <radialGradient id={id+'sun'}><stop stopColor="#FFF1C2"/><stop offset=".14" stopColor="#F9DBA4" stopOpacity=".85"/><stop offset=".5" stopColor="#EDB780" stopOpacity=".23"/><stop offset="1" stopColor="#E8B482" stopOpacity="0"/></radialGradient>
+ </defs>
+   <rect x="210" y="170" width="700" height="510" fill={u('sky')}/>
+   <path d="M210 560L290 538L360 558L430 528L490 549L560 530L635 560L730 525L910 566V690H210Z" fill="#695A70" opacity=".65"/>
+   {Array.from({length:15},(_,i)=><g key={i} opacity=".7">
+    <rect x={215+i*48} y={480+(i%4)*32} width={32+i%3*8} height="220" fill="#53485F"/>
+    {[0,1,2].map(j=><path key={j} d={`M${223+i*48} ${510+(i%4)*32+j*16}h14`} stroke="#BA9290" strokeWidth="3" opacity=".4"/>)}
+   </g>)}
+   <circle cx={sunX} cy="382" r="240" fill={u('sun')}/>
+   <circle cx={sunX} cy="382" r="46" fill="#F9DEAE" opacity=".85"/>
+   <path d="M210 293Q500 279 910 286M210 342Q500 328 910 335" stroke="#EFC5AA" strokeWidth="3" opacity=".17"/>
+ </g>;
+};
 // Original SVG environment. Physical props and actors remain in the same world plane.
 export const LabBackground:React.FC<{id:string;soft?:boolean}>=({id,soft=false})=>{
  const u=(s:string)=>`url(#${id+s})`;
@@ -25,15 +51,7 @@ export const LabBackground:React.FC<{id:string;soft?:boolean}>=({id,soft=false})
   <path d="M0 780H1920" stroke="#141623" strokeWidth="19"/>
   <rect x="192" y="150" width="736" height="548" rx="6" fill="#171823" stroke="#493847" strokeWidth="12"/>
   <g clipPath={u('window')}>
-   <rect x="210" y="170" width="700" height="510" fill={u('sky')}/>
-   <path d="M210 560L290 538L360 558L430 528L490 549L560 530L635 560L730 525L910 566V690H210Z" fill="#695A70" opacity=".65"/>
-   {Array.from({length:15},(_,i)=><g key={i} opacity=".7">
-    <rect x={215+i*48} y={480+(i%4)*32} width={32+i%3*8} height="220" fill="#53485F"/>
-    {[0,1,2].map(j=><path key={j} d={`M${223+i*48} ${510+(i%4)*32+j*16}h14`} stroke="#BA9290" strokeWidth="3" opacity=".4"/>)}
-   </g>)}
-   <circle cx="665" cy="382" r="240" fill={u('sun')}/>
-   <circle cx="665" cy="382" r="46" fill="#F9DEAE" opacity=".85"/>
-   <path d="M210 293Q500 279 910 286M210 342Q500 328 910 335" stroke="#EFC5AA" strokeWidth="3" opacity=".17"/>
+   <LabWindowScenery id={id+'windowView'}/>
   </g>
   <path d="M438 165V688M677 165V688M210 470H910" stroke="#322837" strokeWidth="12"/>
   <path d="M432 171V680M671 171V680" stroke="#B38C77" strokeWidth="2" opacity=".55"/>
@@ -73,12 +91,7 @@ export const LabBackground:React.FC<{id:string;soft?:boolean}>=({id,soft=false})
   {[0,1,2,3,4].map(i=><g key={i}><path d={`M${196+i*243} 724v28h220v-28`} stroke="#675360" strokeWidth="2" fill="none"/>
    <path d={`M${288+i*243} 737h32`} stroke="#A38D86" strokeWidth="3"/>
   </g>)}
-  <g stroke="#91818A" strokeWidth="3" fill="none">
-   <path d="M285 707v-87h55v87M284 634h57M298 619v-36h27v36"/>
-   <path d="M365 705v-112m-21 2h44m-11 0v70"/>
-   <path d="M428 704q-31 -9 -20 -36l17 -24v-35h16v35l15 24q14 28 -13 36Z"/>
-  </g>
-  <path d="M410 685Q435 672 453 685L444 701H423Z" fill="#A89258" opacity=".8"/>
+  <LabBenchGlassware/>
   <path d="M1170 705v-60h75v60Z" fill="#393544" stroke="#64515C" strokeWidth="3"/>
   <path d="M1185 665h43m-43 12h31" stroke="#8D7C83" strokeWidth="3"/>
   {[0,1,2,3,4,5].map(i=><g key={i}><rect x={1270+i*20} y="666" width="11" height="35" rx="3" fill="#96816B" opacity=".65"/><rect x={1269+i*20} y="661" width="13" height="7" fill="#43394A"/></g>)}
