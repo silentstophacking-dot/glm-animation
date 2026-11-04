@@ -4,6 +4,7 @@ import './engine/fonts';
 import { STUDIO } from './studio.config';
 import { EPISODES } from './episodes';
 import {IfverseContactPreview} from './episodes/probability-control/ifverse-contact-preview';
+import {SlenderDesignSheet} from './episodes/probability-control/slender-character-sheet';
 import { CastSheet } from './CastSheet';
 import {CharacterRigV2Gallery,CharacterRigV2Motion} from './episodes/probability-control/character-v2-gallery';
 import {CharacterActingV3,ACTING_V3_FRAMES,ACTING_V3_FPS} from './episodes/probability-control/character-acting-v3';
@@ -25,6 +26,7 @@ export const Root: React.FC = () => {
           <Composition id={`${e.id}Board`} component={e.Board} durationInFrames={Math.max(1, e.shotCount)} fps={e.fps} width={e.width} height={e.height} />
         </React.Fragment>
       ))}
+      <Composition id="SlenderDesignSheet" component={SlenderDesignSheet} durationInFrames={1} fps={30} width={1920} height={1080}/>
       <Composition id="IfverseContactPreview" component={IfverseContactPreview} durationInFrames={240} fps={30} width={1920} height={1080}/>
       <Composition id="IfverseCharacterSheet" component={ReferenceCharacterSheet}
         durationInFrames={1} fps={30} width={1920} height={1080}/>
