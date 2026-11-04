@@ -61,6 +61,12 @@ export const evidenceActorAt=(f:number):RoomActorPerformance=>{
  * a soft cast contact shadow, separated rear/front glass contours,
  * cool transmitted fill and a localized warm sunset highlight.
  */
+// All liquid particles must have reached the flask by the end of the
+// restoration window; delayed drops cannot hang in midair after w = 1.
+export const dropletProgress=(w:number,index:number)=>{
+  const delay=index*.058;
+  return clamp((w-delay)/(1-delay));
+};
 const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({id,frame:f,camera:c})=>{
   const {returnShards:t,restore:m,water:w}=evidenceProgress(f);
   const u=(name:string)=>'url(#'+id+name+')';
@@ -178,14 +184,14 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
     {pieces.map((s,i)=><g key={i} opacity={fragmentVisibility}
       transform={'translate('+(s.bx*(1-t)+s.x*t)+' '+(s.by*(1-t)+s.y*t)+
         ') rotate('+(s.rot*(1-t))+')'}>
-      <path d={s.shape} transform="translate(4 3)"
+      <path d={s.shape} transform="translate(2.7 2.2)"
         fill="#1E3D50" stroke="#183145" strokeWidth="1.7"/>
-      <path d={s.shape} fill={u('shard')} stroke="#D8C6AF"
-        strokeWidth="2.3" strokeLinejoin="round"/>
+      <path d={s.shape} fill={u('shard')} stroke="#DDC9B6"
+        strokeWidth="1.65" strokeLinejoin="round"/>
       <path d="M-9 -13L0 -18L7 -3" fill="none"
-        stroke="#F8E6D1" strokeWidth="2.1" strokeLinecap="round" opacity=".94"/>
+        stroke="#F8E6D1" strokeWidth="1.5" strokeLinecap="round" opacity=".94"/>
       <path d="M-8 10L6 2L12 10" fill="none"
-        stroke="#85C5CA" strokeWidth="1.7" opacity=".64"/>
+        stroke="#85C5CA" strokeWidth="1.35" opacity=".64"/>
       <path d="M-3 -6L10 5" fill="none"
         stroke="#264D64" strokeWidth="2.2" opacity=".62"/>
     </g>)}
@@ -193,7 +199,7 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
     {/* Water rises out of its shrinking spill and ENTERS the vial through
         its open metal mouth, using one local/world coordinate system. */}
     {Array.from({length:10},(_,i)=>{
-      const q=clamp((w-i*.075)*2.1),inFlight=Math.sin(Math.PI*q);
+      const q=dropletProgress(w,i),inFlight=Math.sin(Math.PI*q);
       const x=43*(1-q)+Math.sin(i*1.7)*17*inFlight;
       const y=-6-146*q+Math.cos(i*1.9)*4*inFlight;
       return <g key={'water'+i} opacity={.84*inFlight}>
@@ -255,6 +261,8 @@ export const ReversalEvidenceFrame:React.FC=()=>{
 export const auditReversalEvidence=()=>{
   if(EVIDENCE_SHOTS[0].from!==0||EVIDENCE_SHOTS.at(-1)!.to!==REVERSAL_FRAMES)
     throw new Error('Story beat boundaries incorrect');
+  if(Array.from({length:10},(_,i)=>dropletProgress(1,i)).some(v=>v!==1))
+    throw new Error('Liquid particles still suspended after restoration');
   if(evidenceProgress(173).returnShards!==0||
      evidenceProgress(318).returnShards!==1||
      evidenceProgress(378).restore!==1||
