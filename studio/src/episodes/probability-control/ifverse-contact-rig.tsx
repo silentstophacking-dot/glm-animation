@@ -130,9 +130,14 @@ export const RefCharacter:React.FC<RefCharacterProps>=({
     {gesture!=='sit'?<g stroke={colors.ink} strokeWidth="6" strokeLinecap="round">
       <path d="M-13 0L-20 0"/><path d="M13 0L21 0"/>
     </g>:null}
-    {/* The neck is almost invisible in the supplied frames. */}
-    <rect x="-5" y="-181" width="10" height="16" rx="4" fill={colors.ink}/>
-    <g transform={'translate('+faceShift+' -204) rotate('+headTilt+')'}>
+    {/* Expose a narrow neck between the jaw and collar, including in profile. */}
+    <path d="M-5 -192L5 -192L6 -164Q0 -159 -6 -164Z" fill={colors.ink}/>
+    <path d="M-4 -181L-4 -173" fill="none" stroke={colors.warm}
+      strokeWidth="1.5" strokeLinecap="round" opacity=".7"/>
+    <path d="M-12 -168Q0 -158 12 -168" fill="none"
+      stroke={role==='red-hoodie'?colors.coralLight:'#64535A'}
+      strokeWidth="2.5" strokeLinecap="round"/>
+    <g transform={'translate('+faceShift+' -218) rotate('+headTilt+')'}>
       <circle cx="0" cy="0" r="37" fill={colors.ink}/>
       {/* The thin warm upper/side rim, NOT a broad cartoon outline. */}
       <path d="M-36 4Q-39 -27 -10 -36Q10 -41 28 -25"
