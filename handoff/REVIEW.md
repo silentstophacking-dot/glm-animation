@@ -4,6 +4,9 @@ These are small review copies, not 1080p masters. They are tracked in this repos
 
 ## Start here
 
+- [24s backward-clock mini-scene with sound](review/lab-time-anomaly-24s.mp4) — six-shot story following the liked puffer proof; owner review pending.
+- [Six-shot storyboard](review/lab-time-anomaly-board.png).
+
 - [New 11s puffer/lab acting proof](review/puffer-lab-performance-11s.mp4) — walking, hesitation, console press, recoil and recovery in the projected room; owner review pending.
 - [Puffer performance key poses](review/puffer-lab-performance-board.png).
 

@@ -52,6 +52,10 @@ Code filenames above live under `studio/src/episodes/probability-control/` unles
 5. Review key poses first; then one short local phone proof and one designated GitHub production render. Audit feet/contact and inspect actual frames, especially walking, wrists, sleeve/torso overlap, quilt deformation, press/release and recovery. Keep lighting and floor shadows coherent across the camera move.
 6. Ask for visual feedback on the concrete proof. Only after final combined design/motion approval move into the long-form storyboard/shot planning.
 
+## Mini-scene verification
+
+`LabTimeAnomaly` passed its 720-frame support/contact/clock audit, local phone MP4/audio checks and GitHub full-resolution render: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41854780789 . Draft PR #39 and handoff/review preserve the 24-second movie and storyboard. Owner review remains pending.
+
 ## Latest verification
 
 The new puffer performance passed local 720p decoding/metadata checks and GitHub’s full-resolution render/verification: https://github.com/silentstophacking-dot/glm-animation/actions/runs/41852035320 . Draft PR #38 and handoff/review preserve that result; the owner subsequently liked it.

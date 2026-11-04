@@ -30,3 +30,11 @@ Build with `python3 scripts/build-lab-anomaly-audio.py studio/out/time-anomaly-a
 TypeScript and the 720-frame actor/contact/clock audit pass. Planted-foot drift is zero; world and cropped-screen hand/contact error is below 0.001. The four original puffer and 330-frame contact checks also run through the integration audit. Rendered storyboard review checks cuff connections, sleeve quilting, facial visibility and shot composition. Story continuity and acting still require owner review in motion.
 
 One local phone movie and one designated GitHub Actions production render are planned. The pipeline verifies H.264/yuv420p/faststart, full decode/frame count, AAC stereo/duration, levels and cue metadata against the motion audit. No full episode render is needed.
+
+The mastered AAC measures approximately −22.6 LUFS integrated and −1.1 dBFS true peak, with a 3 LU loudness range. Those are measured output values; they do not imply a completed subjective listening review.
+
+The prior PufferRoomPerformanceBoard was rendered again after the clock/console refactor and compared in RGB: pixel-identical to the saved board. GitHub Actions [41854780789](https://github.com/silentstophacking-dot/glm-animation/actions/runs/41854780789) passed at 1080p, including video and audio verification and successful movie/review artifact uploads.
+
+The local phone copy passed full 720-frame decode, 1280×720 / 30fps / 24 seconds, H.264/yuv420p/faststart and AAC stereo checks. Decoded audio peak is −1.3 dBFS; cue metadata matches the motion audit. Inspected extracted movie frames around every cut, the final reach and successive clock positions. No detached wrist or missing sleeve quilting was seen in those frames. The clock insert is intentionally stylized and the synthesized sound still needs subjective owner feedback.
+
+Six additional movie-frame crops covering all three stepping/landing phases were reviewed: supporting soles stayed on the floor and the puffer arms remained connected. No claim of reference parity or final subjective motion/sound approval is made.
