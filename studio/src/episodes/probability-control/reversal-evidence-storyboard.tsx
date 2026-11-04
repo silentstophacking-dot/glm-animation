@@ -83,6 +83,7 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
   const {returnShards:t,restore:m,water:w}=evidenceProgress(f);
   const fx=reversalFxAt(f);
   const tPrev=evidenceProgress(Math.max(0,f-7)).returnShards;
+  const tEcho=evidenceProgress(Math.max(0,f-14)).returnShards;
   const u=(name:string)=>'url(#'+id+name+')';
   const origin=planeTransform(BASE,c);
   // At the beginning ONLY the broken bowl is still on the bench. The
@@ -99,13 +100,13 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
   const puddle=1-w;
   const fragmentVisibility=clamp((.73-m)/.47);
   const pieces=[
-    {x:-27,y:-119,bx:-112,by:-9,rot:-86,shape:'M-13 -17 L4 -25 L15 -6 L3 16 L-16 9 Z'},
-    {x:24,y:-120,bx:106,by:-4,rot:68,shape:'M-10 -24 L12 -19 L17 4 L-4 19 L-16 3 Z'},
-    {x:-39,y:-76,bx:-77,by:-20,rot:-55,shape:'M-12 -21 L9 -16 L17 4 L-8 19 L-18 5 Z'},
-    {x:38,y:-75,bx:72,by:-17,rot:49,shape:'M-15 -20 L10 -23 L20 5 L-5 20 L-17 4 Z'},
-    {x:-21,y:-48,bx:-41,by:-5,rot:-63,shape:'M-16 -12 L6 -23 L16 5 L-6 17 Z'},
-    {x:24,y:-48,bx:40,by:-9,rot:52,shape:'M-14 -19 L10 -16 L19 9 L-8 18 Z'},
-    {x:3,y:-136,bx:8,by:-13,rot:100,shape:'M-11 -15 L10 -23 L15 11 L-6 20 Z'}
+    {x:-27,y:-119,bx:-112,by:-9,rot:-86,shape:'M-15 -18 L-2 -30 L13 -15 L8 11 L-16 14 Z'},
+    {x:24,y:-120,bx:106,by:-4,rot:68,shape:'M-8 -27 L16 -14 L14 9 L-7 17 L-13 -2 Z'},
+    {x:-39,y:-76,bx:-77,by:-20,rot:-55,shape:'M-16 -22 L5 -17 L17 5 L1 20 L-17 7 Z'},
+    {x:38,y:-75,bx:72,by:-17,rot:49,shape:'M-11 -26 L12 -17 L20 6 L-9 18 L-18 2 Z'},
+    {x:-21,y:-48,bx:-41,by:-5,rot:-63,shape:'M-17 -16 L-3 -28 L12 -6 L15 9 L-9 15 Z'},
+    {x:24,y:-48,bx:40,by:-9,rot:52,shape:'M-18 -18 L9 -21 L18 8 L-1 22 L-13 6 Z'},
+    {x:3,y:-136,bx:8,by:-13,rot:100,shape:'M-11 -26 L12 -15 L11 14 L-6 21 L-17 0 Z'}
   ];
   return <g transform={origin}>
     <defs>
@@ -145,6 +146,12 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
         <stop offset=".45" stopColor="#7EBFC8" stopOpacity=".7"/>
         <stop offset="1" stopColor="#6AAEC3" stopOpacity=".08"/>
       </linearGradient>
+      <linearGradient id={id+'lightshaft'} x1="0" y1="1" x2="0" y2="0">
+        <stop stopColor="#9AF0EE" stopOpacity=".54"/>
+        <stop offset=".32" stopColor="#C1E8E0" stopOpacity=".24"/>
+        <stop offset=".85" stopColor="#F7E4C9" stopOpacity=".09"/>
+        <stop offset="1" stopColor="#F7E4C9" stopOpacity="0"/>
+      </linearGradient>
       <radialGradient id={id+'benchshadow'}>
         <stop stopColor="#080F19" stopOpacity=".72"/>
         <stop offset="1" stopColor="#080F19" stopOpacity="0"/>
@@ -174,14 +181,14 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
         warm/cool illumination on the vial and counter, two short physical
         shock pulses and tiny dust drawn toward the repairing glass. */}
     <ellipse cx="0" cy="-83" rx="150" ry="163" fill={u('timebloom')}
-      opacity={clamp(.12*fx.active+.78*fx.flash)}/>
+      opacity={clamp(.5*fx.active+.88*fx.flash)}/>
     <ellipse cx="5" cy="6" rx="111" ry="18" fill={u('timebloom')}
-      opacity={clamp(.35*fx.active+.62*fx.flash)}/>
-    {[0,1].map(i=>{
-      const phase=(f-(190+i*15))/39;
+      opacity={clamp(.7*fx.active+.82*fx.flash)}/>
+    {[0,1,2].map(i=>{
+      const phase=(f-([190,217,347][i]))/45;
       const pulse=clamp(phase);
-      return <g key={'pulse'+i} opacity={.38*Math.sin(Math.PI*pulse)*fx.active}>
-        <ellipse cx="0" cy="3" rx={52+112*pulse} ry={8+20*pulse}
+      return <g key={'pulse'+i} opacity={.7*Math.sin(Math.PI*pulse)*fx.active}>
+        <ellipse cx="0" cy="3" rx={52+165*pulse} ry={8+34*pulse}
           fill="none" stroke={i===0?'#DBDBC0':'#85BAC4'}
           strokeWidth={2.5-1.6*pulse}/>
       </g>;
@@ -195,6 +202,17 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
       return <circle key={'dust'+i} cx={x} cy={y} r={.8+i%3*.48}
         fill={i%3===0?'#F5DDC8':'#B6E8E7'}
         opacity={.58*fx.active*twinkle*(1-converge*.8)}/>;
+    })}
+    {/* Refraction through the rebuilding bottle casts a beam and caustics
+        in the existing projected glass/bench coordinate system. */}
+    <path d="M-44 -58 Q-110 -172 -159 -294 Q0 -335 159 -294 Q110 -172 44 -58Z"
+      fill={u('lightshaft')} opacity={clamp(.66*fx.active+.52*fx.flash)}/>
+    {[0,1,2].map(i=>{
+      const wave=.5+.5*Math.sin(f*.09+i*1.9);
+      return <ellipse key={'caustic'+i} cx={-44+i*43+5*Math.sin(f*.05+i)}
+        cy={8+i%2*5} rx={26+7*wave} ry={4+i%2*2}
+        fill="none" stroke={i===1?'#F4D6B6':'#A2E1DB'}
+        strokeWidth={1.5+wave} opacity={fx.active*(.32+.26*wave)}/>;
     })}
     {/* Reconstructed body has a clipped jagged fracture front which
         physically rises as each fragment returns. No complete ghost vial. */}
@@ -231,6 +249,16 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
       <path d="M-43 -28Q-30 -3 0 1Q32 -3 43 -28"
         fill="none" stroke="#C0DBD6" strokeWidth="3.2" opacity=".75"/>
     </g>
+    {/* Two tempered glass afterimages make time reversal readable while
+        tracking exact physical trajectories; nothing is screen-locked. */}
+    {pieces.map((p,i)=>[tPrev,tEcho].map((past,j)=>{
+      const x=p.bx*(1-past)+p.x*past;
+      const y=p.by*(1-past)+p.y*past;
+      return <path key={'echo'+i+'-'+j} d={p.shape}
+        transform={'translate('+x+' '+y+') rotate('+(p.rot*(1-past))+')'}
+        fill="#89C8CE" stroke="#EAD9C4" strokeWidth=".9"
+        opacity={fx.active*clamp(fx.trail*10)*fragmentVisibility*(j===0?.25:.12)}/>;
+    }))}
     {/* Trailing refracted highlights follow moving glass in the same
         physical local frame; no camera-locked speed lines. */}
     {pieces.map((s,i)=>{
@@ -274,8 +302,8 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
         the vial's mouth during the return, with brighter reflected flecks. */}
     <path d={'M'+(43*(1-w))+' -3 Q'+(24-12*w)+' '+(-59-16*w)+
       ' '+(4*(1-w))+' -146'} fill="none" stroke="#83C8D4"
-      strokeWidth={1.8+.8*Math.sin(f*.19)**2}
-      strokeLinecap="round" opacity={.52*Math.sin(Math.PI*clamp(w))}/>
+      strokeWidth={2.7+1.1*Math.sin(f*.19)**2}
+      strokeLinecap="round" opacity={.8*Math.sin(Math.PI*clamp(w))}/>
     {/* Water rises out of its shrinking spill and ENTERS the vial through
         its open metal mouth, using one local/world coordinate system. */}
     {Array.from({length:10},(_,i)=>{
@@ -314,7 +342,7 @@ export const EvidenceScene:React.FC<{frame:number;id:string}>=({frame:f,id})=>{
   // One optical push across the SAME world projection while shards travel.
   // Crop and entire room scale together; no detached background/parallax.
   const push=(shot.beat==='lift'||shot.beat==='mend')
-    ? .068*amount(f,185,329):0;
+    ? .105*amount(f,185,329):0;
   const crop: [number,number,number,number]=[
     shot.crop[0]+shot.crop[2]*push/2,
     shot.crop[1]+shot.crop[3]*push/2,
