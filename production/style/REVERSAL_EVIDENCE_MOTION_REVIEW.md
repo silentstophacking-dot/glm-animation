@@ -29,3 +29,8 @@ Foley generation: `studio/scripts/generate-reversal-audio.py` writes its origina
 5. Only after review, consider an approved 1080p pass and integration into the next long-form sequence.
 
 Do not merge into the approved clock branch or overwrite earlier work merely because this workflow passes.
+
+## Owner feedback — visible effects pass
+The initial 17s proof technically rendered but the owner said **“It lacks effects.”** This revision responds with actual time-reversal effects inside the existing projected 2.5D world, not a generic fullscreen filter: localized warm/cool bloom, brief time pulses on the physical counter, physically following fragment trails, small incoming suspended dust, momentary glass-seam glints, a visible returning-liquid filament, and one restrained optical push while the bench remains anchored. The audio mix also raises shatter/reassembly/return cues and adds a nonmusical pressure layer, all synthesized originally.
+
+The 24s approved baseline is not changed. The first 17s video remains an archived comparison; this revision requires fresh CI, full render decode, contact-sheet and owner review before selection. These effects are visible evidence of the physical event, not a change toward neon UI or cartoon embellishment.

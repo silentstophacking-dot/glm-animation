@@ -71,17 +71,24 @@ for i in range(COUNT):
                         + .003 * math.sin(TWO_PI * 228.0 * t))
 
 # A physical accident is heard before the reverse movement is understood.
-add_ping(3.48, .82, 1273, .14)
-add_ping(3.54, 1.08, 2045, .11)
-add_breath(3.44, .55, .19)
+add_ping(3.48, .82, 1273, .24)
+add_ping(3.54, 1.08, 2045, .18)
+add_breath(3.44, .55, .27)
 # Distinct pieces, staggered as they seem to snap backward into glass.
 for k, at in enumerate((6.12, 6.53, 7.04, 7.51, 8.14, 8.61, 9.02)):
-    add_ping(at, .52, 1070 + 193 * k, .075, reverse=True)
-add_breath(5.96, 3.62, .12, rising=True)
+    add_ping(at, .52, 1070 + 193 * k, .13, reverse=True)
+add_breath(5.96, 3.62, .18, rising=True)
 # Liquid draws back into the neck over the physical restoration.
-add_breath(9.83, 2.8, .25, rising=True)
+add_breath(9.83, 2.8, .33, rising=True)
 add_ping(12.28, .80, 1443, .12)
 add_ping(12.33, 1.06, 2287, .09)
+# Modulated, non-musical time pressure tied to the visible reconstruction.
+for i in range(int(5.92*SAMPLE_RATE), int(12.65*SAMPLE_RATE)):
+    t=i/SAMPLE_RATE-5.92
+    p=min(1.0,t/1.0,(6.73-t)/.65)
+    if p>0:
+        phase=2*math.pi*(66*t+5*t*t)
+        samples[i]+= .034*p*(math.sin(phase)+.23*math.sin(2.4*phase))
 # Restrained motion cues after recognition (no unmotivated scare sting).
 add_breath(13.46, .54, .08)
 for at in (15.64, 16.18, 16.72):
