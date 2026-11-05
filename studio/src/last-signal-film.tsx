@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill,Composition,Sequence,registerRoot,useCurrentFrame} from 'remotion';
 import {LastSignalApartmentCheckpoint} from './last-signal-apartment';
 import {CharacterTurnV5} from './episodes/probability-control/character-turn-v5';
+import {WorldStreet} from './last-signal-world-street';
 const ease=(t:number)=>{const v=Math.max(0,Math.min(1,t));return v*v*(3-2*v)};
 const City:React.FC<{id:string;frame:number;double?:boolean;closer?:boolean}>=({id,frame,double=false,closer=false})=>{
  const u=(s:string)=>`url(#${id}-${s})`,rain=frame;
@@ -35,12 +36,12 @@ const Hall:React.FC<{frame:number}>=({frame})=><svg viewBox="0 0 1920 1080" widt
 const Film:React.FC=()=>{const f=useCurrentFrame();return <AbsoluteFill style={{backgroundColor:'#0A1421'}}>
  <Sequence from={0} durationInFrames={110}><Phone text="DO NOT LOOK OUTSIDE." frame={f}/></Sequence>
  <Sequence from={110} durationInFrames={430}><LastSignalApartmentCheckpoint/></Sequence>
- <Sequence from={540} durationInFrames={245}><City id="ls-street" frame={f-540} double/></Sequence>
- <Sequence from={785} durationInFrames={170}><City id="ls-double" frame={f-785} double closer/></Sequence>
+ <Sequence from={540} durationInFrames={245}><WorldStreet id="ls-street" frame={f-540} showDouble/></Sequence>
+ <Sequence from={785} durationInFrames={170}><WorldStreet id="ls-double" frame={f-785+85} showDouble/></Sequence>
  <Sequence from={955} durationInFrames={190}><Phone text="THAT IS YOU." sub="30 SECONDS FROM NOW." frame={f-955}/></Sequence>
- <Sequence from={1145} durationInFrames={135}><City id="ls-disappear" frame={f-1145+310} double/></Sequence>
+ <Sequence from={1145} durationInFrames={135}><WorldStreet id="ls-disappear" frame={f-1145} showDouble disappear/></Sequence>
  <Sequence from={1280} durationInFrames={105}><Phone text="YOU HAVE ALREADY LOOKED." frame={f-1280}/></Sequence>
  <Sequence from={1385} durationInFrames={127}><Hall frame={f-1385}/></Sequence>
  </AbsoluteFill>};
-const Root=()=> <><Composition id="LastSignalFullSilent" component={Film} durationInFrames={1512} fps={30} width={1920} height={1080}/><Composition id="LastSignalStreetCheckpoint" component={()=> <City id="ls-check" frame={75} double/>} durationInFrames={1} fps={30} width={1920} height={1080}/><Composition id="LastSignalHallCheckpoint" component={()=> <Hall frame={105}/>} durationInFrames={1} fps={30} width={1920} height={1080}/></>;
+const Root=()=> <><Composition id="LastSignalFullSilent" component={Film} durationInFrames={1512} fps={30} width={1920} height={1080}/><Composition id="LastSignalStreetCheckpoint" component={()=> <WorldStreet id="ls-check" frame={75} showDouble/>} durationInFrames={1} fps={30} width={1920} height={1080}/><Composition id="LastSignalHallCheckpoint" component={()=> <Hall frame={105}/>} durationInFrames={1} fps={30} width={1920} height={1080}/></>;
 registerRoot(Root);
