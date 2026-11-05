@@ -52,5 +52,81 @@ const Apartment:React.FC=()=>{
  </svg></AbsoluteFill>;
 };
 export const LastSignalApartmentCheckpoint=Apartment;
-const Root=()=> <Composition id="LastSignalApartmentCheckpoint" component={Apartment} durationInFrames={360} fps={30} width={1920} height={1080}/>;
+
+
+const NightStreet:React.FC<{shot:'wide'|'double'|'empty';frame:number}>=({shot,frame})=>{
+ const push=1+Math.min(.11,frame*.00035),ghost=shot==='double';
+ return <svg viewBox="0 0 1920 1080" width="100%" height="100%">
+ <defs>
+ <linearGradient id="night-sky" x2="0" y2="1"><stop stopColor="#080F1E"/><stop offset=".65" stopColor="#1C2C42"/><stop offset="1" stopColor="#253B4B"/></linearGradient>
+ <linearGradient id="night-road" x2="0" y2="1"><stop stopColor="#293846"/><stop offset="1" stopColor="#0B1724"/></linearGradient>
+ <linearGradient id="night-building" x2="1" y2=".4"><stop stopColor="#17293D"/><stop offset=".55" stopColor="#26364A"/><stop offset="1" stopColor="#0E1B2B"/></linearGradient>
+ <radialGradient id="night-light"><stop stopColor="#F9D9A1" stopOpacity=".48"/><stop offset="1" stopColor="#F9D9A1" stopOpacity="0"/></radialGradient>
+ <radialGradient id="night-vig"><stop offset=".35" stopColor="#000" stopOpacity="0"/><stop offset="1" stopColor="#000" stopOpacity=".8"/></radialGradient>
+ </defs>
+ <g transform={`translate(${960*(1-push)} ${540*(1-push)}) scale(${push})`}>
+ <rect width="1920" height="1080" fill="url(#night-sky)"/>
+ <path d="M0 780L790 670L1160 670L1920 780V1080H0Z" fill="url(#night-road)"/>
+ <path d="M0 777L790 667L1160 667L1920 777" stroke="#A2A2A3" strokeWidth="7" opacity=".38"/>
+ <path d="M900 1080L955 710L1010 710L1080 1080" fill="#9B9D97" opacity=".1"/>
+ {Array.from({length:12},(_,i)=>{const left=i<6,idx=i%6,x=left?idx*143-60:1130+idx*156,w=145+(idx%3)*26,h=330+(idx*91%380),y=760-h;return <g key={i}>
+ <path d={`M${x} ${y}l${w} -20v${h+150}l-${w} 20Z`} fill="url(#night-building)" stroke="#58677A" strokeWidth="3"/>
+ <path d={`M${x+w} ${y-20}l28 15v${h+130}l-28 5Z`} fill="#101B2B"/>
+ <path d={`M${x-7} ${y-5}l${w+14} -22`} stroke="#8490A0" strokeWidth="5"/>
+ {Array.from({length:Math.floor(h/51)},(_,r)=>[0,1,2,3].map(c=><g key={r+'-'+c}><rect x={x+13+c*(w-20)/4} y={y+22+r*50} width="19" height="29" fill={(r*3+c+i)%7===0?'#B7A083':'#101F30'} stroke="#4D6074" strokeWidth="2"/><path d={`M${x+13+c*(w-20)/4} ${y+35+r*50}h19`} stroke="#73859A" opacity=".4"/></g>))}
+ </g>})}
+ <path d="M970 650V110" stroke="#465568" strokeWidth="20"/><path d="M960 132Q960 110 995 108h112" stroke="#637387" strokeWidth="16" fill="none"/>
+ <path d="M1105 110l-12 44h-68l-15-44Z" fill="#A69A88" stroke="#D8C7AB" strokeWidth="5"/>
+ <ellipse cx="1057" cy="145" rx="260" ry="300" fill="url(#night-light)"/>
+ <path d="M1030 700L850 1080H1270L1100 700Z" fill="#D7B27C" opacity=".065"/>
+ <path d="M0 890L1920 800" stroke="#6E8192" strokeWidth="5" opacity=".24"/>
+ {Array.from({length:13},(_,i)=><path key={i} d={`M${i*160} 875l-35 220`} stroke="#92A4B4" strokeWidth="3" opacity=".1"/>)}
+ {ghost&&<g transform="translate(1050 770) scale(1.15)">
+ <ellipse cx="0" cy="4" rx="100" ry="22" fill="#040B12" opacity=".7"/>
+ <CharacterTurnV5 id="daniel-double" x={0} y={0} yaw={-.62} headYaw={-.85} lighting="baseline" mood="calm" outfit="hoodie"/>
+ </g>}
+ <rect width="1920" height="1080" fill="url(#night-vig)"/>
+ </g>
+ </svg>;
+};
+const PhoneShot:React.FC<{frame:number;message:string}>=({frame,message})=><svg viewBox="0 0 1920 1080" width="100%" height="100%">
+ <defs><linearGradient id="phone-bg" x2=".7" y2="1"><stop stopColor="#283448"/><stop offset="1" stopColor="#080F1C"/></linearGradient><radialGradient id="phone-glow"><stop stopColor="#D4E3F2" stopOpacity=".25"/><stop offset="1" stopColor="#D4E3F2" stopOpacity="0"/></radialGradient></defs>
+ <rect width="1920" height="1080" fill="url(#phone-bg)"/>
+ {Array.from({length:20},(_,i)=><path key={i} d={`M${i*120-100} 0l-450 1080`} stroke="#9DB5CA" strokeWidth="2" opacity=".07"/>)}
+ <ellipse cx="960" cy="550" rx="540" ry="570" fill="url(#phone-glow)"/>
+ <g transform={`translate(${Math.sin(frame*.018)*5} ${Math.cos(frame*.015)*4})`}>
+ <rect x="655" y="65" width="610" height="970" rx="94" fill="#080D16" stroke="#8495A8" strokeWidth="18"/>
+ <rect x="679" y="90" width="562" height="922" rx="71" fill="#111D2D" stroke="#34475D" strokeWidth="5"/>
+ <rect x="844" y="105" width="235" height="37" rx="18" fill="#050A13"/>
+ <text x="725" y="202" fontSize="43" fill="#E3EAF0" fontFamily="Arial" fontWeight="bold">2:17</text>
+ <path d="M726 259H1190" stroke="#667B8D" strokeWidth="2" opacity=".6"/>
+ <rect x="710" y="330" width="500" height="320" rx="30" fill="#26374A" stroke="#B6A49C" strokeWidth="4"/>
+ <text x="750" y="396" fontSize="32" fontFamily="Arial" fill="#E7A39B">EMERGENCY MESSAGE</text>
+ {message.split('|').map((line,i)=><text key={i} x="750" y={485+i*65} fontFamily="Arial" fontWeight="bold" fontSize={line.length>19?35:44} fill="#F2E9DF">{line}</text>)}
+ <circle cx="960" cy="949" r="8" fill="#7D91A4"/>
+ </g></svg>;
+const Reveal:React.FC<{frame:number}>=({frame})=><svg viewBox="0 0 1920 1080" width="100%" height="100%">
+ <defs><linearGradient id="reveal" x2="0" y2="1"><stop stopColor="#152439"/><stop offset="1" stopColor="#050912"/></linearGradient><radialGradient id="edge"><stop stopColor="#E4B590" stopOpacity=".25"/><stop offset="1" stopColor="#E4B590" stopOpacity="0"/></radialGradient></defs>
+ <rect width="1920" height="1080" fill="url(#reveal)"/>
+ <path d="M0 0H1920V1080H0Z" fill="#090E1A" opacity=".5"/>
+ <path d="M1450 0L1900 0V1080L1400 1080Z" fill="#2B3442"/>
+ <path d="M1430 0V1080" stroke="#5F6977" strokeWidth="22"/>
+ <ellipse cx="1490" cy="500" rx="440" ry="560" fill="url(#edge)"/>
+ <g transform="translate(890 965) scale(1.45)"><CharacterTurnV5 id="daniel-final" x={0} y={0} yaw={.25} headYaw={.7} lighting="baseline" mood="surprised" outfit="hoodie"/></g>
+ {frame>40&&<g transform="translate(1530 950) scale(1.6)"><CharacterTurnV5 id="second-presence" x={0} y={0} yaw={-.65} headYaw={-.75} lighting="baseline" mood="calm" outfit="hoodie"/></g>}
+ <rect width="1920" height="1080" fill="#030711" opacity={Math.max(0,(frame-105)/45)}/>
+ </svg>;
+const LastSignalFilm:React.FC=()=>{
+ const f=useCurrentFrame();
+ const shot=f<195?<PhoneShot frame={f} message="DO NOT LOOK|OUTSIDE."/>:
+ f<510?<Apartment/>:
+ f<830?<NightStreet frame={f-510} shot="empty"/>:
+ f<1110?<NightStreet frame={f-830} shot="double"/>:
+ f<1275?<PhoneShot frame={f-1110} message="THAT IS YOU.|30 SECONDS|FROM NOW."/>:
+ f<1430?<Apartment/>:
+ f<1510?<PhoneShot frame={f-1430} message="YOU HAVE|ALREADY LOOKED."/>:
+ <Reveal frame={f-1510}/>;
+ return <AbsoluteFill style={{backgroundColor:'#080D17'}}>{shot}</AbsoluteFill>;
+};
+const Root=()=> <><Composition id="LastSignalApartmentCheckpoint" component={Apartment} durationInFrames={360} fps={30} width={1920} height={1080}/><Composition id="LastSignalFilm" component={LastSignalFilm} durationInFrames={1635} fps={30} width={1920} height={1080}/></>;
 registerRoot(Root);
