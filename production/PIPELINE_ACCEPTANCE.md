@@ -20,3 +20,11 @@
 3. The starter film renders, ffprobe reports H.264 and ffmpeg decodes it.
 4. World-camera parallax and default outfit are checked in source and visual review.
 5. User approves the look of reusable environment presets before calling the library artistically finished.
+
+## Visual audit — 2026-11-05 (actual GitHub render)
+
+GitHub Actions run 42012907490 completed successfully. Artifact 13407517784 was downloaded and its approved reference, street, apartment and industrial checkpoints inspected.
+
+**Result: TECHNICALLY VERIFIED; ARTISTICALLY REJECTED.** The three presets are simplistic geometric blockouts, not the approved detailed cinematic 2.5D environments. Buildings use repetitive windows, the apartment has rudimentary furniture, and the industrial room lacks material and lighting complexity. Do not promote these presets as production-ready or use them as the final backgrounds for a new film.
+
+The puffer-clad character and world-camera code are retained. Upgrade the environment material/geometry layer against the approved `lab-room-depth.tsx` before visual approval. The next acceptance checkpoint must compare the same camera-scale, character size, material richness and environment density, not just a successful render.
