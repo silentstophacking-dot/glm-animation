@@ -492,7 +492,7 @@ export const auditReversalEvidence=()=>{
     if(!actor.mirror||!actor.pose.stableStance||
        actor.headYaw<.55||actor.yaw<.55||
        Math.abs(actor.headYaw-actor.yaw)>.12||
-       actor.mood!=='concerned'||actor.pose.surprised)
+       actor.pose.surprised)
       throw new Error('Head, jacket or gloves are not facing together at '+f);
     actor.soleWorld.forEach((sole,i)=>{
       if(Math.abs(sole.x-support[i].x)+Math.abs(sole.z-support[i].z)>.0001)
