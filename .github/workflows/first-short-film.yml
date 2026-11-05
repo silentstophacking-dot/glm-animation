@@ -1,0 +1,51 @@
+name: First Short Film — The Reversal (49s)
+on:
+  push:
+    branches: ['feature/first-short-film-the-reversal']
+    paths:
+      - 'studio/src/first-short-film-entry.tsx'
+      - '.github/workflows/first-short-film.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Install
+        run: npm ci --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Generate glass sound
+        run: python3 scripts/generate-reversal-audio.py
+      - name: Check approved clock soundtrack
+        run: test -s public/lab-discovery-v3/soundtrack.m4a
+      - name: Preview city and closing shot
+        run: |
+          mkdir -p out/first-film
+          npx remotion still src/first-short-film-entry.tsx FirstShortFilmCity out/first-film/City-Detail.png --frame=70 --scale=0.5
+          npx remotion still src/first-short-film-entry.tsx FirstShortFilmCity out/first-film/City-Rewind.png --frame=195 --scale=0.5
+      - name: Render full 49-second short film
+        run: |
+          set -euo pipefail
+          npx remotion render src/first-short-film-entry.tsx FirstShortFilm out/first-film/The-Reversal-49s.mp4 --codec=h264 --pixel-format=yuv420p --crf=23 --concurrency=2 --scale=0.5
+      - name: Verify complete video and sound
+        run: |
+          ffprobe -v error -show_entries stream=codec_type,codec_name,nb_frames -show_entries format=duration -of json out/first-film/The-Reversal-49s.mp4
+          ffmpeg -nostdin -v error -xerror -i out/first-film/The-Reversal-49s.mp4 -f null -
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: THE-REVERSAL-FIRST-FILM-49S
+          path: studio/out/first-film/
+          retention-days: 14
