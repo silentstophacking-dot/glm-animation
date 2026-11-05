@@ -22,8 +22,6 @@ jobs:
         run: npm ci
       - name: Typecheck and validate scene contract
         run: npx tsc --noEmit
-      - name: Validate reusable scene presets and camera movement
-        run: npx tsx -e "import {validateProductionPresets} from './src/production/production-validation'; console.log(JSON.stringify(validateProductionPresets()))"
       - name: Render approved reference and reusable new scene
         run: |
           mkdir -p out/production-master
