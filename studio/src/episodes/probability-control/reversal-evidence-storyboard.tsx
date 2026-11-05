@@ -90,44 +90,58 @@ export const shardMotionAt=(f:number,i:number)=>{
   };
 };
 
+// Every completed bottle patch is the inverse of its actual seated fragment.
+// The glass wall and incoming shard occupy the same projection while welding;
+// the completed wall persists even after the particle effects die away.
+export const seamAt=(f:number,i:number)=>{
+  const shard=shardMotionAt(f,i);
+  const complete=1-shard.opacity;
+  const glow=4*complete*(1-complete);
+  return {complete,glow,remaining:shard.opacity};
+};
 export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   const latest=discoveryActorAt(719);
   const notice=amount(f,42,90);
-  const recoil=amount(f,381,395)*(1-amount(f,420,446));
+  // Eye / head lead, the puffer shoulders follow, then the two wrists
+  // follow separately. Each muscle group settles independently.
+  const head=amount(f,379,400)*(1-amount(f,425,458));
+  const shoulder=amount(f,389,416)*(1-amount(f,438,471));
+  const nearArm=amount(f,400,425)*(1-amount(f,444,477));
+  const farArm=amount(f,405,432)*(1-amount(f,446,480));
   const pose={...latest.pose};
-  // Eyes locate glass first. At the seal the torso and arms flinch but the
-  // planted sole anchors remain in the same physical world positions.
-  pose.yaw=kf(f,[[0,latest.pose.yaw??0],[92,-.43],[375,-.43],[420,-.26],[509,-.48]]);
-  pose.gaze=kf(f,[[0,latest.pose.gaze??0],[81,-1.15],[379,-1.15],[421,-.30],[509,-.88]]);
-  pose.gazeY=(latest.pose.gazeY??0)-.75*notice+2.4*recoil;
-  pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[96,-9],[375,-9],[432,-6],[509,-10]])-6.5*recoil;
-  pose.lean=(latest.pose.lean??0)-3.0*recoil;
+  pose.yaw=kf(f,[[0,latest.pose.yaw??0],[92,-.43],[375,-.43],[424,-.27],[509,-.48]]);
+  pose.gaze=kf(f,[[0,latest.pose.gaze??0],[81,-1.15],[379,-1.15],[424,-.3],[509,-.88]]);
+  pose.gazeY=(latest.pose.gazeY??0)-.75*notice+2.1*head;
+  pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[96,-9],[375,-9],[432,-6],[509,-10]])-5.8*head;
+  pose.lean=(latest.pose.lean??0)-3.7*shoulder;
   const far=latest.pose.farHand??{x:-25,y:-153};
-  pose.farHand={x:far.x-12*recoil,y:far.y-10*recoil};
-  pose.hand={x:latest.pose.hand.x+4*recoil,y:latest.pose.hand.y+6*recoil};
-  // Guarantee the two-bone sleeves remain physically reachable as the
-  // torso flinches. The same rig geometry and hand transform are used by
-  // the actual CharacterTurnV5 renderer; no costume geometry is modified.
-  const shoulders=turnV5Geometry(latest.yaw);
+  pose.farHand={x:far.x-9*farArm,y:far.y-8*farArm};
+  // A hand lags the shoulder slightly: smooth, observable elbow articulation
+  // instead of the previous abrupt wrist snap and permanent locked extension.
+  pose.hand={x:latest.pose.hand.x+6*nearArm,y:latest.pose.hand.y+5*nearArm};
+  // IK safety uses precisely the yaw and inverse torso rotation that the
+  // renderer will use. Clamping occurs only when the elbow cannot bend.
+  const shoulderGeom=turnV5Geometry(latest.yaw);
   const near=v2HandLocal(pose);
-  const ndx=near.x-shoulders.nearShoulder,ndy=near.y+270;
-  const nDist=Math.hypot(ndx,ndy);
-  if(nDist>132.8){
+  const dx=near.x-shoulderGeom.nearShoulder,dy=near.y+270;
+  const distance=Math.hypot(dx,dy);
+  if(distance>132.5){
     const a=-(pose.lean??0)*Math.PI/180;
-    const c=Math.cos(a),s=Math.sin(a),k=132.8/nDist;
-    const ex=shoulders.nearShoulder+ndx*k;
-    const ey=-270+ndy*k+146;
-    pose.hand={x:ex*c+ey*s,y:-ex*s+ey*c+pose.drop-146};
+    const c=Math.cos(a),sn=Math.sin(a),q=132.5/distance;
+    const ex=shoulderGeom.nearShoulder+dx*q;
+    const ey=-270+dy*q+146;
+    pose.hand={x:ex*c+ey*sn,y:-ex*sn+ey*c+pose.drop-146};
   }
-  const fdx=pose.farHand.x-shoulders.farShoulder;
-  const fdy=pose.farHand.y+270,fdist=Math.hypot(fdx,fdy);
-  if(fdist>119.1){
-    const k=119.1/fdist;
-    pose.farHand={x:shoulders.farShoulder+fdx*k,y:-270+fdy*k};
+  const fx=pose.farHand.x-shoulderGeom.farShoulder;
+  const fy=pose.farHand.y+270,farDist=Math.hypot(fx,fy);
+  if(farDist>119){
+    const q=119/farDist;
+    pose.farHand={x:shoulderGeom.farShoulder+fx*q,y:-270+fy*q};
   }
   pose.blink=Math.max(...[91,450].map(t=>clamp(1-Math.abs(f-t)/2)));
-  pose.surprised=recoil>.26;
-  return {...latest,pose,headYaw:pose.yaw??-.43,mood:recoil>.26?'surprised':'concerned'};
+  pose.surprised=head>.4;
+  return {...latest,pose,headYaw:pose.yaw??-.43,
+    mood:head>.4?'surprised':'concerned'};
 };
 /**
  * The new prop uses translucency with explicit back/rim/front layers,
@@ -141,18 +155,13 @@ export const dropletProgress=(w:number,index:number)=>{
   return clamp((w-delay)/(1-delay));
 };
 const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({id,frame:f,camera:c})=>{
-  const {returnShards:t,restore:m,water:w}=evidenceProgress(f);
+  const {water:w}=evidenceProgress(f);
   const fx=reversalFxAt(f);
   const u=(name:string)=>'url(#'+id+name+')';
   const origin=planeTransform(BASE,c);
-  // At the beginning ONLY the broken bowl is still on the bench. The
-  // upper walls reappear behind converging glass pieces; there is never an
-  // intact, translucent "ghost" bottle behind the broken pieces.
-  const fracture=-48-117*m;
-  const fractureMask='M-94 '+(fracture-3)+' L-52 '+(fracture-9)+
-    ' L-19 '+(fracture+5)+' L7 '+(fracture-10)+
-    ' L31 '+(fracture+4)+' L66 '+(fracture-6)+
-    ' L94 '+(fracture-2)+' V25 H-94 Z';
+  // Body bands appear only when the six incoming shards physically weld.
+  // Unlike the former rising global clip, the shell cannot appear behind a
+  // shard before that individual piece reaches its destination.
   const shell='M-17 -148L-17 -111L-48 -52Q-68 -24 -47 -9Q-30 7 0 8Q30 7 47 -9Q68 -24 48 -52L17 -111L17 -148Z';
   const inner='M-15 -145V-107L-43 -50Q-58 -23 -39 -13Q-22 0 0 1Q22 0 39 -13Q58 -23 43 -50L15 -107V-145Z';
   const liquidTop=-23-32*w+Math.sin(f*.12)*.6*(1-w);
@@ -211,7 +220,18 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
         <stop offset=".57" stopColor="#34798E" stopOpacity=".79"/>
         <stop offset="1" stopColor="#133D59" stopOpacity=".84"/>
       </linearGradient>
-      <clipPath id={id+'rebuild'}><path d={fractureMask}/></clipPath>
+      <mask id={id+'rebuild'} x="-110" y="-180" width="220" height="220" maskUnits="userSpaceOnUse">
+        <rect x="-105" y="-55" width="210" height="84" fill="white"/>
+        {pieces.map((p,i)=>{
+          const row=i<2?0:i<4?1:2;
+          const y=row===0?-172:row===1?-129:-95;
+          const h=row===0?55:row===1?44:44;
+          const x=i%2===0?-105:-2;
+          return <rect key={'band'+i} x={x} y={y} width="107"
+            height={h} fill="white" opacity={seamAt(f,i).complete}/>;
+        })}
+      </mask>
+      <clipPath id={id+'shellShape'}><path d={shell}/></clipPath>
       <clipPath id={id+'inside'}><path d={inner}/></clipPath>
     </defs>
 
@@ -269,7 +289,7 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
     })}
     {/* Reconstructed body has a clipped jagged fracture front which
         physically rises as each fragment returns. No complete ghost vial. */}
-    <g clipPath={u('rebuild')}>
+    <g mask={u('rebuild')}>
       <path d={shell} transform="translate(5 2)"
         fill="#122F40" stroke="#1B3547" strokeWidth="4.5" opacity=".67"/>
       <path d={shell} fill={u('glass')} stroke="#7EAEB6" strokeWidth="2.15"/>
@@ -302,6 +322,19 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
       <path d="M-43 -28Q-30 -3 0 1Q32 -3 43 -28"
         fill="none" stroke="#C0DBD6" strokeWidth="3.2" opacity=".75"/>
     </g>
+    {/* Irregular glass fracture traces brighten only during the moment of
+        joining, then become entirely invisible on the continuous shell. */}
+    <g clipPath={u('shellShape')}>
+      {pieces.map((piece,i)=>{
+        const merge=seamAt(f,i);
+        const x=piece.x,y=piece.y;
+        return <path key={'weld'+i}
+          d={'M'+(x-12)+' '+(y-24)+'l8 6 7 -3 8 12 -4 10 8 9'}
+          fill="none" stroke={i%2?'#CFEBE3':'#EBD2B8'}
+          strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round"
+          opacity={merge.glow*.53}/>;
+      })}
+    </g>
     {/* Every real fragment rotates up from the bench (foreshortened),
         follows its own staggered arc, and seats into a part of the wall.
         Thin, faint edge echoes indicate motion without duplicated tiles. */}
@@ -329,10 +362,11 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
         </g>
       </g>;
     })}
-    {/* Each joining glint lights up as that physical section seals. */}
+    {/* Localized glints are energy released at physical weld progress,
+        not arbitrary global flickers or a permanent seam highlight. */}
     {pieces.map((s,i)=>{
-      const join=amount(f,s.seal-4,s.seal+2)*(1-amount(f,s.seal+3,s.seal+13));
-      return <g key={'glint'+i} opacity={join*.56}>
+      const join=seamAt(f,i).glow;
+      return <g key={'glint'+i} opacity={join*.43}>
         <path d={'M'+(s.x-6)+' '+s.y+'h12 M'+s.x+' '+(s.y-7)+'v14'}
           stroke="#F7E7D5" strokeWidth="1.3" strokeLinecap="round"/>
       </g>;
@@ -435,6 +469,14 @@ export const auditReversalEvidence=()=>{
     throw new Error('Actor eyeline not continuous with approved ending');
   for(let i=0;i<VIAL_SHARDS.length;i++){
     const s=VIAL_SHARDS[i],initial=shardMotionAt(0,i),last=shardMotionAt(509,i);
+    for(let f=0;f<REVERSAL_FRAMES;f++){
+      const weld=seamAt(f,i);
+      if(Math.abs(weld.complete+weld.remaining-1)>1e-8 ||
+        weld.glow<0 || weld.glow>1.000001)
+        throw new Error('Glass shard did not become its corresponding shell '+i+' at '+f);
+      if(f<s.seal&&weld.complete!==0)
+        throw new Error('Bottle shell appears before shard arrives '+i+' at '+f);
+    }
     if(Math.abs(initial.x-s.bx)>.001||Math.abs(initial.y-s.by)>.001||
        Math.abs(last.x-s.x)>.001||Math.abs(last.y-s.y)>.001||
        last.opacity!==0||initial.opacity!==1)
@@ -442,7 +484,7 @@ export const auditReversalEvidence=()=>{
     if(shardMotionAt(s.seal,i).progress<.999)
       throw new Error('Shard not fully seated before glass seal '+i);
   }
-  let last=0,maxHandStep=0,maxFootDrift=0;
+  let last=0,maxHandStep=0,maxFootDrift=0,maxHandAcceleration=0,prevHandStep=0;
   for(let f=0;f<REVERSAL_FRAMES;f++){
     const shot=evidenceShotAt(f),phase=evidenceProgress(f);
     if(f!==0&&f%60===0&&phase.returnShards<last-.00001)throw new Error('Time reversal regressed');
@@ -463,11 +505,13 @@ export const auditReversalEvidence=()=>{
       const handStep=Math.hypot(actor.pose.hand.x-prev.pose.hand.x,
                                 actor.pose.hand.y-prev.pose.hand.y);
       maxHandStep=Math.max(maxHandStep,handStep);
+      maxHandAcceleration=Math.max(maxHandAcceleration,Math.abs(handStep-prevHandStep));
+      prevHandStep=handStep;
       maxFootDrift=Math.max(maxFootDrift,
         ...actor.soleWorld.map((s,i)=>Math.abs(s.x-prev.soleWorld[i].x)+
           Math.abs(s.z-prev.soleWorld[i].z)));
-      if(handStep>4||maxFootDrift>.001)throw new Error('Unnatural recoil/foot slide '+f);
+      if(handStep>3.2||maxHandAcceleration>1.8||maxFootDrift>.001)throw new Error('Abrupt elbow/wrist or planted foot slide '+f);
     }
   }
-  return {frames:REVERSAL_FRAMES,shots:EVIDENCE_SHOTS.length,prop:'detailed world-projected transparent glass and physical metal clamp',source:'approved ClockDiscoveryPerformance unchanged',renderGate:'MOTION_REVIEW_NOT_MASTER',maxHandStep,maxFootDrift};
+  return {frames:REVERSAL_FRAMES,shots:EVIDENCE_SHOTS.length,prop:'detailed world-projected transparent glass and physical metal clamp',source:'approved ClockDiscoveryPerformance unchanged',renderGate:'MOTION_REVIEW_NOT_MASTER',maxHandStep,maxHandAcceleration,maxFootDrift};
 };
