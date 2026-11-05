@@ -19,11 +19,12 @@ samples = array("f", [0.0]) * COUNT
 rng = random.Random(42017)
 cues = [
     {"name": "quiet laboratory electrical bed", "at": 0.0},
+    {"name": "first guarded glance / jacket movement", "at": 2.18},
     {"name": "bench impact / fractured glass", "at": 3.48},
     {"name": "glass fragments returning", "at": 6.12},
     {"name": "reverse suction and liquid return", "at": 9.85},
     {"name": "sealed rim ping", "at": 12.36},
-    {"name": "coat breath / concerned reaction", "at": 13.48},
+    {"name": "sudden quiet and recoiling coat", "at": 12.82},
     {"name": "clock mechanism under wide reveal", "at": 15.58},
 ]
 
@@ -71,11 +72,12 @@ for i in range(COUNT):
                         + .003 * math.sin(TWO_PI * 228.0 * t))
 
 # A physical accident is heard before the reverse movement is understood.
+add_breath(2.18, .36, .055)
 add_ping(3.48, .82, 1273, .24)
 add_ping(3.54, 1.08, 2045, .18)
 add_breath(3.44, .55, .27)
 # Distinct pieces, staggered as they seem to snap backward into glass.
-for k, at in enumerate((6.12, 6.53, 7.04, 7.51, 8.14, 8.61, 9.02)):
+for k, at in enumerate((6.12, 6.42, 6.72, 7.02, 7.32, 7.62)):
     add_ping(at, .52, 1070 + 193 * k, .13, reverse=True)
 add_breath(5.96, 3.62, .18, rising=True)
 # Liquid draws back into the neck over the physical restoration.
@@ -90,7 +92,13 @@ for i in range(int(5.92*SAMPLE_RATE), int(12.65*SAMPLE_RATE)):
         phase=2*math.pi*(66*t+5*t*t)
         samples[i]+= .034*p*(math.sin(phase)+.23*math.sin(2.4*phase))
 # Restrained motion cues after recognition (no unmotivated scare sting).
-add_breath(13.46, .54, .08)
+# Physical reversal lands at the rim; the room drops quiet for the
+# character's visible recoil. Keep real headroom; don't add a musical sting.
+for i in range(int(12.72*SAMPLE_RATE), int(13.24*SAMPLE_RATE)):
+    p=(i/SAMPLE_RATE-12.72)/.52
+    samples[i] *= .16 + .84 * (abs(2*p-1) ** 2)
+add_breath(12.85, .48, .105)
+add_breath(13.34, .33, .065)
 for at in (15.64, 16.18, 16.72):
     add_ping(at, .24, 733, .035)
 

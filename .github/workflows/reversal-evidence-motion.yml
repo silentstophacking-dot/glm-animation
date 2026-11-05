@@ -1,7 +1,7 @@
-name: Glass Reversal — 17s motion proof (single review render)
+name: Glass Reversal — physical shards and acting proof
 on:
   push:
-    branches: ['feature/reversal-evidence-motion-proof']
+    branches: ['feature/reversal-physical-acting-pass']
     paths:
       - '.github/workflows/reversal-evidence-motion.yml'
       - 'studio/src/reversal-evidence-entry.tsx'
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: glass-reversal-motion-proof
+  group: glass-reversal-physical-acting-review
   cancel-in-progress: true
 
 jobs:
@@ -36,6 +36,7 @@ jobs:
         run: npm run typecheck
       - name: Geometry, support and reconstructed-fluid audit
         run: |
+          set -euo pipefail
           mkdir -p out/reversal-motion
           npx --no-install esbuild src/episodes/probability-control/reversal-evidence-storyboard.tsx --bundle --platform=node --outfile=out/reversal-motion/audit.cjs
           node -e "console.log(JSON.stringify(require('./out/reversal-motion/audit.cjs').auditReversalEvidence(),null,2))" | tee out/reversal-motion/audit.log
@@ -57,6 +58,7 @@ jobs:
           command -v ffprobe && command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
       - name: Render the single designated 17-second 720p review movie with audio
         run: |
+          set -euo pipefail
           npx remotion render src/reversal-evidence-entry.tsx ReversalEvidenceMotionProof \
             out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 \
             --codec=h264 --pixel-format=yuv420p --crf=21 --concurrency=2 \
