@@ -9,5 +9,5 @@ export const STARTER_FILM:FilmPlan={
  {id:'left-wall',x:-950,y:0,z:550,width:580,height:680,depth:210,material:'wall',windows:true},
  {id:'right-building',x:570,y:0,z:780,width:420,height:800,depth:220,material:'wall',windows:true},
  {id:'street-prop',x:250,y:0,z:120,width:80,height:310,depth:80,material:'metal'}],
- actors:[{id:'protagonist',x:-130,y:0,z:250,scale:1.35,yaw:.25,headYaw:.5,outfit:'hoodie',lighting:'baseline'}]}
+ actors:[{id:'protagonist',x:-130,y:0,z:250,scale:1.35,yaw:.25,headYaw:.5,outfit:'puffer-black',lighting:'baseline'}]}
  ]};
