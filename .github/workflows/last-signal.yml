@@ -26,7 +26,9 @@ jobs:
           mkdir -p out/last-signal
           npx remotion still src/last-signal-entry.tsx LastSignalApartmentCheckpoint out/last-signal/Apartment-Detail.png --frame=110 --scale=0.5
           npx remotion still src/last-signal-entry.tsx LastSignalApartmentCheckpoint out/last-signal/Daniel-Looks.png --frame=290 --scale=0.5
-          npx remotion render src/last-signal-entry.tsx LastSignalApartmentCheckpoint out/last-signal/Apartment-Checkpoint-12s.mp4 --codec=h264 --scale=0.5
+          npx remotion still src/last-signal-entry.tsx LastSignalFilm out/last-signal/Street-Double.png --frame=970 --scale=0.5
+          npx remotion still src/last-signal-entry.tsx LastSignalFilm out/last-signal/Final-Reveal.png --frame=1560 --scale=0.5
+          npx remotion render src/last-signal-entry.tsx LastSignalFilm out/last-signal/The-Last-Signal-Visual-Cut-54s.mp4 --codec=h264 --scale=0.5
       - uses: actions/upload-artifact@v4
         if: always()
         with:
