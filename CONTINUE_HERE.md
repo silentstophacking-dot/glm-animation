@@ -1,3 +1,19 @@
+## LATEST STATUS — 5 November 2026, before ChatGPT Plus expires
+
+The owner uses only an iPhone and reported ChatGPT Plus/Codex access ending on 6 November 2026. **Codex is not needed to keep this project alive.** Code and revisions are stored in this GitHub repository; GitHub Actions renders native Remotion source. ChatGPT GitHub connector availability may differ after a plan downgrade, but GitHub repository/actions are independent of ChatGPT.
+
+**Important: do not resume from the historical branch named below as "Active branch".** Current unmerged scene work goes through:
+- Owner-approved 24s reference: feature/clock-discovery-acting (PRESERVE, do not edit).
+- Corrected left-facing character and glass motion: feature/reversal-coherent-left-facing-rig, PR #48.
+- Mandatory city/lab material unification review: feature/environment-city-style-unification, draft PR #49.
+- The owner says every visible object, including the city skyline, MUST match the detailed 2.5D rendering standard. No placeholder shapes, no generic flat city. This is a hard art-direction rule.
+- The dedicated still-only workflow "World Style Unification — three checkpoint stills" renders frame 33, 254 and 416 on PR #49. Inspect PNGs and fix defects before any movie master.
+- Permanent instructions: production/style/MANDATORY_WORLD_ART_STANDARD.md.
+- Do not overwrite prior 24s approval, do not merge draft branches automatically, do not reintroduce head-spin/bent elbows/hidden left glove.
+- For account transfer, give the next assistant the repository URL, PR #49 URL, and this file; work through GitHub API or GitHub Actions, not Codex-specific filesystem paths.
+
+---
+
 # Continue this animation project
 
 **Cross-account handover, 4 November 2026.** Read this before relying on the default branch or older chat summaries.
