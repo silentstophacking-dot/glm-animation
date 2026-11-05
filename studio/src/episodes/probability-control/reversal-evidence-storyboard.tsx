@@ -6,6 +6,8 @@ import {clockSecondsAt} from './lab-time-anomaly-motion';
 import {planeTransform,projectWorld,WorldCamera} from './pseudo-depth-camera';
 import {W,RoomActorPerformance} from './lab-room-geometry';
 import {kf,clamp} from '../../engine/anim';
+import {turnV5Geometry,CharacterTurnV5} from './character-turn-v5';
+import {v2HandLocal} from './character-v2-motion';
 
 /**
  * NEXT BEAT / REVERSAL EVIDENCE — STILLS ONLY / NOT OWNER-APPROVED.
@@ -99,10 +101,30 @@ export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   pose.gaze=kf(f,[[0,latest.pose.gaze??0],[81,-1.15],[379,-1.15],[421,-.30],[509,-.88]]);
   pose.gazeY=(latest.pose.gazeY??0)-.75*notice+2.4*recoil;
   pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[96,-9],[375,-9],[432,-6],[509,-10]])-6.5*recoil;
-  pose.lean=(latest.pose.lean??0)-4.2*recoil;
+  pose.lean=(latest.pose.lean??0)-3.0*recoil;
   const far=latest.pose.farHand??{x:-25,y:-153};
-  pose.farHand={x:far.x-19*recoil,y:far.y-16*recoil};
-  pose.hand={x:latest.pose.hand.x+10*recoil,y:latest.pose.hand.y+15*recoil};
+  pose.farHand={x:far.x-12*recoil,y:far.y-10*recoil};
+  pose.hand={x:latest.pose.hand.x+4*recoil,y:latest.pose.hand.y+6*recoil};
+  // Guarantee the two-bone sleeves remain physically reachable as the
+  // torso flinches. The same rig geometry and hand transform are used by
+  // the actual CharacterTurnV5 renderer; no costume geometry is modified.
+  const shoulders=turnV5Geometry(latest.yaw);
+  const near=v2HandLocal(pose);
+  const ndx=near.x-shoulders.nearShoulder,ndy=near.y+270;
+  const nDist=Math.hypot(ndx,ndy);
+  if(nDist>132.8){
+    const a=-(pose.lean??0)*Math.PI/180;
+    const c=Math.cos(a),s=Math.sin(a),k=132.8/nDist;
+    const ex=shoulders.nearShoulder+ndx*k;
+    const ey=-270+ndy*k+146;
+    pose.hand={x:ex*c+ey*s,y:-ex*s+ey*c+pose.drop-146};
+  }
+  const fdx=pose.farHand.x-shoulders.farShoulder;
+  const fdy=pose.farHand.y+270,fdist=Math.hypot(fdx,fdy);
+  if(fdist>119.1){
+    const k=119.1/fdist;
+    pose.farHand={x:shoulders.farShoulder+fdx*k,y:-270+fdy*k};
+  }
   pose.blink=Math.max(...[91,450].map(t=>clamp(1-Math.abs(f-t)/2)));
   pose.surprised=recoil>.26;
   return {...latest,pose,headYaw:pose.yaw??-.43,mood:recoil>.26?'surprised':'concerned'};
@@ -430,6 +452,11 @@ export const auditReversalEvidence=()=>{
     if(!Number.isFinite(q.x+q.y+q.scale)||q.scale<=0)throw new Error('Invalid world prop projection at '+f);
     if(f>=174&&f<376&&shot.crop[2]!==450)throw new Error('Close insert lost world framing');
     const actor=evidenceActorAt(f);
+    // Render the actual posed actor for all 510 frames in the pre-render
+    // source audit, not just its feet. This catches impossible arm IK.
+    CharacterTurnV5({id:'reversal-rig-audit',x:0,y:0,scale:actor.scale,
+      yaw:actor.yaw,headYaw:actor.headYaw,pose:actor.pose,mood:actor.mood,
+      outfit:'puffer-black',lighting:'sunset',shadow:false});
     if(!actor.soleWorld.some(s=>Math.abs(s.y)<.001))throw new Error('Actor has no planted support '+f);
     if(f>0){
       const prev=evidenceActorAt(f-1);
