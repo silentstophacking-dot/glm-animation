@@ -418,7 +418,7 @@ export const EvidenceScene:React.FC<{frame:number;id:string}>=({frame:f,id})=>{
   return <svg viewBox={crop.join(' ')} width="100%" height="100%">
     <LabRoomDepthScene id={id+'lab'} frame={f} camera={shot.camera}
       clockSeconds={clockTime} signal={.95} clockStyle="cinematic"
-      performance={evidenceActorAt(f)}/>
+      performance={evidenceActorAt(f)} richWorld={true}/>
     <ReversingAmpoule id={id+'evidence'} frame={f} camera={shot.camera}/>
   </svg>;
 };

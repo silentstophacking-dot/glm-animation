@@ -1,6 +1,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {LabWindowScenery,LabBenchGlassware} from './cinematic-lab';
+import {RichLabWindowScenery,RichLabWorldDetails,RichLabSecondaryDetails} from './lab-rich-world';
 import {CinematicLabClock,ClockWallDetail} from './cinematic-lab-clock';
 import {LabClock} from './lab-clock';
 import {LabConsole} from './lab-console';
@@ -16,7 +17,7 @@ const Glass:React.FC<{id:string;x:number;y:number;z:number;camera:WorldCamera}>=
  <ellipse cy="-190" rx="15" ry="4" fill="#213A46" stroke="#AEAAA0" strokeWidth="1.5"/>
 </g>;
 
-export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCamera;performance?:RoomActorPerformance;clockSeconds?:number;signal?:number;clockStyle?:'simple'|'cinematic'}>=({id,frame,camera,performance,clockSeconds,signal,clockStyle='simple'})=>{
+export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCamera;performance?:RoomActorPerformance;clockSeconds?:number;signal?:number;clockStyle?:'simple'|'cinematic';richWorld?:boolean}>=({id,frame,camera,performance,clockSeconds,signal,clockStyle='simple',richWorld=false})=>{
  const c=camera??roomCameraAt(frame),origin=performance?.origin??ROOM_ACTOR.origin,actorScale=performance?.scale??ROOM_ACTOR.scale,u=(s:string)=>`url(#${id+s})`;
  const windowPoints=[W(-1100,340,800),W(-100,340,800),W(-100,940,800),W(-1100,940,800)];
  return <g>
@@ -44,7 +45,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   {[-600,-400,-200,0,200,400,600,800].map(z=><RoomLine key={'floor-z'+z} a={W(-1600,0,z)} b={W(1600,0,z)} camera={c} stroke="#AB8A82" opacity={.14}/>) }
   <path d={floorEllipse(-400,400,700,320,c)} fill={u('pool')}/>
   {/* The old skyline artwork is behind the aperture, independently of its frame. */}
-  <g clipPath={u('windowClip')}><g transform={planeTransform(W(-600,640,1350),c)}><svg x="-750" y="-450" width="1500" height="900" viewBox="210 170 700 510" preserveAspectRatio="none"><LabWindowScenery id={id+'city'} sunX={400}/></svg></g></g>
+  <g clipPath={u('windowClip')}><g transform={planeTransform(W(-600,640,1350),c)}><svg x="-750" y="-450" width="1500" height="900" viewBox="210 170 700 510" preserveAspectRatio="none">{richWorld?<RichLabWindowScenery id={id+'cityRich'} sunX={400}/>:<LabWindowScenery id={id+'city'} sunX={400}/>}</svg></g></g>
   {[{x0:-1120,x1:-1100,y0:320,y1:960},{x0:-100,x1:-80,y0:320,y1:960},{x0:-1100,x1:-100,y0:940,y1:960}].map((b,i)=><Box key={'window-frame'+i} box={{...b,z0:775,z1:825}} camera={c} front="#3F3543" side="#211F30" top="#8D7468"/>)}
   {[-770,-435].map(x=><Box key={x} box={{x0:x-7,x1:x+7,y0:340,y1:940,z0:777,z1:815}} camera={c} front="#392E3A" side="#1D2330" top="#AE8A6C"/>)}
   <Box box={{x0:-1100,x1:-100,y0:572,y1:584,z0:777,z1:815}} camera={c} front="#392E3A" top="#A08775"/>
@@ -75,6 +76,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   <Box box={{x0:40,x1:200,y0:278,y1:365,z0:520,z1:630}} camera={c} front="#454351" top="#807472" side="#2B3546"/>
   <g transform={planeTransform(W(40,365,519),c)}><path d="M20 20H140M20 34H100" stroke="#AEA19A" strokeWidth="2"/><circle cx="126" cy="62" r="8" fill="#242F41" stroke="#9A8C83"/></g>
   <RoomFace points={[W(-1100,340,780),W(-100,340,780),W(500,0,-250),W(-700,0,-250)]} camera={c} fill={u('haze')} stroke="none"/>
+  {richWorld?<RichLabWorldDetails id={id+'fineWorld'} camera={c}/>:null}
   {/* Interaction trolley: slab, tray, braces and four independent grounded legs. */}
   <path d={floorEllipse(5,30,170,85,c)} fill="#08111D" opacity=".4"/>
   <Box box={{x0:-116,x1:124,y0:38,y1:48,z0:-25,z1:110}} camera={c} front="#303443" top="#4D4C5A" side="#222B3C"/>
@@ -86,6 +88,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   <Box box={{x0:-130,x1:-12,y0:315,y1:381,z0:0,z1:80}} camera={c} front="#353F50" top="#7A737D" side="#243347"/>
   <g transform={planeTransform(W(0,885,0),c)}><g transform="translate(-960 0)" clipPath={u('consoleFace')}><LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadow={false} signal={signal}/></g></g>
   <g transform={planeTransform(W(-36,315,-41),c)}><path d="M0 0C0 28 64 22 64 52V195Q64 222 32 224" fill="none" stroke="#0D1926" strokeWidth="4"/><path d="M0 0C0 28 64 22 64 52" fill="none" stroke="#9B8B80" strokeWidth=".8" opacity=".5"/></g>
+  {richWorld?<RichLabSecondaryDetails id={id+'fineSecondary'} camera={c}/>:null}
   {/* Actor and sole shadows share physical floor anchors; the original depth proof is still; performance is opt-in. */}
   <path d={floorEllipse(origin.x,origin.z,75,32,c)} fill="#07101D" opacity=".3"/>
   <path d={floorPolygon([W(origin.x-30,0,origin.z),W(origin.x+35,0,origin.z),W(origin.x+260,0,origin.z-160),W(origin.x+185,0,origin.z-180)],c)} fill="#091220" opacity=".28" filter={u('shade')}/>
