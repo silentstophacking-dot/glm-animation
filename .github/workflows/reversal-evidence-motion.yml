@@ -36,6 +36,7 @@ jobs:
         run: npm run typecheck
       - name: Geometry, support and reconstructed-fluid audit
         run: |
+          set -euo pipefail
           mkdir -p out/reversal-motion
           npx --no-install esbuild src/episodes/probability-control/reversal-evidence-storyboard.tsx --bundle --platform=node --outfile=out/reversal-motion/audit.cjs
           node -e "console.log(JSON.stringify(require('./out/reversal-motion/audit.cjs').auditReversalEvidence(),null,2))" | tee out/reversal-motion/audit.log
