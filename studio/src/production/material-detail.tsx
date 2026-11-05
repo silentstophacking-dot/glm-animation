@@ -29,8 +29,8 @@ export const ArchitecturalDetail:React.FC<{box:WorldBox;camera:WorldCamera;scene
  {metal&&<g>
  {Array.from({length:Math.max(1,Math.floor(h/120))},(_,i)=><Panel key={'bolt'+i} point={W(x+w/2,y+60+i*120,z-9)} camera={c} width={w*.68} height={12} fill="#6C7886" stroke="#A3A8A9"><circle cx={-w*.25} cy="-6" r="3" fill="#C8BBAA"/><circle cx={w*.25} cy="-6" r="3" fill="#C8BBAA"/></Panel>)}
  </g>}
- {wood&&<g>{Array.from({length:4},(_,i)=><Face key={'grain'+i} points={[W(x+10,y+h*.15+i*16,z-8),W(x+w-10,y+h*.15+i*16,z-8),W(x+w-10,y+h*.15+i*16+1,z-8),W(x+10,y+h*.15+i*16+1,z-8)]} camera={c} fill="#D7B29A" opacity=".23"/>)}</g>}
- {glass&&<Face points={[W(x+8,y+5,z-9),W(x+w*.3,y+5,z-9),W(x+w*.65,y+h-5,z-9),W(x+w*.5,y+h-5,z-9)]} camera={c} fill="#B8E0E9" opacity=".13"/>}
+ {wood&&<g>{Array.from({length:4},(_,i)=><Face key={'grain'+i} points={[W(x+10,y+h*.15+i*16,z-8),W(x+w-10,y+h*.15+i*16,z-8),W(x+w-10,y+h*.15+i*16+1,z-8),W(x+10,y+h*.15+i*16+1,z-8)]} camera={c} fill="#D7B29A" opacity={.23}/>)}</g>}
+ {glass&&<Face points={[W(x+8,y+5,z-9),W(x+w*.3,y+5,z-9),W(x+w*.65,y+h-5,z-9),W(x+w*.5,y+h-5,z-9)]} camera={c} fill="#B8E0E9" opacity={.13}/>}
  </g>;
 };
 export const CinematicAtmosphere:React.FC<{spec:WorldSceneSpec;camera:WorldCamera;frame:number}>=({spec,camera:c,frame})=>{
