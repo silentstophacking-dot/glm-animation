@@ -5,6 +5,7 @@ import {CharacterTurnV5} from '../episodes/probability-control/character-turn-v5
 import type {CharacterOutfit} from '../episodes/probability-control/character-outfits';
 import {AnomalyScene} from '../episodes/probability-control/lab-time-anomaly-proof';
 import {discoveryActorAt} from '../episodes/probability-control/clock-discovery-motion';
+import {ArchitecturalDetail,CinematicAtmosphere} from './material-detail';
 export type CameraKey={frame:number;x:number;y:number;z:number;focal:number};
 export type WorldBox={id:string;x:number;y:number;z:number;width:number;height:number;depth:number;material:'wall'|'metal'|'wood'|'glass';windows?:boolean};
 export type ActorCue={id:string;x:number;y:number;z:number;scale?:number;yaw?:number;headYaw?:number;outfit?:CharacterOutfit;lighting?:'baseline'|'sunset'};
@@ -26,7 +27,7 @@ const Building:React.FC<{box:WorldBox;camera:WorldCamera}>=({box:b,camera:c})=>{
  return <g><Surface points={[W(x+w,y,z),W(x+w,y,z+d),W(x+w,y+h,z+d),W(x+w,y+h,z)]} camera={c} fill={side} stroke={edge}/>
  <Surface points={[W(x,y,z),W(x+w,y,z),W(x+w,y+h,z),W(x,y+h,z)]} camera={c} fill={front} stroke={edge}/>
  <Surface points={[W(x,y+h,z),W(x+w,y+h,z),W(x+w,y+h,z+d),W(x,y+h,z+d)]} camera={c} fill={side} stroke={edge}/>
- {b.windows&&Array.from({length:Math.floor(h/100)},(_,r)=>Array.from({length:Math.floor(w/90)},(_,col)=>{const p=projectWorld(W(x+28+col*90,y+60+r*100,z-2),c);return <g key={r+'-'+col} transform={`translate(${p.x} ${p.y}) scale(${p.scale})`}><rect x="0" y="-35" width="42" height="53" fill={(r+col)%7===0?'#D2A982':'#182A3B'} stroke="#82929E" strokeWidth="3"/><path d="M21 -35V18M0 -8H42" stroke="#82929E" strokeWidth="2"/></g>}))}</g>;
+ <ArchitecturalDetail box={b} camera={c} sceneId={b.id}/></g>;
 };
 export const SceneRenderer:React.FC<{spec:SceneSpec;frame:number}>=({spec,frame})=>{
  if(spec.kind==='approved-clock')return <AbsoluteFill style={{background:'#161C2A'}}><svg viewBox="0 0 1920 1080" width="100%" height="100%"><AnomalyScene frame={spec.sourceFrame+frame} id={spec.id} refinedClock performance={discoveryActorAt(spec.sourceFrame+frame)}/></svg></AbsoluteFill>;
@@ -34,8 +35,9 @@ export const SceneRenderer:React.FC<{spec:SceneSpec;frame:number}>=({spec,frame}
  return <AbsoluteFill style={{background:spec.background??'#101B2A'}}><svg viewBox="0 0 1920 1080" width="100%" height="100%">
  <defs><radialGradient id={spec.id+'vignette'}><stop offset=".45" stopColor="#050B16" stopOpacity="0"/><stop offset="1" stopColor="#050B16" stopOpacity=".65"/></radialGradient></defs>
  <Surface points={[W(-3000,0,-200),W(3000,0,-200),W(3000,0,2400),W(-3000,0,2400)]} camera={c} fill="#263241" stroke="#536071"/>
+ <CinematicAtmosphere spec={spec} camera={c} frame={frame}/>
  {spec.boxes.map(b=><Building key={b.id} box={b} camera={c}/>)}
- {spec.actors.map(a=><g key={a.id} transform={planeTransform(W(a.x,a.y,a.z),c)}><CharacterTurnV5 id={spec.id+'-'+a.id} x={0} y={0} scale={a.scale??1} yaw={a.yaw??0} headYaw={a.headYaw??a.yaw??0} outfit={a.outfit??'hoodie'} lighting={a.lighting??'baseline'}/></g>)}
+ {spec.actors.map(a=><g key={a.id} transform={planeTransform(W(a.x,a.y,a.z),c)}><CharacterTurnV5 id={spec.id+'-'+a.id} x={0} y={0} scale={a.scale??1} yaw={a.yaw??0} headYaw={a.headYaw??a.yaw??0} outfit={a.outfit??'puffer-black'} lighting={a.lighting??'baseline'}/></g>)}
  <rect width="1920" height="1080" fill={`url(#${spec.id}vignette)`}/>
  </svg></AbsoluteFill>;
 };
