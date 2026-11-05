@@ -1,0 +1,30 @@
+name: Last Signal — approved test comparison
+on:
+  push:
+    branches: [feature/last-signal-cinematic-production]
+    paths:
+      - 'studio/src/last-signal-baseline-audit.tsx'
+      - '.github/workflows/last-signal-baseline.yml'
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - name: Render comparison with approved technical test
+        run: |
+          mkdir -p out/last-signal-audit
+          npx remotion still src/last-signal-baseline-audit.tsx LastSignalBaselineAudit out/last-signal-audit/Approved-vs-Candidate.png --scale=0.5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: LAST-SIGNAL-APPROVED-BASELINE-AUDIT
+          path: studio/out/last-signal-audit/
