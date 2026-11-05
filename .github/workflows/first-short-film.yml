@@ -39,6 +39,8 @@ jobs:
         run: |
           set -euo pipefail
           npx remotion render src/first-short-film-entry.tsx FirstShortFilm out/first-film/The-Reversal-49s.mp4 --codec=h264 --pixel-format=yuv420p --crf=23 --concurrency=2 --scale=0.5
+      - name: Install media verification tools
+        run: command -v ffprobe && command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
       - name: Verify complete video and sound
         run: |
           ffprobe -v error -show_entries stream=codec_type,codec_name,nb_frames -show_entries format=duration -of json out/first-film/The-Reversal-49s.mp4
