@@ -175,9 +175,12 @@ export const evidenceActorAt=(f:number):RoomActorPerformance=>{
     pose.farHand={x:torso.farShoulder+fx*q,y:-270+fy*q};
   }
   pose.blink=Math.max(...[91,450].map(t=>clamp(1-Math.abs(f-t)/2)));
-  pose.surprised=head>.4;
-  return {...latest,pose,yaw:bodyYaw,headYaw,
-    mood:head>.4?'surprised':'concerned'};
+  // Important: the old surprised mouth became a large bright oval between
+  // two bright eyes, reading as the face turning around. Keep the same
+  // facial topology throughout and sell the shock with eye line, blink,
+  // tilt, shoulder recoil and synchronized torso motion.
+  pose.surprised=false;
+  return {...latest,pose,yaw:bodyYaw,headYaw,mood:'concerned'};
 };
 /**
  * The new prop uses translucency with explicit back/rim/front layers,
@@ -533,6 +536,8 @@ export const auditReversalEvidence=()=>{
     if(!Number.isFinite(q.x+q.y+q.scale)||q.scale<=0)throw new Error('Invalid world prop projection at '+f);
     if(f>=174&&f<376&&shot.crop[2]!==450)throw new Error('Close insert lost world framing');
     const actor=evidenceActorAt(f);
+    if(actor.pose.surprised || actor.mood==='surprised')
+      throw new Error('Sudden face-topology swap can resemble a head flip at '+f);
     // Render the actual posed actor for all 510 frames in the pre-render
     // source audit, not just its feet. This catches impossible arm IK.
     CharacterTurnV5({id:'reversal-rig-audit',x:0,y:0,scale:actor.scale,
