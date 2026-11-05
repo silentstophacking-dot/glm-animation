@@ -107,12 +107,15 @@ export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   // different direction from the torso. Keep exact frame-zero continuity,
   // then allow the body to follow the eyes instead of spinning the head
   // freely on top of an unmoving puffer jacket.
+  // Keep the face oriented toward the reversing vial throughout this
+  // scene. A negative-to-positive head-yaw crossover reads as a false
+  // 180/360-degree face flip in the simple 2D facial projection.
   const bodyYaw=kf(f,[
-    [0,latest.yaw],[34,.34],[80,.14],[110,.14],[378,.14],
-    [391,.18],[428,.33],[457,.29],[509,.18]]);
+    [0,latest.yaw],[34,.32],[80,.08],[110,.06],[378,.06],
+    [391,.085],[428,.12],[457,.10],[509,.05]]);
   const desiredHeadYaw=kf(f,[
-    [0,latest.headYaw],[34,-.12],[80,.02],[110,.08],[375,.08],
-    [387,.13],[405,.29],[429,.34],[455,.29],[509,.18]]);
+    [0,latest.headYaw],[34,-.24],[80,-.20],[110,-.19],[375,-.19],
+    [387,-.17],[405,-.14],[429,-.12],[455,-.13],[509,-.18]]);
   const permittedNeckAngle=kf(f,[
     [0,Math.abs(latest.headYaw-latest.yaw)+.01],[75,.28],[509,.28]]);
   const headYaw=clamp(desiredHeadYaw,
@@ -544,9 +547,10 @@ export const auditReversalEvidence=()=>{
       const bodyStep=Math.abs(actor.yaw-prev.yaw);
       maxHeadStep=Math.max(maxHeadStep,headStep);
       maxBodyStep=Math.max(maxBodyStep,bodyStep);
-      if((f>=80&&neck>.281)||headStep>.075||bodyStep>.075||
+      if((f>=80&&(neck>.281||actor.headYaw>-.099))||
+         headStep>.075||bodyStep>.075||
          actor.pose.torsoYaw!==actor.yaw||actor.pose.yaw!==actor.headYaw)
-        throw new Error('Independent neck spin or unsupported torso facing at '+f);
+        throw new Error('Independent neck spin, face flip or unsupported torso facing at '+f);
       const handStep=Math.hypot(actor.pose.hand.x-prev.pose.hand.x,
                                 actor.pose.hand.y-prev.pose.hand.y);
       maxHandStep=Math.max(maxHandStep,handStep);
