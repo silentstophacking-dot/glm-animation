@@ -3,7 +3,7 @@ import type {CharacterV2Pose} from './character-v2-motion';
 import type {CharacterMood} from './cinematic-character-v2';
 import {turnV5Geometry} from './character-turn-v5';
 import {projectWorld,floorPolygon,WorldCamera,WorldPoint} from './pseudo-depth-camera';
-export type RoomActorPerformance={origin:WorldPoint;scale:number;pose:CharacterV2Pose;yaw:number;headYaw:number;mood:CharacterMood;press:number;active:boolean;soleWorld:[WorldPoint,WorldPoint];supportOpacity:[number,number]};
+export type RoomActorPerformance={origin:WorldPoint;scale:number;pose:CharacterV2Pose;yaw:number;headYaw:number;mood:CharacterMood;press:number;active:boolean;mirror?:boolean;soleWorld:[WorldPoint,WorldPoint];supportOpacity:[number,number]};
 export const ROOM_FRAMES=210;
 export const W=(x:number,y:number,z:number):WorldPoint=>({x,y,z});
 export function roomCameraAt(f:number):WorldCamera{
