@@ -71,7 +71,7 @@ export const VIAL_SHARDS=[
     shape:'M-5 -25 L12 15 L17 28 L5 23 L-14 -10 Z'},
   {x:-47,y:-43,bx:-54,by:-7,rot:-43,seal:316,
     shape:'M-1 -19 L-8 -4 L-3 14 L12 30 L18 17 L6 -7 Z'},
-  {x:47,y:-43,bx:53,by:-7,rot:40,seal:316,
+  {x:47,y:-43,bx:53,by:-7,rot:40,seal:325,
     shape:'M1 -19 L8 -4 L3 14 L-12 30 L-18 17 L-6 -7 Z'}
 ] as const;
 export const shardMotionAt=(f:number,i:number)=>{
