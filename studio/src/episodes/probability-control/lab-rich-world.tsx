@@ -189,3 +189,102 @@ export const RichLabWorldDetails:React.FC<{id:string;camera:WorldCamera}>=({id,c
   </g>)}
  </g>;
 };
+
+
+/** Details for the previously bare graph, archive, trolley and visible wall.
+ * Uses the same three world-depth planes as the original equipment.
+ */
+export const RichLabSecondaryDetails:React.FC<{id:string;camera:WorldCamera}>=({id,camera:c})=>{
+ const u=(n:string)=>'url(#'+id+n+')';
+ return <g>
+  <defs>
+   <linearGradient id={id+'panel'} x1="0" y1="0" x2="1" y2=".7">
+    <stop stopColor="#566176"/><stop offset=".5" stopColor="#29394D"/>
+    <stop offset="1" stopColor="#142336"/>
+   </linearGradient>
+   <linearGradient id={id+'brass'} x2="1" y2="1">
+    <stop stopColor="#F4D3AB"/><stop offset=".4" stopColor="#B29988"/>
+    <stop offset="1" stopColor="#526374"/>
+   </linearGradient>
+  </defs>
+  {/* Precision instrumentation: recessed graph plate, illuminated trend,
+      calibration marks, brass fasteners, etched legend and status ports. */}
+  <g transform={planeTransform(W(205,678,762),c)}>
+   <rect x="10" y="13" width="280" height="192" rx="5"
+     fill="#122438" stroke="#8294A1" strokeWidth="1.7"/>
+   <rect x="20" y="24" width="258" height="166" rx="2"
+     fill="#16293D" stroke="#536F80" strokeWidth="1"/>
+   {[0,1,2,3,4,5].map(i=><g key={i}>
+    <path d={'M34 '+(34+i*24)+'h223'} stroke="#91ADB5"
+      strokeWidth=".7" opacity=".2"/>
+    <path d={'M'+(37+i*43)+' 30v142'} stroke="#A1AFB4"
+      strokeWidth=".7" opacity=".14"/>
+   </g>)}
+   <path d="M35 155L83 114L137 131L188 62L245 83"
+     stroke="#C4DEDA" strokeWidth="3.2" strokeLinecap="round"
+     strokeLinejoin="round" fill="none"/>
+   <path d="M35 155L83 114L137 131L188 62L245 83"
+     stroke="#76BEBD" strokeWidth="6" opacity=".12" fill="none"/>
+   {[{x:35,y:155},{x:83,y:114},{x:137,y:131},{x:188,y:62},{x:245,y:83}].map((p,i)=>
+    <g key={i}>
+     <circle cx={p.x} cy={p.y} r="4" fill="#203C50"
+       stroke="#D7C1A6" strokeWidth="1.4"/>
+     <circle cx={p.x} cy={p.y} r="1.8" fill="#B5DBD6"/>
+    </g>)}
+   <path d="M40 179h51m14 0h36m14 0h52" stroke="#CDBAA6"
+     strokeWidth="2" opacity=".63"/>
+   {[0,1,2,3].map(i=><g key={i}>
+    <circle cx={18+i%2*267} cy={20+Math.floor(i/2)*178} r="3.5"
+      fill="#253747" stroke="#C6B5AA" strokeWidth="1.1"/>
+    <path d={'M'+(16+i%2*267)+' '+(20+Math.floor(i/2)*178)+'h4'}
+      stroke="#F0D3B2" strokeWidth=".7"/>
+   </g>)}
+  </g>
+  {/* Finished archive framework: separate metal edge strips, spine bands,
+      numbered enameled brackets, rivets and support rails. */}
+  {[0,1,2].map((row)=><g key={row}
+    transform={planeTransform(W(613,699-row*185,436),c)}>
+    <path d="M0 2h338" stroke="#151F30" strokeWidth="11"/>
+    <path d="M0 -3h338" stroke={u('brass')} strokeWidth="2" opacity=".58"/>
+    {[0,1,2,3,4,5,6,7].map(i=><g key={i}>
+     <path d={'M'+(12+i*41)+' -2v14'}
+       stroke="#778695" strokeWidth="4" opacity=".65"/>
+     <rect x={19+i*41} y="2" width="21" height="7" rx="1"
+       fill="#1F3448" stroke="#B4A69C" strokeWidth=".8"/>
+     <path d={'M'+(22+i*41)+' 5h14'} stroke="#C8D6CF"
+       strokeWidth=".7" opacity=".55"/>
+    </g>)}
+    <circle cx="7" cy="2" r="2" fill="#E5C6A7"/>
+    <circle cx="331" cy="2" r="2" fill="#E5C6A7"/>
+  </g>)}
+  {/* World-mounted trolley joinery and machined control fittings. */}
+  <g transform={planeTransform(W(-119,312,-43),c)}>
+   <path d="M3 -4h253M5 6h248" stroke={u('brass')}
+     strokeWidth="2" opacity=".65"/>
+   {[12,70,135,200,249].map(x=><g key={x}>
+    <circle cx={x} cy="-2" r="3.5" fill="#233246"
+      stroke="#D6BBA5" strokeWidth="1.2"/>
+    <path d={'M'+(x-1.3)+' -2h2.6'} stroke="#EED1B4" strokeWidth=".8"/>
+   </g>)}
+   <path d="M23 22h65m20 0h72m-139 7h104" stroke="#95A4A6"
+     strokeWidth="1.6" opacity=".35"/>
+   <rect x="169" y="17" width="51" height="18" rx="3"
+     fill={u('panel')} stroke="#B8AB9F" strokeWidth="1.4"/>
+   {Array.from({length:6},(_,i)=><path key={i}
+     d={'M'+(175+i*7)+' 23v6'} stroke="#9CC7C3"
+     opacity={i%2?.42:.72} strokeWidth="2.2"/>)}
+  </g>
+  {/* Structural rail cable trunk and actual joint fixtures on back wall. */}
+  <g transform={planeTransform(W(105,798,780),c)}>
+   <path d="M-34 0h455" stroke="#162638" strokeWidth="13"/>
+   <path d="M-34 -3h455" stroke="#8D8A91" strokeWidth="5"/>
+   <path d="M-34 -5h455" stroke="#E8C7AA" strokeWidth="1.2" opacity=".58"/>
+   {[0,100,210,330,418].map(x=><g key={x}>
+    <rect x={x-7} y="-11" width="17" height="13" rx="2"
+      fill={u('panel')} stroke="#C6ACA2" strokeWidth="1"/>
+    <circle cx={x-2} cy="-5" r="1.5" fill="#E2C1A4"/>
+    <circle cx={x+6} cy="-5" r="1.5" fill="#E2C1A4"/>
+   </g>)}
+  </g>
+ </g>;
+};
