@@ -1,7 +1,7 @@
-name: Glass Reversal — 17s motion proof (single review render)
+name: Glass Reversal — physical shards and acting proof
 on:
   push:
-    branches: ['feature/reversal-evidence-motion-proof']
+    branches: ['feature/reversal-physical-acting-pass']
     paths:
       - '.github/workflows/reversal-evidence-motion.yml'
       - 'studio/src/reversal-evidence-entry.tsx'
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: glass-reversal-motion-proof
+  group: glass-reversal-physical-acting-review
   cancel-in-progress: true
 
 jobs:
