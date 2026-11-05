@@ -1,0 +1,43 @@
+name: Last Signal — full cinematic film
+on:
+  push:
+    branches: [feature/last-signal-cinematic-production]
+    paths:
+      - 'studio/src/last-signal-film.tsx'
+      - 'studio/src/last-signal-entry.tsx'
+      - '.github/workflows/last-signal-full.yml'
+  workflow_dispatch:
+jobs:
+  film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Render story checkpoints
+        run: |
+          mkdir -p out/last-signal-full
+          npx remotion still src/last-signal-film.tsx LastSignalStreetCheckpoint out/last-signal-full/Street-Detail.png --scale=0.5
+          npx remotion still src/last-signal-film.tsx LastSignalHallCheckpoint out/last-signal-full/Final-Reveal.png --scale=0.5
+      - name: Render complete 50.4-second film
+        run: npx remotion render src/last-signal-film.tsx LastSignalFullSilent out/last-signal-full/The-Last-Signal-50s-silent.mp4 --codec=h264 --scale=0.5 --concurrency=2
+      - name: Verify video stream
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          ffprobe -v error -show_entries format=duration -show_entries stream=codec_name,codec_type -of json out/last-signal-full/The-Last-Signal-50s-silent.mp4
+          ffmpeg -nostdin -v error -xerror -i out/last-signal-full/The-Last-Signal-50s-silent.mp4 -f null -
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: THE-LAST-SIGNAL-FULL-50S-VIDEO
+          path: studio/out/last-signal-full/
+          retention-days: 14
