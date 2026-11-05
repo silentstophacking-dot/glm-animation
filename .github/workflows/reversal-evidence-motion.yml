@@ -1,7 +1,7 @@
-name: Glass Reversal — coordinated head torso proof
+name: Glass Reversal — coherent left-facing character rig
 on:
   push:
-    branches: ['feature/reversal-head-body-linked-turn']
+    branches: ['feature/reversal-coherent-left-facing-rig']
     paths:
       - '.github/workflows/reversal-evidence-motion.yml'
       - 'studio/src/reversal-evidence-entry.tsx'
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: glass-reversal-head-body-turn-review
+  group: glass-reversal-stable-facing-review
   cancel-in-progress: true
 
 jobs:
@@ -56,6 +56,10 @@ jobs:
       - name: Ensure ffmpeg for completed-movie verification
         run: |
           command -v ffprobe && command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+      - name: Snapshot true rendered full-body and close-up facing poses
+        run: |
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame out/reversal-motion/Actor-Left-Facing-Opening.png --frame=75 --scale=0.6666666666666666
+          npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame out/reversal-motion/Actor-Left-Facing-Recoil.png --frame=416 --scale=0.6666666666666666
       - name: Render the single designated 17-second 720p review movie with audio
         run: |
           set -euo pipefail

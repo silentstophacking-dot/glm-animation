@@ -42,6 +42,42 @@ export const CharacterTurnV5:React.FC<{id:string;x:number;y:number;scale?:number
  const u=(n:string)=>`url(#${id+n})`;
  const arm=(side:number)=>{
   const sh=side>0?g.nearShoulder:g.farShoulder,wr=side>0?g.nearWrist:g.farWrist;
+  // Dedicated relaxed THREE-QUARTER pose for the separate Glass Reversal
+  // continuation. The approved clock rig never opts into this branch.
+  // Keep both gloves visibly outside the jacket: never hide a left hand
+  // behind the solid torso or let the 2-bone solver form a sharp elbow.
+  if(pose?.stableStance){
+   const sign=side>0?1:-1;
+   const swing=side>0?(pose.stanceNearSwing??0):(pose.stanceFarSwing??0);
+   const handX=sign*(w+24)+swing;
+   const sleeve='M'+sh+' -270 C'+(sh+sign*5)+' -237 '+
+      (handX-sign*3)+' -187 '+handX+' -154';
+   return <g>
+    <path d={sleeve} fill="none" stroke="#101622"
+      strokeWidth="24" strokeLinecap="round"/>
+    <path d={sleeve} fill="none" stroke={u(side>0?'cloth':'far')}
+      strokeWidth="19.2" strokeLinecap="round"/>
+    {[0,1,2,3].map(i=>{
+      const yy=-244+i*23,frac=(yy+270)/116;
+      const mx=sh+(handX-sh)*frac;
+      return <g key={'puffer-stitch'+i}>
+       <path d={'M'+(mx-9)+' '+yy+'q9 4 18 0'} fill="none"
+         stroke="#0B192B" strokeWidth="1.4" opacity=".74"/>
+       <path d={'M'+(mx-8)+' '+(yy-2)+'q8 3 16 0'} fill="none"
+         stroke="#C4D6D2" strokeWidth=".85" opacity=".26"/>
+      </g>;
+    })}
+    <g transform={'translate('+handX+' -152)'}>
+      <path d="M-10 -5H10V4H-10Z" fill={palette.cuff}
+        stroke="#0B1424" strokeWidth="1.3"/>
+      <path d="M-8 2H8L9 10Q8 17 3 19H-3Q-9 14 -9 9Z"
+        fill="#121A27" stroke="#2C3E4B" strokeWidth="1.2"/>
+      <path d="M-4 9v5M2 9v5" fill="none"
+        stroke="#D2BA97" strokeWidth=".8" opacity=".4"/>
+    </g>
+   </g>;
+  }
+
   const elbow=side*(31*c+10*s);
   let path=`M${sh} -270Q${elbow} -242 ${elbow} -211Q${wr} -178 ${wr} -151`;
   let tip={x:wr,y:-151},angle=90;

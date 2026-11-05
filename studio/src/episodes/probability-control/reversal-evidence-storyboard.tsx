@@ -100,87 +100,41 @@ export const seamAt=(f:number,i:number)=>{
   return {complete,glow,remaining:shard.opacity};
 };
 export const evidenceActorAt=(f:number):RoomActorPerformance=>{
-  const latest=discoveryActorAt(719);
-  const notice=amount(f,42,90);
-
-  // The approved ClockDiscoveryPerformance ends with the neck looking a
-  // different direction from the torso. Keep exact frame-zero continuity,
-  // then allow the body to follow the eyes instead of spinning the head
-  // freely on top of an unmoving puffer jacket.
-  // Keep the face oriented toward the reversing vial throughout this
-  // scene. A negative-to-positive head-yaw crossover reads as a false
-  // 180/360-degree face flip in the simple 2D facial projection.
-  const bodyYaw=kf(f,[
-    [0,latest.yaw],[34,.32],[80,.08],[110,.06],[378,.06],
-    [391,.085],[428,.12],[457,.10],[509,.05]]);
-  const desiredHeadYaw=kf(f,[
-    [0,latest.headYaw],[34,-.24],[80,-.20],[110,-.19],[375,-.19],
-    [387,-.17],[405,-.14],[429,-.12],[455,-.13],[509,-.18]]);
-  const permittedNeckAngle=kf(f,[
-    [0,Math.abs(latest.headYaw-latest.yaw)+.01],[75,.28],[509,.28]]);
-  const headYaw=clamp(desiredHeadYaw,
-    bodyYaw-permittedNeckAngle,bodyYaw+permittedNeckAngle);
-
-  // Independent reaction timing: eyes -> head -> chest -> left and right
-  // wrists. The torso actually changes facing while all shoes remain locked.
-  const head=amount(f,379,400)*(1-amount(f,425,458));
-  const chest=amount(f,392,416)*(1-amount(f,438,473));
-  const nearArm=amount(f,401,426)*(1-amount(f,445,478));
-  const farArm=amount(f,405,432)*(1-amount(f,447,481));
-  const pose={...latest.pose};
-  pose.torsoYaw=bodyYaw;
+  const approvedEnd=discoveryActorAt(719);
+  // This scene begins at a wide SHOT CUT. The actor faces the vial on the
+  // left as ONE connected silhouette; no simulated spin through a rear view.
+  // Head, neck, puffer, shoulders and gloves are mirrored as a whole.
+  const recoil=amount(f,383,408)*(1-amount(f,431,470));
+  const shoulder=amount(f,397,425)*(1-amount(f,449,485));
+  const nearArm=amount(f,408,436)*(1-amount(f,454,492));
+  const farArm=amount(f,413,441)*(1-amount(f,460,496));
+  const yaw=kf(f,[[0,.64],[95,.68],[375,.68],[432,.71],[509,.69]]);
+  const headYaw=kf(f,[[0,.68],[100,.71],[378,.71],[417,.76],[509,.72]]);
+  const pose={...approvedEnd.pose};
+  pose.stableStance=true;
+  pose.torsoYaw=yaw;
   pose.yaw=headYaw;
-  pose.gaze=kf(f,[
-    [0,latest.pose.gaze??0],[82,-.72],[375,-.72],
-    [411,-.27],[509,-.42]]);
-  pose.gazeY=(latest.pose.gazeY??0)-.54*notice+1.45*head;
-  pose.headTilt=kf(f,[
-    [0,latest.pose.headTilt??-3],[90,-6],[375,-6],
-    [426,-3],[509,-5]])-3.6*head;
-  pose.lean=(latest.pose.lean??0)-3*chest;
-
-  // Preserve the planted sole world coordinates as torso yaw changes.
-  // This is the same reach correction used in the approved discovery rig.
-  const oldGeometry=turnV5Geometry(latest.yaw);
-  const torso=turnV5Geometry(bodyYaw);
-  const reach=(hips:number[])=>Math.max(...pose.feet.map((foot,i)=>{
+  pose.lean=-2.5*shoulder;
+  pose.headTilt=kf(f,[[0,-4],[378,-4],[420,-7],[480,-4],[509,-4]]);
+  pose.gaze=-.1-.22*recoil;
+  pose.gazeY=-.4+1.15*recoil;
+  pose.surprised=false;
+  pose.blink=Math.max(...[96,416].map(t=>clamp(1-Math.abs(f-t)/2)));
+  pose.stanceNearSwing=3.4*nearArm;
+  pose.stanceFarSwing=-2.7*farArm;
+  // Recompute trouser support for the new facing, without moving either
+  // actual sole or using a fictitious swing to hide a foot slide.
+  const oldG=turnV5Geometry(approvedEnd.yaw),bodyG=turnV5Geometry(yaw);
+  const floorReach=(hips:number[])=>Math.max(...pose.feet.map((foot,i)=>{
     const dx=foot.x-hips[i];
     return foot.y-4+147.4-Math.sqrt(143**2-dx**2);
   }));
-  const dropCorrection=reach(torso.hips)-reach(oldGeometry.hips);
-  pose.drop+=dropCorrection;
-
-  const far=latest.pose.farHand??{x:-25,y:-153};
-  pose.farHand={x:far.x-8*farArm,y:far.y-7*farArm};
-  pose.hand={x:latest.pose.hand.x+5*nearArm,
-    y:latest.pose.hand.y+dropCorrection+4*nearArm};
-
-  // Keep the original two-bone character rig in its reachable region.
-  // No extra joints or independent neck revolutions are added.
-  const near=v2HandLocal(pose);
-  const dx=near.x-torso.nearShoulder,dy=near.y+270;
-  const distance=Math.hypot(dx,dy);
-  if(distance>132.5){
-    const a=-(pose.lean??0)*Math.PI/180;
-    const c=Math.cos(a),sn=Math.sin(a),q=132.5/distance;
-    const ex=torso.nearShoulder+dx*q;
-    const ey=-270+dy*q+146;
-    pose.hand={x:ex*c+ey*sn,
-      y:-ex*sn+ey*c+pose.drop-146};
-  }
-  const fx=pose.farHand.x-torso.farShoulder;
-  const fy=pose.farHand.y+270,farDist=Math.hypot(fx,fy);
-  if(farDist>119){
-    const q=119/farDist;
-    pose.farHand={x:torso.farShoulder+fx*q,y:-270+fy*q};
-  }
-  pose.blink=Math.max(...[91,450].map(t=>clamp(1-Math.abs(f-t)/2)));
-  // Important: the old surprised mouth became a large bright oval between
-  // two bright eyes, reading as the face turning around. Keep the same
-  // facial topology throughout and sell the shock with eye line, blink,
-  // tilt, shoulder recoil and synchronized torso motion.
-  pose.surprised=false;
-  return {...latest,pose,yaw:bodyYaw,headYaw,mood:'concerned'};
+  pose.drop+=floorReach(bodyG.hips)-floorReach(oldG.hips);
+  const soleWorld=approvedEnd.soleWorld.map(p=>({
+    ...p,x:2*approvedEnd.origin.x-p.x
+  })) as RoomActorPerformance['soleWorld'];
+  return {...approvedEnd,pose,yaw,headYaw,mirror:true,soleWorld,
+    mood:'concerned'};
 };
 /**
  * The new prop uses translucency with explicit back/rim/front layers,
@@ -501,13 +455,12 @@ export const auditReversalEvidence=()=>{
      evidenceProgress(378).restore!==1||
      evidenceProgress(380).water!==1)
     throw new Error('Glass and liquid reconstruction did not reach exact phase limits');
-  const initial=evidenceActorAt(0),baseline=discoveryActorAt(719);
-  if(initial.yaw!==baseline.yaw||initial.headYaw!==baseline.headYaw)
-    throw new Error('Approved clock ending must match the continuation opening');
-  if(initial.pose.yaw!==baseline.pose.yaw||
-     initial.pose.gaze!==baseline.pose.gaze||
-     initial.pose.gazeY!==baseline.pose.gazeY)
-    throw new Error('Actor eyeline not continuous with approved ending');
+  // New scene begins on a deliberate cut from the prior approved
+  // film. Verify the new silhouette is one coherent left-facing pose.
+  const initial=evidenceActorAt(0),support=initial.soleWorld;
+  if(!initial.mirror||!initial.pose.stableStance||
+     initial.yaw<.5||initial.headYaw<.5)
+    throw new Error('Actor not facing glass as a coherent body');
   for(let i=0;i<VIAL_SHARDS.length;i++){
     const s=VIAL_SHARDS[i],initial=shardMotionAt(0,i),last=shardMotionAt(509,i);
     for(let f=0;f<REVERSAL_FRAMES;f++){
@@ -536,6 +489,16 @@ export const auditReversalEvidence=()=>{
     if(!Number.isFinite(q.x+q.y+q.scale)||q.scale<=0)throw new Error('Invalid world prop projection at '+f);
     if(f>=174&&f<376&&shot.crop[2]!==450)throw new Error('Close insert lost world framing');
     const actor=evidenceActorAt(f);
+    if(!actor.mirror||!actor.pose.stableStance||
+       actor.headYaw<.55||actor.yaw<.55||
+       Math.abs(actor.headYaw-actor.yaw)>.12||
+       actor.pose.surprised)
+      throw new Error('Head, jacket or gloves are not facing together at '+f);
+    actor.soleWorld.forEach((sole,i)=>{
+      if(Math.abs(sole.x-support[i].x)+Math.abs(sole.z-support[i].z)>.0001)
+        throw new Error('Mirrored actor foot slides at '+f);
+    });
+
     if(actor.pose.surprised || actor.mood==='surprised')
       throw new Error('Sudden face-topology swap can resemble a head flip at '+f);
     // Render the actual posed actor for all 510 frames in the pre-render
@@ -552,8 +515,7 @@ export const auditReversalEvidence=()=>{
       const bodyStep=Math.abs(actor.yaw-prev.yaw);
       maxHeadStep=Math.max(maxHeadStep,headStep);
       maxBodyStep=Math.max(maxBodyStep,bodyStep);
-      if((f>=80&&(neck>.281||actor.headYaw>-.099))||
-         headStep>.075||bodyStep>.075||
+      if(neck>.12||headStep>.045||bodyStep>.045||
          actor.pose.torsoYaw!==actor.yaw||actor.pose.yaw!==actor.headYaw)
         throw new Error('Independent neck spin, face flip or unsupported torso facing at '+f);
       const handStep=Math.hypot(actor.pose.hand.x-prev.pose.hand.x,

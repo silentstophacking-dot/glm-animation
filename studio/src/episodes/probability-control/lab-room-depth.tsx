@@ -90,7 +90,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   <path d={floorEllipse(origin.x,origin.z,75,32,c)} fill="#07101D" opacity=".3"/>
   <path d={floorPolygon([W(origin.x-30,0,origin.z),W(origin.x+35,0,origin.z),W(origin.x+260,0,origin.z-160),W(origin.x+185,0,origin.z-180)],c)} fill="#091220" opacity=".28" filter={u('shade')}/>
   {(performance?.soleWorld??[-16,16].map(h=>W(origin.x+h*actorScale,0,origin.z))).map((p,i)=><path key={i} d={floorEllipse(p.x,p.z,19,8,c)} fill="#070F1B" opacity={performance?.supportOpacity[i]??.65}/>)}
-  <g transform={planeTransform(origin,c)}><CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={actorScale} yaw={performance?.yaw??.45} headYaw={performance?.headYaw} pose={performance?.pose} mood={performance?.mood} outfit="puffer-black" lighting="sunset" shadow={false}/></g>
+  <g transform={planeTransform(origin,c)}><g transform={performance?.mirror?'scale(-1 1)':undefined}><CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={actorScale} yaw={performance?.yaw??.45} headYaw={performance?.headYaw} pose={performance?.pose} mood={performance?.mood} outfit="puffer-black" lighting="sunset" shadow={false}/></g></g>
   {/* Bench surfaces and glass bases stay attached even at the stronger foreground parallax. */}
   <g filter={u('fg')}>
    {FOREGROUND_BENCHES.map((b,i)=><g key={i}>{[b.x0+30,b.x1-48].map(x=><g key={x}>{[b.z0+20,b.z1-38].map(z=><Box key={z} box={{x0:x,x1:x+18,y0:0,y1:b.y0,z0:z,z1:z+18}} camera={c} front="#243141" side="#162435" top="#58606A"/>)}</g>)}<Box box={b} camera={c} front="#1D2937" top="#4B4E57" side="#172537"/><Glass id={id+'fgGlass'+i} x={i?520:-620} y={205} z={-350} camera={c}/></g>)}
