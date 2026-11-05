@@ -53,24 +53,6 @@ jobs:
         run: |
           npx remotion still src/reversal-evidence-entry.tsx ReversalEvidenceFrame \
             out/world-style/03-Character-Reaction.png --frame=416 --scale=0.6666666666666666
-      - name: Build three-frame iPhone review contact sheet
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          from PIL import Image, ImageDraw
-          folder=Path('out/world-style')
-          images=[Image.open(folder/n).convert('RGB') for n in (
-           '01-Opening-Wide.png','02-Glass-Bench.png','03-Character-Reaction.png')]
-          out=Image.new('RGB',(1280,720*3+150),'#151b2b')
-          d=ImageDraw.Draw(out)
-          for i,(img,label) in enumerate(zip(images,(
-              '01 - OPENING / SKYLINE','02 - GLASS / WORKBENCH',
-              '03 - ACTOR / ENVIRONMENT'))):
-            y=i*770
-            d.text((18,y+12),label,fill='#efdec7')
-            out.paste(img,(0,y+45))
-          out.save(folder/'00-Three-Checkpoint-Review.jpg',quality=90)
-          PY
       - name: Upload all still images without rendering a movie
         uses: actions/upload-artifact@v4
         with:
