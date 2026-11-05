@@ -58,6 +58,7 @@ jobs:
           command -v ffprobe && command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
       - name: Render the single designated 17-second 720p review movie with audio
         run: |
+          set -euo pipefail
           npx remotion render src/reversal-evidence-entry.tsx ReversalEvidenceMotionProof \
             out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 \
             --codec=h264 --pixel-format=yuv420p --crf=21 --concurrency=2 \
