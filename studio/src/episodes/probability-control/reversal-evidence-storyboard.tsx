@@ -24,13 +24,14 @@ export const REVERSAL_FRAMES=510;
 const BASE=W(-860,278,535);
 const EASE=(n:number)=>{const x=clamp(n);return x*x*(3-2*x);};
 const amount=(f:number,a:number,b:number)=>EASE((f-a)/(b-a));
-type Beat='notice'|'broken'|'lift'|'mend'|'reaction'|'clock';
+type Beat='notice'|'noticeClose'|'broken'|'lift'|'mend'|'reaction'|'clock';
 type Shot={from:number;to:number;beat:Beat;label:string;camera:WorldCamera;crop:[number,number,number,number]};
 const wide:WorldCamera={x:-265,y:370,z:10,focal:1200};
 const close:WorldCamera={x:-645,y:475,z:240,focal:1200};
 const actorCam:WorldCamera={x:-105,y:360,z:135,focal:1200};
 export const EVIDENCE_SHOTS:Shot[]=[
- {from:0,to:100,beat:'notice',label:'A SOUND FROM THE BENCH',camera:wide,crop:[60,100,1680,945]},
+ {from:0,to:62,beat:'notice',label:'AN UNEASY SOUND IN THE LAB',camera:wide,crop:[60,100,1680,945]},
+ {from:62,to:100,beat:'noticeClose',label:'HE LOOKS TOWARD THE BENCH',camera:actorCam,crop:[400,180,1020,573.75]},
  {from:100,to:174,beat:'broken',label:'THE GLASS IS SHATTERED',camera:close,crop:[585,515,450,253.125]},
  {from:174,to:286,beat:'lift',label:'THE SHARDS RISE BACKWARD',camera:close,crop:[585,515,450,253.125]},
  {from:286,to:376,beat:'mend',label:'THE LIQUID RETURNS INTO THE VIAL',camera:close,crop:[585,515,450,253.125]},
@@ -56,17 +57,55 @@ export const reversalFxAt=(f:number)=>{
     evidenceProgress(Math.max(0,f-7)).returnShards);
   return {active,flash,trail};
 };
+// Six physical zones of the cylindrical bottle wall. Each shard has a
+// corresponding destination on the complete vial's silhouette, rather than
+// being an arbitrary tile scattered about the frame.
+export const VIAL_SHARDS=[
+  {x:-24,y:-126,bx:-122,by:-9,rot:-84,seal:344,
+    shape:'M7 -22 L10 21 L-6 31 L-12 -8 Z'},
+  {x:24,y:-126,bx:118,by:-8,rot:72,seal:344,
+    shape:'M-10 -22 L-7 21 L12 15 L8 -17 Z'},
+  {x:-35,y:-86,bx:-85,by:-13,rot:-58,seal:329,
+    shape:'M6 -26 L-11 11 L-19 32 L-7 22 L15 -10 Z'},
+  {x:35,y:-86,bx:82,by:-14,rot:61,seal:329,
+    shape:'M-5 -25 L12 15 L17 28 L5 23 L-14 -10 Z'},
+  {x:-47,y:-43,bx:-54,by:-7,rot:-43,seal:316,
+    shape:'M-1 -19 L-8 -4 L-3 14 L12 30 L18 17 L6 -7 Z'},
+  {x:47,y:-43,bx:53,by:-7,rot:40,seal:316,
+    shape:'M1 -19 L8 -4 L3 14 L-12 30 L-18 17 L-6 -7 Z'}
+] as const;
+export const shardMotionAt=(f:number,i:number)=>{
+  const p=VIAL_SHARDS[i];
+  const q=amount(f,183+i*9,284+i*7);
+  const arc=Math.sin(Math.PI*q);
+  return {
+    x:p.bx+(p.x-p.bx)*q+(i%2===0?-1:1)*10*arc,
+    y:p.by+(p.y-p.by)*q-13*arc,
+    angle:p.rot*(1-q),
+    squash:.30+.70*q,
+    progress:q,
+    opacity:1-amount(f,p.seal,p.seal+18)
+  };
+};
+
 export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   const latest=discoveryActorAt(719);
-  const q=amount(f,42,90),look=amount(f,380,414),recover=amount(f,452,506);
-  // Copy source pose before adapting. Never mutate the approved baseline.
+  const notice=amount(f,42,90);
+  const recoil=amount(f,381,395)*(1-amount(f,420,446));
   const pose={...latest.pose};
-  pose.yaw=kf(f,[[0,latest.pose.yaw??0],[87,-.40],[375,-.40],[431,-.28],[509,-.46]]);
-  pose.gaze=kf(f,[[0,latest.pose.gaze??0],[80,-1.1],[400,-1.1],[447,-.35],[509,-.9]]);
-  pose.gazeY=(latest.pose.gazeY??0)-.8*q;
-  pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[83,-9],[382,-9],[431,-5],[509,-10]]);
-  pose.blink=Math.max(...[91,418,484].map(t=>clamp(1-Math.abs(f-t)/2)));
-  return {...latest,pose,headYaw:pose.yaw??-.4,mood:look>.5?'surprised':'concerned'};
+  // Eyes locate glass first. At the seal the torso and arms flinch but the
+  // planted sole anchors remain in the same physical world positions.
+  pose.yaw=kf(f,[[0,latest.pose.yaw??0],[92,-.43],[375,-.43],[420,-.26],[509,-.48]]);
+  pose.gaze=kf(f,[[0,latest.pose.gaze??0],[81,-1.15],[379,-1.15],[421,-.30],[509,-.88]]);
+  pose.gazeY=(latest.pose.gazeY??0)-.75*notice+2.4*recoil;
+  pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[96,-9],[375,-9],[432,-6],[509,-10]])-6.5*recoil;
+  pose.lean=(latest.pose.lean??0)-4.2*recoil;
+  const far=latest.pose.farHand??{x:-25,y:-153};
+  pose.farHand={x:far.x-19*recoil,y:far.y-16*recoil};
+  pose.hand={x:latest.pose.hand.x+10*recoil,y:latest.pose.hand.y+15*recoil};
+  pose.blink=Math.max(...[91,450].map(t=>clamp(1-Math.abs(f-t)/2)));
+  pose.surprised=recoil>.26;
+  return {...latest,pose,headYaw:pose.yaw??-.43,mood:recoil>.26?'surprised':'concerned'};
 };
 /**
  * The new prop uses translucency with explicit back/rim/front layers,
@@ -82,8 +121,6 @@ export const dropletProgress=(w:number,index:number)=>{
 const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({id,frame:f,camera:c})=>{
   const {returnShards:t,restore:m,water:w}=evidenceProgress(f);
   const fx=reversalFxAt(f);
-  const tPrev=evidenceProgress(Math.max(0,f-7)).returnShards;
-  const tEcho=evidenceProgress(Math.max(0,f-14)).returnShards;
   const u=(name:string)=>'url(#'+id+name+')';
   const origin=planeTransform(BASE,c);
   // At the beginning ONLY the broken bowl is still on the bench. The
@@ -98,16 +135,7 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
   const inner='M-15 -145V-107L-43 -50Q-58 -23 -39 -13Q-22 0 0 1Q22 0 39 -13Q58 -23 43 -50L15 -107V-145Z';
   const liquidTop=-23-32*w+Math.sin(f*.12)*.6*(1-w);
   const puddle=1-w;
-  const fragmentVisibility=clamp((.73-m)/.47);
-  const pieces=[
-    {x:-27,y:-119,bx:-112,by:-9,rot:-86,shape:'M-15 -18 L-2 -30 L13 -15 L8 11 L-16 14 Z'},
-    {x:24,y:-120,bx:106,by:-4,rot:68,shape:'M-8 -27 L16 -14 L14 9 L-7 17 L-13 -2 Z'},
-    {x:-39,y:-76,bx:-77,by:-20,rot:-55,shape:'M-16 -22 L5 -17 L17 5 L1 20 L-17 7 Z'},
-    {x:38,y:-75,bx:72,by:-17,rot:49,shape:'M-11 -26 L12 -17 L20 6 L-9 18 L-18 2 Z'},
-    {x:-21,y:-48,bx:-41,by:-5,rot:-63,shape:'M-17 -16 L-3 -28 L12 -6 L15 9 L-9 15 Z'},
-    {x:24,y:-48,bx:40,by:-9,rot:52,shape:'M-18 -18 L9 -21 L18 8 L-1 22 L-13 6 Z'},
-    {x:3,y:-136,bx:8,by:-13,rot:100,shape:'M-11 -26 L12 -15 L11 14 L-6 21 L-17 0 Z'}
-  ];
+  const pieces=VIAL_SHARDS;
   return <g transform={origin}>
     <defs>
       <linearGradient id={id+'glass'} x1="0" y1="0" x2="1" y2=".42">
@@ -172,10 +200,13 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
       fill={u('puddle')} opacity={.86*puddle}/>
     <ellipse cx="35" cy={-4-.8*puddle} rx={54*puddle+1} ry={4*puddle+.6}
       fill="#D2ECE7" opacity={.31*puddle}/>
-    {pieces.map((s,i)=><ellipse key={'shadow'+i}
-      cx={s.bx*(1-t)+s.x*t+3} cy="2"
-      rx={(15+i%3*3)*(1-t)+1.5} ry={4*(1-t)+.5}
-      fill="#101A25" opacity={fragmentVisibility*.48}/> )}
+    {pieces.map((s,i)=>{
+      const p=shardMotionAt(f,i);
+      return <ellipse key={'shadow'+i}
+        cx={p.x+3} cy="2" rx={(15+i%3*3)*(1-p.progress)+1.5}
+        ry={4*(1-p.progress)+.5}
+        fill="#101A25" opacity={p.opacity*.4*(1-p.progress)}/>;
+    })}
 
     {/* The room reacts in the prop's own projected coordinate frame:
         warm/cool illumination on the vial and counter, two short physical
@@ -249,53 +280,39 @@ const ReversingAmpoule:React.FC<{id:string;frame:number;camera:WorldCamera}>=({i
       <path d="M-43 -28Q-30 -3 0 1Q32 -3 43 -28"
         fill="none" stroke="#C0DBD6" strokeWidth="3.2" opacity=".75"/>
     </g>
-    {/* Two tempered glass afterimages make time reversal readable while
-        tracking exact physical trajectories; nothing is screen-locked. */}
-    {pieces.map((p,i)=>[tPrev,tEcho].map((past,j)=>{
-      const x=p.bx*(1-past)+p.x*past;
-      const y=p.by*(1-past)+p.y*past;
-      return <path key={'echo'+i+'-'+j} d={p.shape}
-        transform={'translate('+x+' '+y+') rotate('+(p.rot*(1-past))+')'}
-        fill="#89C8CE" stroke="#EAD9C4" strokeWidth=".9"
-        opacity={fx.active*clamp(fx.trail*10)*fragmentVisibility*(j===0?.25:.12)}/>;
-    }))}
-    {/* Trailing refracted highlights follow moving glass in the same
-        physical local frame; no camera-locked speed lines. */}
+    {/* Every real fragment rotates up from the bench (foreshortened),
+        follows its own staggered arc, and seats into a part of the wall.
+        Thin, faint edge echoes indicate motion without duplicated tiles. */}
     {pieces.map((s,i)=>{
-      const nowX=s.bx*(1-t)+s.x*t, nowY=s.by*(1-t)+s.y*t;
-      const oldX=s.bx*(1-tPrev)+s.x*tPrev;
-      const oldY=s.by*(1-tPrev)+s.y*tPrev;
-      return <path key={'streak'+i}
-        d={'M'+nowX+' '+nowY+' L'+oldX+' '+oldY}
-        fill="none" stroke={u('trail')} strokeWidth={1.9+i%3*.65}
-        strokeLinecap="round" opacity={clamp(fx.trail*7)*.78*fragmentVisibility}/>;
+      const p=shardMotionAt(f,i),old=shardMotionAt(Math.max(0,f-6),i);
+      const speed=Math.hypot(p.x-old.x,p.y-old.y);
+      return <g key={'real-shard'+i}>
+        {speed>.5?<path d={s.shape}
+          transform={'translate('+old.x+' '+old.y+') rotate('+old.angle+') scale(1 '+old.squash+')'}
+          fill="none" stroke="#C6E7DF" strokeWidth="1.05"
+          opacity={p.opacity*.18*clamp(speed/12)}/>:null}
+        <g opacity={p.opacity}
+          transform={'translate('+p.x+' '+p.y+') rotate('+p.angle+') scale(1 '+p.squash+')'}>
+          <path d={s.shape} transform="translate(2.6 2)"
+            fill="#182D41" stroke="#233E51" strokeWidth="2.3"/>
+          <path d={s.shape} fill={u('glass')} stroke="#BACBC5"
+            strokeWidth="1.9" strokeLinejoin="round"/>
+          <path d={s.shape} fill={u('shard')} opacity=".24"/>
+          <path d="M-9 -15 Q-3 -20 6 -15" fill="none" stroke="#F2DFC7"
+            strokeWidth="1.5" opacity=".8" strokeLinecap="round"/>
+          <path d="M5 -12L8 10" fill="none" stroke="#8BBEC0"
+            strokeWidth="2.0" opacity=".44"/>
+          <path d="M-6 14L4 16" fill="none" stroke="#DCE7DF"
+            strokeWidth="1.2" opacity=".72"/>
+        </g>
+      </g>;
     })}
-    {/* The glass breaks into actual tinted faces with dark extruded
-        thickness, not hollow diamonds. Broken positions are near the bench;
-        each deterministic trajectory rises into its former bottle surface. */}
-    {pieces.map((s,i)=><g key={i} opacity={fragmentVisibility}
-      transform={'translate('+(s.bx*(1-t)+s.x*t)+' '+(s.by*(1-t)+s.y*t)+
-        ') rotate('+(s.rot*(1-t))+')'}>
-      <path d={s.shape} transform="translate(2.7 2.2)"
-        fill="#1E3D50" stroke="#183145" strokeWidth="1.7"/>
-      <path d={s.shape} fill={u('shard')} stroke="#DDC9B6"
-        strokeWidth="1.65" strokeLinejoin="round"/>
-      <path d="M-9 -13L0 -18L7 -3" fill="none"
-        stroke="#F8E6D1" strokeWidth="1.5" strokeLinecap="round" opacity=".94"/>
-      <path d="M-8 10L6 2L12 10" fill="none"
-        stroke="#85C5CA" strokeWidth="1.35" opacity=".64"/>
-      <path d="M-3 -6L10 5" fill="none"
-        stroke="#264D64" strokeWidth="2.2" opacity=".62"/>
-    </g>)}
-
-    {/* Specular joins arrive exactly when each restored glass section seals. */}
+    {/* Each joining glint lights up as that physical section seals. */}
     {pieces.map((s,i)=>{
-      const join=amount(f,288+i*6,306+i*6)*(1-amount(f,317+i*6,333+i*6));
-      const brightness=join*(.46+.54*Math.sin(f*.56+i));
-      return <g key={'glint'+i} opacity={brightness*.88}>
+      const join=amount(f,s.seal-4,s.seal+2)*(1-amount(f,s.seal+3,s.seal+13));
+      return <g key={'glint'+i} opacity={join*.56}>
         <path d={'M'+(s.x-6)+' '+s.y+'h12 M'+s.x+' '+(s.y-7)+'v14'}
-          stroke="#F5EAD8" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx={s.x} cy={s.y} r="2.1" fill="#D8F0E9"/>
+          stroke="#F7E7D5" strokeWidth="1.3" strokeLinecap="round"/>
       </g>;
     })}
     {/* A slender reversed liquid filament connects the counter spill to
@@ -359,7 +376,7 @@ export const EvidenceScene:React.FC<{frame:number;id:string}>=({frame:f,id})=>{
 export const ReversalEvidenceStoryBoard:React.FC=()=> <svg viewBox="0 0 1920 1848" width="100%" height="100%">
   <rect width="1920" height="1848" fill="#101622"/>
   {[56,129,254,341,419,484].map((f,i)=>{
-    const label=EVIDENCE_SHOTS[i].label;
+    const label=evidenceShotAt(f).label;
     return <g key={f} transform={'translate('+(i%2*960)+' '+(Math.floor(i/2)*616)+')'}>
       <text x="29" y="40" fontFamily="Arial,sans-serif" fontSize="25" fontWeight="600" fill="#F4E6D5">
         {String(i+1).padStart(2,'0')+'  '+label}
@@ -394,7 +411,16 @@ export const auditReversalEvidence=()=>{
      initial.pose.gaze!==baseline.pose.gaze||
      initial.pose.gazeY!==baseline.pose.gazeY)
     throw new Error('Actor eyeline not continuous with approved ending');
-  let last=0;
+  for(let i=0;i<VIAL_SHARDS.length;i++){
+    const s=VIAL_SHARDS[i],initial=shardMotionAt(0,i),last=shardMotionAt(509,i);
+    if(Math.abs(initial.x-s.bx)>.001||Math.abs(initial.y-s.by)>.001||
+       Math.abs(last.x-s.x)>.001||Math.abs(last.y-s.y)>.001||
+       last.opacity!==0||initial.opacity!==1)
+      throw new Error('Shard lost physical landing or final welded location '+i);
+    if(shardMotionAt(s.seal,i).progress<.999)
+      throw new Error('Shard not fully seated before glass seal '+i);
+  }
+  let last=0,maxHandStep=0,maxFootDrift=0;
   for(let f=0;f<REVERSAL_FRAMES;f++){
     const shot=evidenceShotAt(f),phase=evidenceProgress(f);
     if(f!==0&&f%60===0&&phase.returnShards<last-.00001)throw new Error('Time reversal regressed');
@@ -405,6 +431,16 @@ export const auditReversalEvidence=()=>{
     if(f>=174&&f<376&&shot.crop[2]!==450)throw new Error('Close insert lost world framing');
     const actor=evidenceActorAt(f);
     if(!actor.soleWorld.some(s=>Math.abs(s.y)<.001))throw new Error('Actor has no planted support '+f);
+    if(f>0){
+      const prev=evidenceActorAt(f-1);
+      const handStep=Math.hypot(actor.pose.hand.x-prev.pose.hand.x,
+                                actor.pose.hand.y-prev.pose.hand.y);
+      maxHandStep=Math.max(maxHandStep,handStep);
+      maxFootDrift=Math.max(maxFootDrift,
+        ...actor.soleWorld.map((s,i)=>Math.abs(s.x-prev.soleWorld[i].x)+
+          Math.abs(s.z-prev.soleWorld[i].z)));
+      if(handStep>4||maxFootDrift>.001)throw new Error('Unnatural recoil/foot slide '+f);
+    }
   }
-  return {frames:REVERSAL_FRAMES,shots:EVIDENCE_SHOTS.length,prop:'detailed world-projected transparent glass and physical metal clamp',source:'approved ClockDiscoveryPerformance unchanged',renderGate:'STILLS_ONLY'};
+  return {frames:REVERSAL_FRAMES,shots:EVIDENCE_SHOTS.length,prop:'detailed world-projected transparent glass and physical metal clamp',source:'approved ClockDiscoveryPerformance unchanged',renderGate:'MOTION_REVIEW_NOT_MASTER',maxHandStep,maxFootDrift};
 };
