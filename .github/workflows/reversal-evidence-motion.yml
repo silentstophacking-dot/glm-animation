@@ -1,7 +1,7 @@
-name: Glass Reversal — seam fusion and acting refinement
+name: Glass Reversal — coordinated head torso proof
 on:
   push:
-    branches: ['feature/reversal-seam-acting-v2']
+    branches: ['feature/reversal-head-body-linked-turn']
     paths:
       - '.github/workflows/reversal-evidence-motion.yml'
       - 'studio/src/reversal-evidence-entry.tsx'
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: glass-reversal-seam-acting-review
+  group: glass-reversal-head-body-turn-review
   cancel-in-progress: true
 
 jobs:
@@ -92,6 +92,10 @@ jobs:
             -vf "fps=1/2,scale=640:-1,tile=3x3" -frames:v 1 -an \
             out/reversal-motion/Glass-Reversal-Motion-Contact-Sheet.png
           cp public/reversal-evidence/soundtrack.json out/reversal-motion/soundtrack.json
+          ffmpeg -y -nostdin -v error \
+            -ss 12.65 -t 2.2 -i out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 \
+            -vf "fps=6,scale=640:-1,tile=4x3" -frames:v 1 -an \
+            out/reversal-motion/Head-Torso-Coordinated-Frames.png
           ffmpeg -y -nostdin -v error \
             -ss 10.2 -t 2.4 \
             -i out/reversal-motion/Glass-Reversal-Motion-Proof-17s.mp4 \
