@@ -1,0 +1,35 @@
+name: Last Signal — cinematic apartment checkpoint
+on:
+  push:
+    branches: [feature/last-signal-cinematic-production]
+    paths:
+      - 'studio/src/last-signal-entry.tsx'
+      - '.github/workflows/last-signal.yml'
+  workflow_dispatch:
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Render cinematic apartment
+        run: |
+          mkdir -p out/last-signal
+          npx remotion still src/last-signal-entry.tsx LastSignalApartmentCheckpoint out/last-signal/Apartment-Detail.png --frame=110 --scale=0.5
+          npx remotion still src/last-signal-entry.tsx LastSignalApartmentCheckpoint out/last-signal/Daniel-Looks.png --frame=290 --scale=0.5
+          npx remotion render src/last-signal-entry.tsx LastSignalApartmentCheckpoint out/last-signal/Apartment-Checkpoint-12s.mp4 --codec=h264 --scale=0.5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: LAST-SIGNAL-APARTMENT-CINEMATIC-CHECKPOINT
+          path: studio/out/last-signal/
+          retention-days: 14
