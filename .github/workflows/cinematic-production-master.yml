@@ -1,0 +1,42 @@
+name: Cinematic production master — reference, QA, sample film
+on:
+  push:
+    branches: [feature/reusable-cinematic-production-pipeline]
+    paths:
+      - 'studio/src/production/**'
+      - '.github/workflows/cinematic-production-master.yml'
+  workflow_dispatch:
+jobs:
+  production-master:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck and validate scene contract
+        run: npx tsc --noEmit
+      - name: Render approved reference and reusable new scene
+        run: |
+          mkdir -p out/production-master
+          npx remotion still src/production/film-template.tsx CinematicProductionStarter out/production-master/Approved-Reference.png --frame=35 --scale=0.5
+          npx remotion still src/production/film-template.tsx CinematicProductionCheckpoint out/production-master/Reusable-World-Checkpoint.png --frame=75 --scale=0.5
+      - name: Render complete reusable sample
+        run: npx remotion render src/production/film-template.tsx CinematicProductionStarter out/production-master/Reusable-Cinematic-Master-8s.mp4 --codec=h264 --scale=0.5 --concurrency=2
+      - name: Verify render integrity
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          ffprobe -v error -show_entries format=duration -show_entries stream=codec_name,codec_type -of json out/production-master/Reusable-Cinematic-Master-8s.mp4
+          ffmpeg -nostdin -v error -xerror -i out/production-master/Reusable-Cinematic-Master-8s.mp4 -f null -
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: REUSABLE-CINEMATIC-PRODUCTION-MASTER
+          path: studio/out/production-master/
+          retention-days: 14
