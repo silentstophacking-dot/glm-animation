@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill,Composition,Sequence,registerRoot,useCurrentFrame} from 'remotion';
-import {LastSignalApartmentCheckpoint} from './last-signal-entry';
+import {LastSignalApartmentCheckpoint} from './last-signal-apartment';
 import {CharacterTurnV5} from './episodes/probability-control/character-turn-v5';
 const ease=(t:number)=>{const v=Math.max(0,Math.min(1,t));return v*v*(3-2*v)};
 const City:React.FC<{id:string;frame:number;double?:boolean;closer?:boolean}>=({id,frame,double=false,closer=false})=>{
