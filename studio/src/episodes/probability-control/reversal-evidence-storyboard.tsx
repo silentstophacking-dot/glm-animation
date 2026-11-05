@@ -102,45 +102,78 @@ export const seamAt=(f:number,i:number)=>{
 export const evidenceActorAt=(f:number):RoomActorPerformance=>{
   const latest=discoveryActorAt(719);
   const notice=amount(f,42,90);
-  // Eye / head lead, the puffer shoulders follow, then the two wrists
-  // follow separately. Each muscle group settles independently.
+
+  // The approved ClockDiscoveryPerformance ends with the neck looking a
+  // different direction from the torso. Keep exact frame-zero continuity,
+  // then allow the body to follow the eyes instead of spinning the head
+  // freely on top of an unmoving puffer jacket.
+  const bodyYaw=kf(f,[
+    [0,latest.yaw],[34,.34],[80,.14],[110,.14],[378,.14],
+    [391,.18],[428,.33],[457,.29],[509,.18]]);
+  const desiredHeadYaw=kf(f,[
+    [0,latest.headYaw],[34,-.12],[80,.02],[110,.08],[375,.08],
+    [387,.13],[405,.29],[429,.34],[455,.29],[509,.18]]);
+  const permittedNeckAngle=kf(f,[
+    [0,Math.abs(latest.headYaw-latest.yaw)+.01],[75,.28],[509,.28]]);
+  const headYaw=clamp(desiredHeadYaw,
+    bodyYaw-permittedNeckAngle,bodyYaw+permittedNeckAngle);
+
+  // Independent reaction timing: eyes -> head -> chest -> left and right
+  // wrists. The torso actually changes facing while all shoes remain locked.
   const head=amount(f,379,400)*(1-amount(f,425,458));
-  const shoulder=amount(f,389,416)*(1-amount(f,438,471));
-  const nearArm=amount(f,400,425)*(1-amount(f,444,477));
-  const farArm=amount(f,405,432)*(1-amount(f,446,480));
+  const chest=amount(f,392,416)*(1-amount(f,438,473));
+  const nearArm=amount(f,401,426)*(1-amount(f,445,478));
+  const farArm=amount(f,405,432)*(1-amount(f,447,481));
   const pose={...latest.pose};
-  pose.yaw=kf(f,[[0,latest.pose.yaw??0],[92,-.43],[375,-.43],[424,-.27],[509,-.48]]);
-  pose.gaze=kf(f,[[0,latest.pose.gaze??0],[81,-1.15],[379,-1.15],[424,-.3],[509,-.88]]);
-  pose.gazeY=(latest.pose.gazeY??0)-.75*notice+2.1*head;
-  pose.headTilt=kf(f,[[0,latest.pose.headTilt??-3],[96,-9],[375,-9],[432,-6],[509,-10]])-5.8*head;
-  pose.lean=(latest.pose.lean??0)-3.7*shoulder;
+  pose.torsoYaw=bodyYaw;
+  pose.yaw=headYaw;
+  pose.gaze=kf(f,[
+    [0,latest.pose.gaze??0],[82,-.72],[375,-.72],
+    [411,-.27],[509,-.42]]);
+  pose.gazeY=(latest.pose.gazeY??0)-.54*notice+1.45*head;
+  pose.headTilt=kf(f,[
+    [0,latest.pose.headTilt??-3],[90,-6],[375,-6],
+    [426,-3],[509,-5]])-3.6*head;
+  pose.lean=(latest.pose.lean??0)-3*chest;
+
+  // Preserve the planted sole world coordinates as torso yaw changes.
+  // This is the same reach correction used in the approved discovery rig.
+  const oldGeometry=turnV5Geometry(latest.yaw);
+  const torso=turnV5Geometry(bodyYaw);
+  const reach=(hips:number[])=>Math.max(...pose.feet.map((foot,i)=>{
+    const dx=foot.x-hips[i];
+    return foot.y-4+147.4-Math.sqrt(143**2-dx**2);
+  }));
+  const dropCorrection=reach(torso.hips)-reach(oldGeometry.hips);
+  pose.drop+=dropCorrection;
+
   const far=latest.pose.farHand??{x:-25,y:-153};
-  pose.farHand={x:far.x-9*farArm,y:far.y-8*farArm};
-  // A hand lags the shoulder slightly: smooth, observable elbow articulation
-  // instead of the previous abrupt wrist snap and permanent locked extension.
-  pose.hand={x:latest.pose.hand.x+6*nearArm,y:latest.pose.hand.y+5*nearArm};
-  // IK safety uses precisely the yaw and inverse torso rotation that the
-  // renderer will use. Clamping occurs only when the elbow cannot bend.
-  const shoulderGeom=turnV5Geometry(latest.yaw);
+  pose.farHand={x:far.x-8*farArm,y:far.y-7*farArm};
+  pose.hand={x:latest.pose.hand.x+5*nearArm,
+    y:latest.pose.hand.y+dropCorrection+4*nearArm};
+
+  // Keep the original two-bone character rig in its reachable region.
+  // No extra joints or independent neck revolutions are added.
   const near=v2HandLocal(pose);
-  const dx=near.x-shoulderGeom.nearShoulder,dy=near.y+270;
+  const dx=near.x-torso.nearShoulder,dy=near.y+270;
   const distance=Math.hypot(dx,dy);
   if(distance>132.5){
     const a=-(pose.lean??0)*Math.PI/180;
     const c=Math.cos(a),sn=Math.sin(a),q=132.5/distance;
-    const ex=shoulderGeom.nearShoulder+dx*q;
+    const ex=torso.nearShoulder+dx*q;
     const ey=-270+dy*q+146;
-    pose.hand={x:ex*c+ey*sn,y:-ex*sn+ey*c+pose.drop-146};
+    pose.hand={x:ex*c+ey*sn,
+      y:-ex*sn+ey*c+pose.drop-146};
   }
-  const fx=pose.farHand.x-shoulderGeom.farShoulder;
+  const fx=pose.farHand.x-torso.farShoulder;
   const fy=pose.farHand.y+270,farDist=Math.hypot(fx,fy);
   if(farDist>119){
     const q=119/farDist;
-    pose.farHand={x:shoulderGeom.farShoulder+fx*q,y:-270+fy*q};
+    pose.farHand={x:torso.farShoulder+fx*q,y:-270+fy*q};
   }
   pose.blink=Math.max(...[91,450].map(t=>clamp(1-Math.abs(f-t)/2)));
   pose.surprised=head>.4;
-  return {...latest,pose,headYaw:pose.yaw??-.43,
+  return {...latest,pose,yaw:bodyYaw,headYaw,
     mood:head>.4?'surprised':'concerned'};
 };
 /**
@@ -463,6 +496,8 @@ export const auditReversalEvidence=()=>{
      evidenceProgress(380).water!==1)
     throw new Error('Glass and liquid reconstruction did not reach exact phase limits');
   const initial=evidenceActorAt(0),baseline=discoveryActorAt(719);
+  if(initial.yaw!==baseline.yaw||initial.headYaw!==baseline.headYaw)
+    throw new Error('Approved clock ending must match the continuation opening');
   if(initial.pose.yaw!==baseline.pose.yaw||
      initial.pose.gaze!==baseline.pose.gaze||
      initial.pose.gazeY!==baseline.pose.gazeY)
@@ -485,6 +520,7 @@ export const auditReversalEvidence=()=>{
       throw new Error('Shard not fully seated before glass seal '+i);
   }
   let last=0,maxHandStep=0,maxFootDrift=0,maxHandAcceleration=0,prevHandStep=0;
+  let maxNeckSeparation=0,maxHeadStep=0,maxBodyStep=0;
   for(let f=0;f<REVERSAL_FRAMES;f++){
     const shot=evidenceShotAt(f),phase=evidenceProgress(f);
     if(f!==0&&f%60===0&&phase.returnShards<last-.00001)throw new Error('Time reversal regressed');
@@ -502,6 +538,15 @@ export const auditReversalEvidence=()=>{
     if(!actor.soleWorld.some(s=>Math.abs(s.y)<.001))throw new Error('Actor has no planted support '+f);
     if(f>0){
       const prev=evidenceActorAt(f-1);
+      const neck=Math.abs(actor.headYaw-actor.yaw);
+      if(f>=80)maxNeckSeparation=Math.max(maxNeckSeparation,neck);
+      const headStep=Math.abs(actor.headYaw-prev.headYaw);
+      const bodyStep=Math.abs(actor.yaw-prev.yaw);
+      maxHeadStep=Math.max(maxHeadStep,headStep);
+      maxBodyStep=Math.max(maxBodyStep,bodyStep);
+      if((f>=80&&neck>.281)||headStep>.075||bodyStep>.075||
+         actor.pose.torsoYaw!==actor.yaw||actor.pose.yaw!==actor.headYaw)
+        throw new Error('Independent neck spin or unsupported torso facing at '+f);
       const handStep=Math.hypot(actor.pose.hand.x-prev.pose.hand.x,
                                 actor.pose.hand.y-prev.pose.hand.y);
       maxHandStep=Math.max(maxHandStep,handStep);
@@ -513,5 +558,5 @@ export const auditReversalEvidence=()=>{
       if(handStep>3.2||maxHandAcceleration>1.8||maxFootDrift>.001)throw new Error('Abrupt elbow/wrist or planted foot slide '+f);
     }
   }
-  return {frames:REVERSAL_FRAMES,shots:EVIDENCE_SHOTS.length,prop:'detailed world-projected transparent glass and physical metal clamp',source:'approved ClockDiscoveryPerformance unchanged',renderGate:'MOTION_REVIEW_NOT_MASTER',maxHandStep,maxHandAcceleration,maxFootDrift};
+  return {frames:REVERSAL_FRAMES,shots:EVIDENCE_SHOTS.length,prop:'detailed world-projected transparent glass and physical metal clamp',source:'approved ClockDiscoveryPerformance unchanged',renderGate:'MOTION_REVIEW_NOT_MASTER',maxHandStep,maxHandAcceleration,maxFootDrift,maxNeckSeparation,maxHeadStep,maxBodyStep};
 };
