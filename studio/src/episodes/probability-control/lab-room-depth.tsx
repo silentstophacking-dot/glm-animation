@@ -1,7 +1,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {LabWindowScenery,LabBenchGlassware} from './cinematic-lab';
-import {RichLabWindowScenery,RichLabWorldDetails} from './lab-rich-world';
+import {RichLabWindowScenery,RichLabWorldDetails,RichLabSecondaryDetails} from './lab-rich-world';
 import {CinematicLabClock,ClockWallDetail} from './cinematic-lab-clock';
 import {LabClock} from './lab-clock';
 import {LabConsole} from './lab-console';
@@ -88,6 +88,7 @@ export const LabRoomDepthScene:React.FC<{id:string;frame:number;camera?:WorldCam
   <Box box={{x0:-130,x1:-12,y0:315,y1:381,z0:0,z1:80}} camera={c} front="#353F50" top="#7A737D" side="#243347"/>
   <g transform={planeTransform(W(0,885,0),c)}><g transform="translate(-960 0)" clipPath={u('consoleFace')}><LabConsole id={id+'console'} active={performance?.active??true} press={performance?.press??0} shadow={false} signal={signal}/></g></g>
   <g transform={planeTransform(W(-36,315,-41),c)}><path d="M0 0C0 28 64 22 64 52V195Q64 222 32 224" fill="none" stroke="#0D1926" strokeWidth="4"/><path d="M0 0C0 28 64 22 64 52" fill="none" stroke="#9B8B80" strokeWidth=".8" opacity=".5"/></g>
+  {richWorld?<RichLabSecondaryDetails id={id+'fineSecondary'} camera={c}/>:null}
   {/* Actor and sole shadows share physical floor anchors; the original depth proof is still; performance is opt-in. */}
   <path d={floorEllipse(origin.x,origin.z,75,32,c)} fill="#07101D" opacity=".3"/>
   <path d={floorPolygon([W(origin.x-30,0,origin.z),W(origin.x+35,0,origin.z),W(origin.x+260,0,origin.z-160),W(origin.x+185,0,origin.z-180)],c)} fill="#091220" opacity=".28" filter={u('shade')}/>
