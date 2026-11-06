@@ -9,7 +9,9 @@ const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({id,shot,frame:f})=>{
  const old=shot===3||shot===5,blackout=shot===7;
  const open=shot===8?smooth((f-6)/20)*(1-smooth((f-58)/12)):0;
- const c:WorldCamera={x:old?-35:mix(-200,-120,smooth(f/210)),y:old?420:370,z:old?110:mix(-320,-230,smooth(f/240)),focal:1200};
+ const cameras=[[-190,380,20],[-320,370,-240],[-235,365,75],[-30,430,520],[-175,370,-290],[-20,435,410],[-285,370,-60],[-150,370,-300],[-190,370,-315]] as const;
+ const [cx,cy,cz]=cameras[shot]??cameras[0];
+ const c:WorldCamera={x:cx+25*smooth(f/200),y:cy,z:cz+30*smooth(f/180),focal:1200};
  const url=(s:string)=>`url(#${id+s})`;
  const slab=(x0:number,x1:number,y0:number,y1:number,z0:number,z1:number,front:string,side='#2B303F',top='#9D857B')=><Box box={{x0,x1,y0,y1,z0,z1}} camera={c} front={front} side={side} top={top}/>;
  const width=500,hinge=-260,theta=open*1.45,z=980;
@@ -43,15 +45,16 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {slab(-365,-318,0,840,920,1060,'#65505A')}
  {slab(350,395,0,840,920,1060,'#62505A')}
  {slab(-365,395,815,845,910,1070,'#67545D')}
- <RoomFace points={[doorPt(0,0),doorPt(width,0),doorPt(width,795),doorPt(0,795)]} camera={c} fill={url('wood')} stroke="#B19686"/>
+ {!old&&<g> <RoomFace points={[doorPt(0,0),doorPt(width,0),doorPt(width,795),doorPt(0,795)]} camera={c} fill={url('wood')} stroke="#B19686"/>
  {[70,415].map(y=><RoomFace key={y} points={[doorPt(30,y),doorPt(width-30,y),doorPt(width-30,y+282),doorPt(30,y+282)]} camera={c} fill="none" stroke="#9D7E75"/>)}
  <g transform={planeTransform(doorPt(width-90,405),c)}><circle r="19" fill="#B79B74" stroke="#F0D1A4" strokeWidth="5"/><path d="M8 0h26" stroke="#E5CEAE" strokeWidth="8" strokeLinecap="round"/></g>
  <g transform={planeTransform(doorPt(250,690),c)}><rect x="-80" y="-35" width="160" height="65" rx="3" fill="#6E6060" stroke="#BAA189" strokeWidth="4"/><text textAnchor="middle" y="12" fontFamily="Arial" fontWeight="bold" fontSize="38" fill="#F1D5B0">213</text></g>
  <g transform={planeTransform(doorPt(250,510),c)}><circle r="14" fill="#091522" stroke="#E1C19A" strokeWidth="6"/></g>
+</g>}
  {slab(590,970,350,635,1000,1040,'#1D2939','#222938','#AB8980')}
- <g transform={planeTransform(W(765,615,993),c)}><path d="M-150 220L-80 143L-20 165L82 50L160 105" stroke="#9FB6B9" strokeWidth="6" fill="none"/>{[70,120,170].map(y=><path key={y} d={`M-155 ${y}H155`} stroke="#A6A6AF" strokeWidth="2" opacity=".12"/>)}</g>
+ <g transform={planeTransform(W(765,610,993),c)}><rect x="-150" y="0" width="300" height="205" fill="#243241" stroke="#A79887" strokeWidth="3"/><text x="0" y="30" textAnchor="middle" fill="#D8B5A0" fontFamily="Arial" fontWeight="bold" fontSize="29">FIRE EXIT</text><path d="M-115 58h230v112h-230Z M0 58v112M-115 114h230" stroke="#718692" strokeWidth="4" fill="none"/><path d="M-82 149L-28 114L55 114L93 73" stroke="#9CC5B9" strokeWidth="8" fill="none"/><circle cx="-82" cy="149" r="10" fill="#D99B82"/></g>
  {slab(-1180,-760,0,570,920,1030,'#272A3B','#1C2637','#695A65')}
- {Array.from({length:4},(_,i)=>slab(-1150+i*95,-1082+i*95,110,450,890,965,['#615366','#44566C','#75636D'][i%3],'#272D3E','#A8978B'))}
+ <g transform={planeTransform(W(-990,390,892),c)}><rect x="-95" y="-260" width="190" height="300" fill="#38424F" stroke="#8E8B8C" strokeWidth="10"/><rect x="-75" y="-240" width="150" height="225" fill="#182A3E" stroke="#A9A29C" strokeWidth="3"/><path d="M-12 -160v86m-52 -44h100" stroke="#B69B88" strokeWidth="10"/><text x="0" y="-222" fontFamily="Arial" textAnchor="middle" fontSize="21" fill="#DAB59E">EMERGENCY</text></g>
  {old?<g transform={planeTransform(W(0,0,1160),c)}>
  <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset"/>
  <path d="M-30 -590L-11 -605M17 -590L30 -604" stroke="#B3B8C0" strokeWidth="8"/>
@@ -62,7 +65,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <g transform={planeTransform(W(shot===8?mix(-220,50,progress):-240,0,shot===8?mix(110,900,progress):95),c)}>
  <CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={1.55} yaw={shot===6?mix(.25,.94,smooth(f/95)):shot===8?.7:.32} headYaw={shot===6?mix(.3,1,smooth(f/80)):.4} outfit="puffer-black" lighting="sunset" mood={shot>=6?'surprised':'calm'} pose={shot===8?walk.pose:shot===2||shot===6?reaction.pose:undefined}/>
  </g></g>}
- {shot>=7&&<g transform={planeTransform(W(-50,0,-250),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
+ {shot>=7&&<g transform={planeTransform(W(shot===8?-550:220,0,-280),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
  <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#303A49" strokeWidth="3"/>
  <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#283140" strokeWidth="3"/>
  <path d="M-55 -440L-105 -140M55 -440L105 -140" stroke="#07101B" strokeWidth="29" strokeLinecap="round"/>
