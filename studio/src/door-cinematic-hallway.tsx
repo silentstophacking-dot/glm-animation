@@ -4,6 +4,7 @@ import {planeTransform,WorldCamera} from './episodes/probability-control/pseudo-
 import {CharacterTurnV5} from './episodes/probability-control/character-turn-v5';
 import {discoveryActorAt} from './episodes/probability-control/clock-discovery-motion';
 import {characterV2At} from './episodes/probability-control/character-v2-motion';
+import {HallwayPracticalDetails} from './door-hall-practicals';
 const smooth=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t)};
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({id,shot,frame:f})=>{
@@ -55,6 +56,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <g transform={planeTransform(W(765,610,993),c)}><rect x="-150" y="0" width="300" height="205" fill="#243241" stroke="#A79887" strokeWidth="3"/><text x="0" y="30" textAnchor="middle" fill="#D8B5A0" fontFamily="Arial" fontWeight="bold" fontSize="29">FIRE EXIT</text><path d="M-115 58h230v112h-230Z M0 58v112M-115 114h230" stroke="#718692" strokeWidth="4" fill="none"/><path d="M-82 149L-28 114L55 114L93 73" stroke="#9CC5B9" strokeWidth="8" fill="none"/><circle cx="-82" cy="149" r="10" fill="#D99B82"/></g>
  {slab(-1180,-760,0,570,920,1030,'#272A3B','#1C2637','#695A65')}
  <g transform={planeTransform(W(-990,390,892),c)}><rect x="-95" y="-260" width="190" height="300" fill="#38424F" stroke="#8E8B8C" strokeWidth="10"/><rect x="-75" y="-240" width="150" height="225" fill="#182A3E" stroke="#A9A29C" strokeWidth="3"/><path d="M-12 -160v86m-52 -44h100" stroke="#B69B88" strokeWidth="10"/><text x="0" y="-222" fontFamily="Arial" textAnchor="middle" fontSize="21" fill="#DAB59E">EMERGENCY</text></g>
+ <HallwayPracticalDetails camera={c} id={id+'practical'}/>
  {old?<g transform={planeTransform(W(0,0,1160),c)}>
  <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset"/>
  <path d="M-30 -590L-11 -605M17 -590L30 -604" stroke="#B3B8C0" strokeWidth="8"/>
