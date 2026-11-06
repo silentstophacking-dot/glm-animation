@@ -20,9 +20,27 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  const progress=smooth(f/70);
  const actorZ=shot===8?mix(625,1030,smooth(f/60)):shot===0?730:shot===6||shot===7?600:shot===1||shot===2?690:95;
  const actorX=shot===8?mix(-90,25,smooth(f/55)):shot===0?-95:shot===1||shot===2?-115:-125;
+ // Editorial camera coverage: these crops operate on the same projected world,
+ // rather than moving backgrounds independently. Establish/medium/insert/reverse/escape.
+ const shotCrops:[number,number,number][]=[
+  [625,100,1080], // the knocking door and Ethan's keys
+  [650,150,1000], // warning / reaction
+  [775,195,750], // his eyes and the door peephole
+  [650,135,930], // inside the peephole, older Ethan
+  [0,0,1920], // photographic insert owns its own camera
+  [650,155,960], // older Ethan's explanation
+  [540,145,1110], // turn to the empty corridor
+  [375,65,1370], // threat reveal, preserve spatial geography
+  [470,120,1280], // escaping through the real hinged door
+ ];
+ const [cropX,cropY,cropW]=shotCrops[shot]??shotCrops[0];
+ const cameraZoom=shot===0?.06:shot===1?.07:shot===2?.11:shot===3?.12:shot===5?.10:shot===6?.09:shot===7?.07:.03;
+ const zoom=1-cameraZoom*smooth(f/(shot===8?65:165));
+ const viewWidth=cropW*zoom,viewHeight=viewWidth*9/16;
+ const viewX=cropX+(cropW-viewWidth)*.45,viewY=cropY+((cropW*9/16)-viewHeight)*.5;
  const reaction=discoveryActorAt(Math.min(712,shot===2?440+Math.floor(f*.6):shot===6?612+Math.floor(f*.45):552));
  const walk=characterV2At(Math.min(140,Math.max(0,f+20)));
- return <svg viewBox="0 0 1920 1080" width="100%" height="100%">
+ return <svg viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`} width="100%" height="100%">
  <defs>
  <linearGradient id={id+'wall'} x2=".85" y2="1"><stop stopColor="#443544"/><stop offset=".6" stopColor="#302B40"/><stop offset="1" stopColor="#142133"/></linearGradient>
  <linearGradient id={id+'floor'} x2=".2" y2="1"><stop stopColor="#5D4C58"/><stop offset=".45" stopColor="#3E3748"/><stop offset="1" stopColor="#152132"/></linearGradient>
