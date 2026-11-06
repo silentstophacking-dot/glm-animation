@@ -10,7 +10,7 @@ const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({id,shot,frame:f})=>{
  const old=shot===3||shot===5,blackout=shot===7;
  const open=shot===8?smooth((f-6)/20)*(1-smooth((f-58)/12)):0;
- const cameras=[[-190,380,20],[-320,370,-240],[-235,365,75],[-30,430,520],[-175,370,-290],[-20,435,410],[-285,370,-60],[-150,370,-300],[-190,370,-315]] as const;
+ const cameras=[[-150,380,245],[-180,370,260],[-150,365,435],[-30,430,520],[-175,370,-290],[-20,435,410],[-180,370,220],[-140,370,120],[-190,370,-120]] as const;
  const [cx,cy,cz]=cameras[shot]??cameras[0];
  const c:WorldCamera={x:cx+25*smooth(f/200),y:cy,z:cz+30*smooth(f/180),focal:1200};
  const url=(s:string)=>`url(#${id+s})`;
@@ -18,6 +18,8 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  const width=500,hinge=-260,theta=open*1.45,z=980;
  const doorPt=(x:number,y:number)=>W(hinge+x*Math.cos(theta),y,z+x*Math.sin(theta));
  const progress=smooth(f/70);
+ const actorZ=shot===8?mix(625,1030,smooth(f/60)):shot===0?730:shot===6||shot===7?600:shot===1||shot===2?690:95;
+ const actorX=shot===8?mix(-90,25,smooth(f/55)):shot===0?-95:shot===1||shot===2?-115:-125;
  const reaction=discoveryActorAt(Math.min(712,shot===2?440+Math.floor(f*.6):shot===6?612+Math.floor(f*.45):552));
  const walk=characterV2At(Math.min(140,Math.max(0,f+20)));
  return <svg viewBox="0 0 1920 1080" width="100%" height="100%">
@@ -63,8 +65,8 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <path d="M19 -596L-21 -540" stroke="#B46D70" strokeWidth="8" strokeLinecap="round"/>
  </g>:null}
  {!old&&<g>
- <path d={floorEllipse(-250,130,86,35,c)} fill="#050C17" opacity=".4" filter={url('shadow')}/>
- <g transform={planeTransform(W(shot===8?mix(-220,50,progress):-240,0,shot===8?mix(110,900,progress):95),c)}>
+ <path d={floorEllipse(actorX,actorZ,86,35,c)} fill="#050C17" opacity=".4" filter={url('shadow')}/>
+ <g transform={planeTransform(W(actorX,0,actorZ),c)}>
  <CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={1.55} yaw={shot===6?mix(.25,.94,smooth(f/95)):shot===8?.7:.32} headYaw={shot===6?mix(.3,1,smooth(f/80)):.4} outfit="puffer-black" lighting="sunset" mood={shot>=6?'surprised':'calm'} pose={shot===8?walk.pose:shot===2||shot===6?reaction.pose:undefined}/>
  </g></g>}
  {shot>=7&&<g transform={planeTransform(W(shot===8?-550:220,0,-280),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
