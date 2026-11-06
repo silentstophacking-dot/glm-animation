@@ -1,6 +1,6 @@
 import React from 'react';
 import {RoomCuboid,RoomFace,RoomLine,W,floorEllipse} from './episodes/probability-control/lab-room-geometry';
-import {planeTransform,WorldCamera} from './episodes/probability-control/pseudo-depth-camera';
+import {planeTransform,projectWorld,WorldCamera} from './episodes/probability-control/pseudo-depth-camera';
 
 // The reverse camera looks DOWN THE OTHER END of the SAME KIND of corridor.
 // It is a purpose-built matching shot, not a flipped screen-space background.
@@ -16,7 +16,14 @@ export const DoorReverseCorridor:React.FC<{frame:number;id:string;danger?:boolea
  const cuboid=(x0:number,x1:number,y0:number,y1:number,z0:number,z1:number,front:string,top='#A38C83',side='#2A2B3C')=><RoomCuboid box={{x0,x1,y0,y1,z0,z1}} camera={c} front={front} top={top} side={side}/>;
  const worldZ=danger?lerp(1370,350,p):1500;
  const worldX=danger?lerp(45,20,p):0;
- return <svg viewBox="0 0 1920 1080" width="100%" height="100%">
+ // Hard close-up cut on the figure after the empty-hallway reveal.
+ const figure=projectWorld(W(worldX,345,worldZ),c);
+ const close=danger&&f>=112;
+ const cropWidth=close?850*(1-.08*smooth((f-112)/53)):1920;
+ const cropHeight=cropWidth*9/16;
+ const cropX=close?figure.x-cropWidth/2:0;
+ const cropY=close?figure.y-cropHeight*.52:0;
+ return <svg viewBox={`${cropX} ${cropY} ${cropWidth} ${cropHeight}`} width="100%" height="100%">
  <defs>
  <linearGradient id={id+'back'} x1="0" y1="0" x2=".15" y2="1"><stop stopColor="#483748"/><stop offset=".55" stopColor="#302B40"/><stop offset="1" stopColor="#171F31"/></linearGradient>
  <linearGradient id={id+'floor'} x2=".2" y2="1"><stop stopColor="#6B5261"/><stop offset=".5" stopColor="#3C3546"/><stop offset="1" stopColor="#172335"/></linearGradient>
