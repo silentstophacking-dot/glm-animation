@@ -69,9 +69,6 @@ const Film:React.FC=()=>{
  {index===0&&<div style={{...textStyle,top:85,width:'100%',fontSize:46}}>APARTMENT 213</div>}
 
  {index===4&&<Photo frame={local}/>}
- {index===6&&<AbsoluteFill style={{background:'#050810',opacity:smooth(local,95,155)*.35}}/>}
- {index===7&&<AbsoluteFill style={{background:'#02040A',opacity:.82+Math.sin(local*.3)*.1}}/>}
- {index===8&&<div style={{...textStyle,bottom:120,width:'100%',fontSize:78,opacity:smooth(local,8,24)}}>RUN!</div>}
  </AbsoluteFill>;
 };
 const Root=()=> <><Composition id="DoorKnockedBackPreview" component={Film} durationInFrames={1736} fps={fps} width={1920} height={1080}/></>;
