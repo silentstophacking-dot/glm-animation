@@ -40,3 +40,18 @@ export function doorEthanPerformance(shot:number,frame:number):CharacterV2Pose{
  }
  return base;
 }
+
+/** The double is the same approved actor rig, with a restrained fearful gesture.
+ * Its left hand lifts toward the eye-line during the photograph/warning beats.
+ */
+export function olderEthanPerformance(shot:number,frame:number):CharacterV2Pose{
+ const base=characterV2At(135).pose;
+ const t=ease((frame-(shot===3?28:7))/(shot===3?86:65));
+ const nearHand={x:mix(29,65,t),y:mix(-153,-234,t)};
+ const farHand={x:mix(-37,-60,t),y:mix(-155,-195,t)};
+ return {...base,hand:nearHand,farHand,
+   gaze:mix(.35,-.8,t),gazeY:mix(0,-2.7,t),
+   headTilt:mix(-2,8,t),lean:mix(0,-3.5,t),
+   blink:Math.max(0,1-Math.abs(frame-(shot===3?62:38))/3),
+   surprised:false};
+}
