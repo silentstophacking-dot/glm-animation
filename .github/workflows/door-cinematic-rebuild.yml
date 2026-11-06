@@ -6,8 +6,14 @@ on:
       - 'studio/src/door-knocked-back-entry.tsx'
       - 'studio/src/door-cinematic-hallway.tsx'
       - 'studio/src/door-ifverse-visual-gate.tsx'
+      - 'studio/src/door-reverse-corridor.tsx'
+      - 'studio/src/door-acting-performance.ts'
+      - 'studio/src/door-hall-practicals.tsx'
       - '.github/workflows/door-cinematic-rebuild.yml'
   workflow_dispatch:
+concurrency:
+  group: door-cinematic-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   storyboard:
     runs-on: ubuntu-latest
