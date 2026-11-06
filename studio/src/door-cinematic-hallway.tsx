@@ -1,6 +1,6 @@
 import React from 'react';
 import {RoomCuboid as Box,RoomFace,RoomLine,W,floorEllipse} from './episodes/probability-control/lab-room-geometry';
-import {planeTransform,WorldCamera} from './episodes/probability-control/pseudo-depth-camera';
+import {planeTransform,projectWorld,WorldCamera} from './episodes/probability-control/pseudo-depth-camera';
 import {CharacterTurnV5} from './episodes/probability-control/character-turn-v5';
 import {discoveryActorAt} from './episodes/probability-control/clock-discovery-motion';
 import {characterV2At,v2HandLocal} from './episodes/probability-control/character-v2-motion';
@@ -16,29 +16,40 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  const c:WorldCamera={x:cx+25*smooth(f/200),y:cy,z:cz+30*smooth(f/180),focal:1200};
  const url=(s:string)=>`url(#${id+s})`;
  const slab=(x0:number,x1:number,y0:number,y1:number,z0:number,z1:number,front:string,side='#2B303F',top='#9D857B')=><Box box={{x0,x1,y0,y1,z0,z1}} camera={c} front={front} side={side} top={top}/>;
- const width=500,hinge=-260,theta=open*1.45,z=980;
+ const width=500,hinge=-260,theta=open*1.45;
+ // Three knocks physically displace the same hinged door, not a screen-space caption.
+ const knocks=shot===0?[18,34,50].reduce((v,t)=>v+Math.exp(-Math.pow((f-t)/3.8,2)),0):0;
+ const z=980-28*knocks;
  const doorPt=(x:number,y:number)=>W(hinge+x*Math.cos(theta),y,z+x*Math.sin(theta));
  const progress=smooth(f/70);
  const actorZ=shot===8?mix(625,1030,smooth(f/60)):shot===0?915:shot===1?815:shot===2?830:shot===6||shot===7?600:95;
  const actorX=shot===8?mix(-90,25,smooth(f/55)):shot===0?10:shot===1?-20:shot===2?-35:-125;
  // Editorial camera coverage: these crops operate on the same projected world,
  // rather than moving backgrounds independently. Establish/medium/insert/reverse/escape.
- const shotCrops:[number,number,number][]=[
-  [625,100,1080], // the knocking door and Ethan's keys
-  [650,150,1000], // warning / reaction
-  [775,195,750], // his eyes and the door peephole
-  [650,135,930], // inside the peephole, older Ethan
-  [0,0,1920], // photographic insert owns its own camera
-  [650,155,960], // older Ethan's explanation
-  [540,145,1110], // turn to the empty corridor
-  [375,65,1370], // threat reveal, preserve spatial geography
-  [470,120,1280], // escaping through the real hinged door
- ];
- const [cropX,cropY,cropW]=shotCrops[shot]??shotCrops[0];
- const cameraZoom=shot===0?.06:shot===1?.07:shot===2?.11:shot===3?.12:shot===5?.10:shot===6?.09:shot===7?.07:.03;
- const zoom=1-cameraZoom*smooth(f/(shot===8?65:165));
+ // Optical cuts track exact projected character anchors; world-space walls and props never slide.
+ // Each crop is a camera decision, not a different world or re-drawn figure.
+ const actorAnchor=projectWorld(W(actorX,0,actorZ),c);
+ const actorHeadY=actorAnchor.y-326*actorAnchor.scale*1.55;
+ const elderAnchor=projectWorld(W(0,0,980),c);
+ const elderHeadY=elderAnchor.y-326*elderAnchor.scale*1.8;
+ const threatAnchor=projectWorld(W(shot===8?-220:220,0,shot===8?290:550),c);
+ const threatHeadY=threatAnchor.y-490*threatAnchor.scale;
+ const crops:Record<number,[number,number,number]>={
+  0:[625,96,1030],     // room, key and visibly knocking door
+  1:[650,125,940],     // interrupted reaching arm and face
+  2:[actorAnchor.x-155,actorHeadY-63,310], // full facial acting insert
+  3:[elderAnchor.x-255,elderHeadY-95,510], // much larger aged double
+  4:[0,0,1920],       // diegetic photo
+  5:[elderAnchor.x-325,elderHeadY-150,650], // scar, eye movement, warning
+  6:[520,115,1020],   // look back into corridor
+  7:[threatAnchor.x-565,threatHeadY-135,1130], // keep creature visible
+  8:[520,120,1250],   // physical escape and door closure
+ };
+ const [cropX,cropY,cropW]=crops[shot]??crops[0];
+ const motionPush=shot===2?.04:shot===3?.06:shot===5?.075:shot===7?.08:.04;
+ const zoom=1-motionPush*smooth(f/(shot===8?65:180));
  const viewWidth=cropW*zoom,viewHeight=viewWidth*9/16;
- const viewX=cropX+(cropW-viewWidth)*.45,viewY=cropY+((cropW*9/16)-viewHeight)*.5;
+ const viewX=cropX+(cropW-viewWidth)*.5,viewY=cropY+(cropW*9/16-viewHeight)*.5;
  const reaction=doorEthanPerformance(shot,f);
  const walk=characterV2At(Math.min(140,Math.max(0,f+20)));
  return <svg viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`} width="100%" height="100%">
@@ -78,7 +89,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {slab(-1180,-760,0,570,920,1030,'#272A3B','#1C2637','#695A65')}
  <g transform={planeTransform(W(-990,390,892),c)}><rect x="-95" y="-260" width="190" height="300" fill="#38424F" stroke="#8E8B8C" strokeWidth="10"/><rect x="-75" y="-240" width="150" height="225" fill="#182A3E" stroke="#A9A29C" strokeWidth="3"/><path d="M-12 -160v86m-52 -44h100" stroke="#B69B88" strokeWidth="10"/><text x="0" y="-222" fontFamily="Arial" textAnchor="middle" fontSize="21" fill="#DAB59E">EMERGENCY</text></g>
  <HallwayPracticalDetails camera={c} id={id+'practical'}/>
- {old?<g transform={planeTransform(W(0,0,1160),c)}>
+ {old?<g transform={planeTransform(W(0,0,980),c)}>
  <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset" mood="concerned"/>
  <path d="M-56 -613Q-51 -649 -21 -654Q15 -662 46 -622" stroke="#929FA9" strokeWidth="10" opacity=".83" fill="none" strokeLinecap="round"/>
  <path d="M-50 -620l-12 19m32 -40l-9 23m31 -30l12 19m19 -21l12 18" stroke="#C4CAD0" strokeWidth="5" opacity=".72" strokeLinecap="round"/>
@@ -97,7 +108,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  </g>;})()}
  </g>}
  </g>}
- {shot>=7&&<g transform={planeTransform(W(shot===8?-550:220,0,-280),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
+ {shot>=7&&<g transform={planeTransform(W(shot===8?-220:220,0,shot===8?290:550),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
  <ellipse cy="-310" rx="250" ry="440" fill={url("light")} opacity=".38"/>
  <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#303A49" strokeWidth="3"/>
  <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#283140" strokeWidth="3"/>
