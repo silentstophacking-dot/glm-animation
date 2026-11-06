@@ -58,6 +58,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <linearGradient id={id+'floor'} x2=".2" y2="1"><stop stopColor="#5D4C58"/><stop offset=".45" stopColor="#3E3748"/><stop offset="1" stopColor="#152132"/></linearGradient>
  <linearGradient id={id+'wood'} x2="1" y2=".2"><stop stopColor="#775654"/><stop offset=".33" stopColor="#47313B"/><stop offset="1" stopColor="#231D2C"/></linearGradient>
  <radialGradient id={id+'light'}><stop stopColor="#EAC09B" stopOpacity=".54"/><stop offset="1" stopColor="#EAC09B" stopOpacity="0"/></radialGradient>
+ <radialGradient id={id+'threatGlow'}><stop stopColor="#AD8C9A" stopOpacity=".48"/><stop offset=".32" stopColor="#A66574" stopOpacity=".25"/><stop offset="1" stopColor="#221C35" stopOpacity="0"/></radialGradient>
  <radialGradient id={id+'vignette'}><stop offset=".35" stopColor="#090F1C" stopOpacity="0"/><stop offset="1" stopColor="#090F1C" stopOpacity=".72"/></radialGradient>
  <filter id={id+'shadow'}><feGaussianBlur stdDeviation="5"/></filter>
  </defs>
@@ -91,8 +92,8 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <HallwayPracticalDetails camera={c} id={id+'practical'}/>
  {old?<g transform={planeTransform(W(0,0,980),c)}>
  <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset" mood="concerned" pose={olderEthanPerformance(shot,f)}/>
- <path d="M-56 -613Q-51 -649 -21 -654Q15 -662 46 -622" stroke="#929FA9" strokeWidth="10" opacity=".83" fill="none" strokeLinecap="round"/>
- <path d="M-50 -620l-12 19m32 -40l-9 23m31 -30l12 19m19 -21l12 18" stroke="#C4CAD0" strokeWidth="5" opacity=".72" strokeLinecap="round"/>
+ <path d="M-58 -608Q-44 -652 -10 -657Q29 -662 56 -612" stroke="#A9B4B9" strokeWidth="8" opacity=".95" fill="none" strokeLinecap="round"/>
+ <path d="M-44 -629Q-25 -619 -21 -607M-16 -647Q-10 -627 -5 -620M17 -647Q25 -627 30 -618" stroke="#9FAAB1" strokeWidth="5" opacity=".7" fill="none" strokeLinecap="round"/>
  <path d="M-30 -590L-11 -605M17 -590L30 -604" stroke="#B3B8C0" strokeWidth="8"/>
  <path d="M19 -596L-21 -540" stroke="#B46D70" strokeWidth="8" strokeLinecap="round"/>
  </g>:null}
@@ -109,13 +110,13 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  </g>}
  </g>}
  {shot>=7&&<g transform={planeTransform(W(shot===8?mix(-220,-35,smooth(f/65)):220,0,shot===8?mix(290,620,smooth(f/65)):550),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
- <ellipse cy="-310" rx="250" ry="440" fill={url("light")} opacity=".38"/>
- <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#303A49" strokeWidth="3"/>
- <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#283140" strokeWidth="3"/>
- <path d={shot===8?`M-55 -440Q-110 -340 ${-105-30*smooth(f/44)} ${-140-110*smooth(f/44)}`:"M-55 -440L-105 -140"} stroke="#07101B" strokeWidth="29" fill="none" strokeLinecap="round"/><path d="M55 -440L105 -140" stroke="#07101B" strokeWidth="29" strokeLinecap="round"/>
+ <ellipse cy="-300" rx="325" ry="490" fill={url("threatGlow")} opacity=".96"/><ellipse cy="10" rx="110" ry="30" fill="#050914" opacity=".68"/>
+ <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#768194" strokeWidth="4"/>
+ <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#6A6F85" strokeWidth="4"/>
+ <path d={shot===8?`M-55 -440Q-110 -340 ${-105-30*smooth(f/44)} ${-140-110*smooth(f/44)}`:"M-55 -440L-105 -140"} stroke="#263042" strokeWidth="27" fill="none" strokeLinecap="round"/><path d="M55 -440L105 -140" stroke="#263042" strokeWidth="27" strokeLinecap="round"/>
  </g>}
  <rect width="1920" height="1080" fill={url('vignette')}/>
  {old&&<path d="M0 0H1920V1080H0Z M960 540m-570 0a570 455 0 1 0 1140 0a570 455 0 1 0 -1140 0" fill="#02050B" fillRule="evenodd" opacity=".85"/>}
- {blackout&&<rect width="1920" height="1080" fill="#030710" opacity={.32+.12*Math.sin(f*.28)}/>}
+ {blackout&&<rect width="1920" height="1080" fill="#030710" opacity={.12+.07*Math.sin(f*.28)}/>}
  </svg>;
 };
