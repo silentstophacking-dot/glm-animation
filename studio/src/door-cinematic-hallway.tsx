@@ -88,7 +88,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {!old&&<g>
  <path d={floorEllipse(actorX,actorZ,86,35,c)} fill="#050C17" opacity=".4" filter={url('shadow')}/>
  <g transform={planeTransform(W(actorX,0,actorZ),c)}>
- <CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={1.55} yaw={shot===6?mix(.25,.94,smooth(f/95)):shot===8?.7:.32} headYaw={shot===6?mix(.3,1,smooth(f/80)):.4} outfit="puffer-black" lighting="sunset" mood={shot>=6?'surprised':'calm'} pose={shot===8?walk.pose:reaction}/>
+ <CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={1.55} yaw={shot===6?mix(.25,.94,smooth(f/95)):shot===8?.7:.32} headYaw={shot===6?mix(.3,1,smooth(f/80)):.4} outfit="puffer-black" lighting="sunset" mood={shot>=7?'surprised':'concerned'} pose={shot===8?walk.pose:reaction}/>
  </g>
  {shot===0&&<g transform={planeTransform(W(actorX,0,actorZ),c)}>
  {(()=>{const palm=v2HandLocal(reaction);return <g transform={`translate(${palm.x*1.55} ${palm.y*1.55}) rotate(-20)`}>
