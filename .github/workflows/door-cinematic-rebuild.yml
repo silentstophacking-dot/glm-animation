@@ -1,0 +1,46 @@
+name: Door Knocked Back — approved-style cinematic rebuild
+on:
+  push:
+    branches: [feature/door-approved-style-rebuild]
+    paths:
+      - 'studio/src/door-knocked-back-entry.tsx'
+      - 'studio/src/door-cinematic-hallway.tsx'
+      - '.github/workflows/door-cinematic-rebuild.yml'
+  workflow_dispatch:
+jobs:
+  storyboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Render seven review checkpoints
+        run: |
+          mkdir -p out/door-film
+          for t in 3 16 25 34 47 54 57; do
+            f=$((t * 30))
+            npx remotion still src/door-knocked-back-entry.tsx DoorKnockedBackPreview "out/door-film/Shot-${t}s.png" --frame="$f" --scale=0.5
+          done
+      - name: Render silent storyboard
+        run: npx remotion render src/door-knocked-back-entry.tsx DoorKnockedBackPreview out/door-film/Door-Knocked-Back-Storyboard-SILENT.mp4 --codec=h264 --scale=0.5 --concurrency=2
+      - name: Install video verification tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Verify full decode and duration
+        run: |
+          ffprobe -v error -show_entries format=duration -show_entries stream=codec_name,codec_type -of json out/door-film/Door-Knocked-Back-Storyboard-SILENT.mp4
+          ffmpeg -nostdin -v error -xerror -i out/door-film/Door-Knocked-Back-Storyboard-SILENT.mp4 -f null -
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: DOOR-CINEMATIC-REBUILD-CHECKPOINTS
+          path: studio/out/door-film/
+          retention-days: 14
