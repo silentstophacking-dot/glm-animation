@@ -55,3 +55,16 @@ export function olderEthanPerformance(shot:number,frame:number):CharacterV2Pose{
    blink:Math.max(0,1-Math.abs(frame-(shot===3?62:38))/3),
    surprised:false};
 }
+
+/** Two urgent grounded strides and a forward lean as Ethan crosses the door threshold. */
+export function doorEscapePerformance(frame:number):CharacterV2Pose{
+ const f=Math.max(0,frame),stride=characterV2At(Math.min(140,30+f*1.65)).pose;
+ const forward=ease((f-3)/10)*(1-ease((f-49)/12));
+ const swing=Math.sin(f*.23);
+ return {...stride,
+  lean:16*forward,headTilt:-8*forward,
+  hand:{x:22+30*swing*forward,y:-158-12*forward+17*swing*forward},
+  farHand:{x:-24-24*swing*forward,y:-164-17*swing*forward},
+  farSwing:24*forward,shoeAngles:[12*forward,-11*forward],
+  gaze:1,gazeY:-2*forward,surprised:f<32};
+}
