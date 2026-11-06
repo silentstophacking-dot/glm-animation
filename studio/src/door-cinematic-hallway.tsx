@@ -6,6 +6,7 @@ import {discoveryActorAt} from './episodes/probability-control/clock-discovery-m
 import {characterV2At,v2HandLocal} from './episodes/probability-control/character-v2-motion';
 import {doorEthanPerformance,olderEthanPerformance,doorEscapePerformance} from './door-acting-performance';
 import {HallwayPracticalDetails} from './door-hall-practicals';
+import {CinematicOlderEthan} from './door-aged-ethan';
 import {DoorReverseCorridor} from './door-reverse-corridor';
 const smooth=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t)};
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
@@ -106,6 +107,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {slab(-365,-318,0,840,920,1060,'#65505A')}
  {slab(350,395,0,840,920,1060,'#62505A')}
  {slab(-365,395,815,845,910,1070,'#67545D')}
+ {escape&&f<35&&<g transform={planeTransform(W(205,0,1150),c)} opacity={1-smooth((f-25)/10)}><CinematicOlderEthan id={id+'rescuer'} frame={f} scale={1.55} action="open"/></g>}
  {!old&&!(escape&&f>=43)&&<g> <RoomFace points={[doorPt(0,0),doorPt(width,0),doorPt(width,795),doorPt(0,795)]} camera={c} fill={url('wood')} stroke="#B19686"/>
  {[70,415].map(y=><RoomFace key={y} points={[doorPt(30,y),doorPt(width-30,y),doorPt(width-30,y+282),doorPt(30,y+282)]} camera={c} fill="none" stroke="#9D7E75"/>)}
  <g transform={planeTransform(doorPt(width-90,405),c)}><circle r="19" fill="#B79B74" stroke="#F0D1A4" strokeWidth="5"/><path d="M8 0h26" stroke="#E5CEAE" strokeWidth="8" strokeLinecap="round"/></g>
@@ -117,18 +119,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {slab(-1180,-760,0,570,920,1030,'#272A3B','#1C2637','#695A65')}
  <g transform={planeTransform(W(-990,390,892),c)}><rect x="-95" y="-260" width="190" height="300" fill="#38424F" stroke="#8E8B8C" strokeWidth="10"/><rect x="-75" y="-240" width="150" height="225" fill="#182A3E" stroke="#A9A29C" strokeWidth="3"/><path d="M-12 -160v86m-52 -44h100" stroke="#B69B88" strokeWidth="10"/><text x="0" y="-222" fontFamily="Arial" textAnchor="middle" fontSize="21" fill="#DAB59E">EMERGENCY</text></g>
  <HallwayPracticalDetails camera={c} id={id+'practical'}/>
- {old?<g transform={planeTransform(W(0,0,980),c)}>
- <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset" mood="concerned" pose={olderEthanPerformance(shot,f)}/>
- {/* Hair and scar are registered to the exact approved head pivot so they move with his acting. */}
- <g transform={`translate(3 -587) rotate(${olderEthanPerformance(shot,f).headTilt??0})`}>
- <path d="M-62 -6Q-71 -45 -40 -66Q-12 -89 24 -76Q52 -66 61 -23L53 -18Q34 -36 18 -43Q-4 -51 -24 -43Q-40 -35 -55 -17Z" fill="#66717E" stroke="#B2B8BE" strokeWidth="3.5"/>
- <path d="M-51 -36Q-24 -66 4 -63M12 -66Q34 -57 45 -39" stroke="#D1D3D0" strokeWidth="3" fill="none" opacity=".64"/>
- <path d="M-62 -8Q-66 14 -49 26M59 -8Q64 15 49 29" stroke="#97A2AE" strokeWidth="7" strokeLinecap="round" fill="none"/>
- <path d="M21 -27L6 20" stroke="#C07B7D" strokeWidth="5.4" strokeLinecap="round"/>
- <path d="M23 -27L8 18" stroke="#E6A8A1" strokeWidth="1.8" strokeLinecap="round"/>
- <path d="M-45 12l10 5m30 12l10 4m28-13l11-5" stroke="#9FA5AF" strokeWidth="2" opacity=".35" fill="none"/>
- </g>
- </g>:null}
+ {old?<g transform={planeTransform(W(0,0,980),c)}><CinematicOlderEthan id={id+'old'} frame={f}/></g>:null}
  {!old&&<g>
  <path d={floorEllipse(actorX,actorZ,86,35,c)} fill="#050C17" opacity=".4" filter={url('shadow')}/>
  <g transform={planeTransform(W(actorX,0,actorZ),c)}>
