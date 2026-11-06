@@ -144,7 +144,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <ellipse cy="-300" rx="325" ry="490" fill={url("threatGlow")} opacity=".96"/><ellipse cy="10" rx="110" ry="30" fill="#050914" opacity=".68"/>
  <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#768194" strokeWidth="4"/>
  <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#6A6F85" strokeWidth="4"/>
- <path d={shot===8?`M-55 -440Q-110 -340 ${-105-30*smooth(f/44)} ${-140-110*smooth(f/44)}`:"M-55 -440L-105 -140"} stroke="#263042" strokeWidth="27" fill="none" strokeLinecap="round"/><path d="M55 -440L105 -140" stroke="#263042" strokeWidth="27" strokeLinecap="round"/>
+ <path d={shot===8?`M-55 -440Q-120 -335 ${-105-190*smooth((f-30)/20)} ${-140-75*smooth((f-30)/20)}`:"M-55 -440L-105 -140"} stroke="#263042" strokeWidth="27" fill="none" strokeLinecap="round"/><path d="M55 -440L105 -140" stroke="#263042" strokeWidth="27" strokeLinecap="round"/>
  </g>}
  <rect width="1920" height="1080" fill={url('vignette')}/>
  {old&&<path d="M0 0H1920V1080H0Z M960 540m-570 0a570 455 0 1 0 1140 0a570 455 0 1 0 -1140 0" fill="#02050B" fillRule="evenodd" opacity=".85"/>}
