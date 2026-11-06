@@ -53,7 +53,7 @@ export const DoorReverseCorridor:React.FC<{frame:number;id:string;danger?:boolea
  <circle cx="64" cy="-78" r="9" fill="#DCC3A1"/>
  </g>
  </g>)}
- <RoomFace points={[W(-190,3,-750),W(190,3,-750),W(190,3,1680),W(-190,3,1680)]} camera={c} fill="#483947" opacity=".72"/>
+ <RoomFace points={[W(-190,3,-750),W(190,3,-750),W(190,3,1680),W(-190,3,1680)]} camera={c} fill="#483947" opacity={.72}/>
  {[-185,185].map(x=><RoomLine key={x} a={W(x,4,-750)} b={W(x,4,1680)} camera={c} stroke="#BBA39B" opacity={.38} width={4}/>)}
  {cuboid(-265,265,0,760,1760,1785,'#182336','#3C3342')}
  <g transform={planeTransform(W(0,590,1755),c)}>
