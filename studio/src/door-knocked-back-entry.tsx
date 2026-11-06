@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill,Composition,registerRoot,useCurrentFrame,interpolate} from 'remotion';
 import {SceneRenderer,WorldSceneSpec,WorldBox} from './production/scene-system';
+import {DoorStoryBeat} from './door-story-actors';
 
 const fps=30;
 const cuts=[0,165,390,600,870,1140,1335,1500,1665,1736] as const;
@@ -42,12 +43,13 @@ const Film:React.FC=()=>{
  const local=frame-cuts[index],spec=shots[index];
  return <AbsoluteFill style={{background:'#090F19'}}>
  <SceneRenderer spec={spec} frame={local}/>
+ <DoorStoryBeat shot={index} frame={local}/>
  {index===0&&<div style={{...textStyle,top:85,width:'100%',fontSize:46}}>APARTMENT 213</div>}
- {index===3&&<><Peephole frame={local}/><div style={{...textStyle,top:115,width:'100%',fontSize:42}}>SAME FACE. OLDER.</div><div style={{position:'absolute',left:'46%',top:'40%',height:8,width:115,background:'#B77975',transform:'rotate(-35deg)',boxShadow:'0 0 20px #B77975'}}/></>}
+
  {index===4&&<Photo frame={local}/>}
  {index===6&&<AbsoluteFill style={{background:'#050810',opacity:smooth(local,95,155)*.35}}/>}
  {index===7&&<AbsoluteFill style={{background:'#02040A',opacity:.82+Math.sin(local*.3)*.1}}/>}
- {index===8&&<><AbsoluteFill style={{background:'#030509',opacity:smooth(local,40,71)}}/><div style={{...textStyle,bottom:120,width:'100%',fontSize:78,opacity:smooth(local,8,24)}}>RUN!</div></>}
+ {index===8&&<div style={{...textStyle,bottom:120,width:'100%',fontSize:78,opacity:smooth(local,8,24)}}>RUN!</div>}
  </AbsoluteFill>;
 };
 const Root=()=> <><Composition id="DoorKnockedBackPreview" component={Film} durationInFrames={1736} fps={fps} width={1920} height={1080}/></>;
