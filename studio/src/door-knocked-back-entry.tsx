@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill,Composition,registerRoot,useCurrentFrame,interpolate} from 'remotion';
 import {SceneRenderer,WorldSceneSpec,WorldBox} from './production/scene-system';
-import {DoorStoryBeat} from './door-story-actors';
+import {CinematicHallway} from './door-cinematic-hallway';
 
 const fps=30;
 const cuts=[0,165,390,600,870,1140,1335,1500,1665,1736] as const;
@@ -59,8 +59,7 @@ const Film:React.FC=()=>{
  const frame=useCurrentFrame();let index=cuts.findIndex((v,i)=>i<cuts.length-1&&frame>=v&&frame<cuts[i+1]);if(index<0)index=8;
  const local=frame-cuts[index],spec=shots[index];
  return <AbsoluteFill style={{background:'#090F19'}}>
- <SceneRenderer spec={spec} frame={local}/>
- <DoorStoryBeat shot={index} frame={local}/>
+ <CinematicHallway id={spec.id} shot={index} frame={local}/>
  {index===0&&<div style={{...textStyle,top:85,width:'100%',fontSize:46}}>APARTMENT 213</div>}
 
  {index===4&&<Photo frame={local}/>}
