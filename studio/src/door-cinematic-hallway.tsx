@@ -119,10 +119,15 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <HallwayPracticalDetails camera={c} id={id+'practical'}/>
  {old?<g transform={planeTransform(W(0,0,980),c)}>
  <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset" mood="concerned" pose={olderEthanPerformance(shot,f)}/>
- <path d="M-58 -608Q-44 -652 -10 -657Q29 -662 56 -612" stroke="#A9B4B9" strokeWidth="8" opacity=".95" fill="none" strokeLinecap="round"/>
- <path d="M-44 -629Q-25 -619 -21 -607M-16 -647Q-10 -627 -5 -620M17 -647Q25 -627 30 -618" stroke="#9FAAB1" strokeWidth="5" opacity=".7" fill="none" strokeLinecap="round"/>
- <path d="M-30 -590L-11 -605M17 -590L30 -604" stroke="#B3B8C0" strokeWidth="8"/>
- <path d="M19 -596L-21 -540" stroke="#B46D70" strokeWidth="8" strokeLinecap="round"/>
+ {/* Hair and scar are registered to the exact approved head pivot so they move with his acting. */}
+ <g transform={`translate(3 -587) rotate(${olderEthanPerformance(shot,f).headTilt??0})`}>
+ <path d="M-62 -6Q-71 -45 -40 -66Q-12 -89 24 -76Q52 -66 61 -23L53 -18Q34 -36 18 -43Q-4 -51 -24 -43Q-40 -35 -55 -17Z" fill="#66717E" stroke="#B2B8BE" strokeWidth="3.5"/>
+ <path d="M-51 -36Q-24 -66 4 -63M12 -66Q34 -57 45 -39" stroke="#D1D3D0" strokeWidth="3" fill="none" opacity=".64"/>
+ <path d="M-62 -8Q-66 14 -49 26M59 -8Q64 15 49 29" stroke="#97A2AE" strokeWidth="7" strokeLinecap="round" fill="none"/>
+ <path d="M21 -27L6 20" stroke="#C07B7D" strokeWidth="5.4" strokeLinecap="round"/>
+ <path d="M23 -27L8 18" stroke="#E6A8A1" strokeWidth="1.8" strokeLinecap="round"/>
+ <path d="M-45 12l10 5m30 12l10 4m28-13l11-5" stroke="#9FA5AF" strokeWidth="2" opacity=".35" fill="none"/>
+ </g>
  </g>:null}
  {!old&&<g>
  <path d={floorEllipse(actorX,actorZ,86,35,c)} fill="#050C17" opacity=".4" filter={url('shadow')}/>
