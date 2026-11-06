@@ -31,6 +31,8 @@ jobs:
           done
       - name: Render silent storyboard
         run: npx remotion render src/door-knocked-back-entry.tsx DoorKnockedBackPreview out/door-film/Door-Knocked-Back-Storyboard-SILENT.mp4 --codec=h264 --scale=0.5 --concurrency=2
+      - name: Install video verification tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Verify full decode and duration
         run: |
           ffprobe -v error -show_entries format=duration -show_entries stream=codec_name,codec_type -of json out/door-film/Door-Knocked-Back-Storyboard-SILENT.mp4
