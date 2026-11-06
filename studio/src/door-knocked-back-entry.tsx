@@ -66,7 +66,6 @@ const Film:React.FC=()=>{
  const local=frame-cuts[index],spec=shots[index];
  return <AbsoluteFill style={{background:'#090F19'}}>
  <CinematicHallway id={spec.id} shot={index} frame={local}/>
- {index===0&&<div style={{...textStyle,top:85,width:'100%',fontSize:46}}>APARTMENT 213</div>}
 
  {index===4&&<Photo frame={local}/>}
  </AbsoluteFill>;
