@@ -37,7 +37,24 @@ const shots=[
 const smooth=(v:number,a:number,b:number)=>interpolate(v,[a,b],[0,1],{extrapolateLeft:'clamp',extrapolateRight:'clamp'});
 const textStyle:React.CSSProperties={position:'absolute',fontFamily:'Arial,sans-serif',fontWeight:800,color:'#F5E9D8',textShadow:'0 4px 18px #000',letterSpacing:3,textAlign:'center'};
 const Peephole:React.FC<{frame:number}>=({frame})=><AbsoluteFill style={{background:'radial-gradient(ellipse at center, transparent 17%, #0B0D16 56%, #03050A 85%)',opacity:smooth(frame,0,32),pointerEvents:'none'}}><div style={{position:'absolute',left:'35%',top:'20%',width:'30%',height:'60%',border:'15px solid #6F665B',borderRadius:'50%',boxShadow:'0 0 60px #000 inset'}}/></AbsoluteFill>;
-const Photo:React.FC<{frame:number}>=({frame})=><AbsoluteFill style={{justifyContent:'center',alignItems:'center',transform:`scale(${1+smooth(frame,0,220)*.16})`}}><div style={{width:740,height:650,background:'#BBAA91',border:'20px solid #E1D0AF',boxShadow:'0 24px 100px #000',position:'relative',overflow:'hidden'}}><div style={{position:'absolute',inset:20,background:'linear-gradient(#3C4851,#141D28)'}}/><div style={{position:'absolute',top:70,left:170,width:400,height:500,borderLeft:'40px solid #4D5760',borderRight:'40px solid #4D5760',background:'#26303B'}}/><div style={{position:'absolute',bottom:40,left:320,width:100,height:320,background:'#0D131D',borderRadius:'55% 55% 8% 8%'}}/><div style={{position:'absolute',bottom:40,left:420,width:75,height:460,background:'#02050A',borderRadius:'50% 50% 0 0',opacity:smooth(frame,90,145)}}/><div style={{position:'absolute',bottom:500,left:280,width:170,height:42,...textStyle,fontSize:28}}>2:13 AM</div></div></AbsoluteFill>;
+const Photo:React.FC<{frame:number}>=({frame})=><AbsoluteFill style={{justifyContent:'center',alignItems:'center',transform:`scale(${1+smooth(frame,0,220)*.12})`}}>
+ <svg viewBox="0 0 1920 1080" width="100%" height="100%">
+ <defs><linearGradient id="photoCorridor" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#66717A"/><stop offset="1" stopColor="#182331"/></linearGradient><linearGradient id="photoPaper" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#E6D7B8"/><stop offset="1" stopColor="#AA947B"/></linearGradient></defs>
+ <g transform="translate(620 120) rotate(-3 340 405)">
+ <rect x="-25" y="-25" width="730" height="850" rx="7" fill="url(#photoPaper)" stroke="#F0DEC2" strokeWidth="16"/>
+ <rect width="680" height="760" fill="url(#photoCorridor)"/>
+ <path d="M0 0L230 230V760H0ZM680 0L450 230V760H680Z" fill="#283544" stroke="#7F8992" strokeWidth="6"/>
+ <path d="M0 0L230 230H450L680 0" fill="#3E4C58" stroke="#A4A9A7" strokeWidth="5"/>
+ <path d="M0 760L230 230H450L680 760" fill="#46505A" stroke="#8B9296" strokeWidth="4"/>
+ <rect x="273" y="235" width="136" height="285" fill="#352B31" stroke="#B5A08C" strokeWidth="13"/>
+ <rect x="284" y="247" width="114" height="262" fill="#1A1E29"/>
+ <text x="340" y="282" textAnchor="middle" fontFamily="Arial" fontSize="20" fill="#D6C6AA">213</text>
+ <g transform="translate(260 650)"><ellipse cx="0" cy="-165" rx="34" ry="43" fill="#141A23"/><path d="M-50 -115Q0 -150 50 -115L42 20H-42Z" fill="#3B4652" stroke="#89919B" strokeWidth="6"/><path d="M-24 20L-33 105M24 20L33 105" stroke="#202A37" strokeWidth="22" strokeLinecap="round"/><path d="M-48 -100L-65 5M48 -100L62 5" stroke="#394655" strokeWidth="17" strokeLinecap="round"/></g>
+ <g transform="translate(420 670)" opacity={smooth(frame,30,110)}><ellipse cx="0" cy="-270" rx="41" ry="62" fill="#050810"/><path d="M-48 -213Q0 -245 48 -213L75 100H-75Z" fill="#060A12"/><path d="M-55 -200L-95 80M55 -200L95 80" stroke="#080C14" strokeWidth="22" strokeLinecap="round"/><path d="M-20 70L-25 145M20 70L25 145" stroke="#070A12" strokeWidth="25" strokeLinecap="round"/></g>
+ <path d="M20 18h640M20 742h640" stroke="#A7AFB3" strokeWidth="2" opacity=".25"/>
+ <text x="340" y="801" textAnchor="middle" fontFamily="monospace" fontSize="29" fill="#4B403D">02:13 AM — HALLWAY CAMERA</text>
+ </g>
+ </svg></AbsoluteFill>;
 const Film:React.FC=()=>{
  const frame=useCurrentFrame();let index=cuts.findIndex((v,i)=>i<cuts.length-1&&frame>=v&&frame<cuts[i+1]);if(index<0)index=8;
  const local=frame-cuts[index],spec=shots[index];
