@@ -62,10 +62,11 @@ export function doorEscapePerformance(frame:number):CharacterV2Pose{
  const forward=ease((f-3)/10)*(1-ease((f-49)/12));
  const swing=Math.sin(f*.23);
  return {...stride,
-  lean:16*forward,headTilt:-8*forward,
-  // Both wrists remain within the approved 60/61-unit two-bone arm reach.
-  hand:{x:22+24*swing*forward,y:-175-16*forward+8*swing*forward},
-  farHand:{x:-24-21*swing*forward,y:-184+8*swing*forward},
-  farSwing:24*forward,shoeAngles:[12*forward,-11*forward],
+  lean:9*forward,headTilt:-4*forward,
+  // One arm drives toward the door as the opposite elbow trails behind.
+  // Both remain inside the approved 60/61-unit IK reach.
+  hand:{x:25+47*forward+4*swing*forward,y:-188-45*forward+3*swing*forward},
+  farHand:{x:-24-21*forward,y:-184+18*forward},
+  farSwing:16*forward,shoeAngles:[9*forward,-8*forward],
   gaze:1,gazeY:-2*forward,surprised:f<32};
 }
