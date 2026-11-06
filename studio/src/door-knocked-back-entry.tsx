@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill,Composition,registerRoot,useCurrentFrame,interpolate} from 'remotion';
 import {SceneRenderer,WorldSceneSpec,WorldBox} from './production/scene-system';
 import {CinematicHallway} from './door-cinematic-hallway';
+import {CharacterTurnV5} from './episodes/probability-control/character-turn-v5';
 
 const fps=30;
 const cuts=[0,165,390,600,870,1140,1335,1500,1665,1736] as const;
@@ -49,6 +50,11 @@ const Photo:React.FC<{frame:number}>=({frame})=><AbsoluteFill style={{justifyCon
  <svg x="0" y="0" width="770" height="810" viewBox="270 110 1350 880" preserveAspectRatio="xMidYMid slice">
  <CinematicHallway id="photo-world" shot={7} frame={130}/>
  </svg>
+ {/* An actual approved-rig Ethan, in front of the shadow inside this evidence photograph. */}
+ <ellipse cx="518" cy="711" rx="83" ry="15" fill="#0B1420" opacity=".5"/>
+ <g transform="translate(520 716) scale(.91)">
+ <CharacterTurnV5 id="photo-young-ethan" x={0} y={0} scale={1} yaw={-.53} headYaw={-.76} outfit="puffer-black" lighting="sunset" mood="concerned"/>
+ </g>
  <rect x="0" y="0" width="770" height="810" fill="#C1A991" opacity=".22"/>
  </g>
  <text x="385" y="863" fontFamily="monospace" fontWeight="bold" fontSize="30" fill="#4C403D" textAnchor="middle">HALLWAY 213 — 02:13 AM</text>
