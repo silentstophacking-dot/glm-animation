@@ -75,6 +75,17 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {slab(x-40,x+40,440,590,940,1010,'#574C56')}
  <g transform={planeTransform(W(x,575,930),c)}><circle r="245" fill={url('light')}/><path d="M-35 -10L-48 -95H48L35 -10Z" fill="#D7B897" stroke="#ECD2B5" strokeWidth="6"/><path d="M-25 -65H25" stroke="#FAE2BD" strokeWidth="4"/></g>
  </g>)}
+ {old&&<g>
+ {/* Interior behind the doorway: warm practical light, actual wall recess, books and window. */}
+ <RoomFace points={[W(-310,0,1002),W(355,0,1002),W(355,815,1002),W(-310,815,1002)]} camera={c} fill="#433A49" stroke="#8B777C"/>
+ <RoomFace points={[W(-305,380,1000),W(-80,380,1000),W(-80,775,1000),W(-305,775,1000)]} camera={c} fill="#7D6570" stroke="#C3A08A"/>
+ <RoomFace points={[W(-294,389,998),W(-91,389,998),W(-91,760,998),W(-294,760,998)]} camera={c} fill="#C49A86" stroke="#D9B5A0"/>
+ {[-230,-165].map(x=><RoomLine key={'inner-window'+x} a={W(x,400,996)} b={W(x,750,996)} camera={c} stroke="#574653" width={9}/>)}
+ {[490,585,680].map(y=><RoomLine key={'interior-blind'+y} a={W(-294,y,994)} b={W(-91,y,994)} camera={c} stroke="#685363" width={7} opacity={.65}/>)}
+ {slab(238,336,80,550,982,1000,'#433847','#222A3C','#997F79')}
+ {Array.from({length:4},(_,i)=>slab(250+i*18,265+i*18,345,485,970,990,['#7B6671','#4D6876','#A1827C','#5B5168'][i],'#2C3040','#C0A593'))}
+ <g transform={planeTransform(W(305,610,974),c)}><ellipse rx="180" ry="260" fill={url('light')} opacity=".55"/><path d="M-25 -30L-37 -115H37L25 -30Z" fill="#E2B98C" stroke="#F6D6AE" strokeWidth="6"/></g>
+ </g>}
  {slab(-340,350,0,815,1020,1040,'#0C1320')}
  {slab(-365,-318,0,840,920,1060,'#65505A')}
  {slab(350,395,0,840,920,1060,'#62505A')}
