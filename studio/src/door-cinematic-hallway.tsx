@@ -3,7 +3,8 @@ import {RoomCuboid as Box,RoomFace,RoomLine,W,floorEllipse} from './episodes/pro
 import {planeTransform,WorldCamera} from './episodes/probability-control/pseudo-depth-camera';
 import {CharacterTurnV5} from './episodes/probability-control/character-turn-v5';
 import {discoveryActorAt} from './episodes/probability-control/clock-discovery-motion';
-import {characterV2At} from './episodes/probability-control/character-v2-motion';
+import {characterV2At,v2HandLocal} from './episodes/probability-control/character-v2-motion';
+import {doorEthanPerformance} from './door-acting-performance';
 import {HallwayPracticalDetails} from './door-hall-practicals';
 const smooth=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t)};
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
@@ -18,8 +19,8 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  const width=500,hinge=-260,theta=open*1.45,z=980;
  const doorPt=(x:number,y:number)=>W(hinge+x*Math.cos(theta),y,z+x*Math.sin(theta));
  const progress=smooth(f/70);
- const actorZ=shot===8?mix(625,1030,smooth(f/60)):shot===0?730:shot===6||shot===7?600:shot===1||shot===2?690:95;
- const actorX=shot===8?mix(-90,25,smooth(f/55)):shot===0?-95:shot===1||shot===2?-115:-125;
+ const actorZ=shot===8?mix(625,1030,smooth(f/60)):shot===0?915:shot===1?815:shot===2?830:shot===6||shot===7?600:95;
+ const actorX=shot===8?mix(-90,25,smooth(f/55)):shot===0?10:shot===1?-20:shot===2?-35:-125;
  // Editorial camera coverage: these crops operate on the same projected world,
  // rather than moving backgrounds independently. Establish/medium/insert/reverse/escape.
  const shotCrops:[number,number,number][]=[
@@ -38,7 +39,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  const zoom=1-cameraZoom*smooth(f/(shot===8?65:165));
  const viewWidth=cropW*zoom,viewHeight=viewWidth*9/16;
  const viewX=cropX+(cropW-viewWidth)*.45,viewY=cropY+((cropW*9/16)-viewHeight)*.5;
- const reaction=discoveryActorAt(Math.min(712,shot===2?440+Math.floor(f*.6):shot===6?612+Math.floor(f*.45):552));
+ const reaction=doorEthanPerformance(shot,f);
  const walk=characterV2At(Math.min(140,Math.max(0,f+20)));
  return <svg viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`} width="100%" height="100%">
  <defs>
@@ -85,8 +86,15 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {!old&&<g>
  <path d={floorEllipse(actorX,actorZ,86,35,c)} fill="#050C17" opacity=".4" filter={url('shadow')}/>
  <g transform={planeTransform(W(actorX,0,actorZ),c)}>
- <CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={1.55} yaw={shot===6?mix(.25,.94,smooth(f/95)):shot===8?.7:.32} headYaw={shot===6?mix(.3,1,smooth(f/80)):.4} outfit="puffer-black" lighting="sunset" mood={shot>=6?'surprised':'calm'} pose={shot===8?walk.pose:shot===2||shot===6?reaction.pose:undefined}/>
- </g></g>}
+ <CharacterTurnV5 id={id+'actor'} x={0} y={0} scale={1.55} yaw={shot===6?mix(.25,.94,smooth(f/95)):shot===8?.7:.32} headYaw={shot===6?mix(.3,1,smooth(f/80)):.4} outfit="puffer-black" lighting="sunset" mood={shot>=6?'surprised':'calm'} pose={shot===8?walk.pose:reaction}/>
+ </g>
+ {shot===0&&<g transform={planeTransform(W(actorX,0,actorZ),c)}>
+ {(()=>{const palm=v2HandLocal(reaction);return <g transform={`translate(${palm.x*1.55} ${palm.y*1.55}) rotate(-20)`}>
+ <circle r="7" fill="none" stroke="#DCC096" strokeWidth="3"/>
+ <path d="M6 0H30v5h-6v8h-5V5H6" fill="#C9AA79" stroke="#E4CFA8" strokeWidth="1.4"/>
+ </g>;})()}
+ </g>}
+ </g>}
  {shot>=7&&<g transform={planeTransform(W(shot===8?-550:220,0,-280),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
  <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#303A49" strokeWidth="3"/>
  <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#283140" strokeWidth="3"/>
