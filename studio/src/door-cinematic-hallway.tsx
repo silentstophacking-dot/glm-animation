@@ -10,7 +10,8 @@ const smooth=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t)};
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({id,shot,frame:f})=>{
  const old=shot===3||shot===5,blackout=shot===7;
- const open=shot===8?smooth((f-6)/20)*(1-smooth((f-58)/12)):0;
+ const escape=shot===8;
+ const open=shot===8?smooth((f-7)/14)*(1-smooth((f-49)/16)):0;
  const cameras=[[-150,380,245],[-180,370,260],[-150,365,435],[-30,430,520],[-175,370,-290],[-20,435,410],[-180,370,220],[-140,370,120],[-190,370,-120]] as const;
  const [cx,cy,cz]=cameras[shot]??cameras[0];
  const c:WorldCamera={x:cx+25*smooth(f/200),y:cy,z:cz+30*smooth(f/180),focal:1200};
@@ -32,7 +33,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  const actorHeadY=actorAnchor.y-326*actorAnchor.scale*1.55;
  const elderAnchor=projectWorld(W(0,0,980),c);
  const elderHeadY=elderAnchor.y-326*elderAnchor.scale*1.8;
- const threatAnchor=projectWorld(W(shot===8?mix(-220,-35,smooth(f/65)):220,0,shot===8?mix(290,620,smooth(f/65)):550),c);
+ const threatAnchor=projectWorld(W(escape?mix(620,325,smooth(f/65)):220,0,escape?mix(110,515,smooth(f/65)):550),c);
  const threatHeadY=threatAnchor.y-490*threatAnchor.scale;
  const crops:Record<number,[number,number,number]>={
   0:[625,96,1030],     // room, key and visibly knocking door
@@ -75,7 +76,7 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {slab(x-40,x+40,440,590,940,1010,'#574C56')}
  <g transform={planeTransform(W(x,575,930),c)}><circle r="245" fill={url('light')}/><path d="M-35 -10L-48 -95H48L35 -10Z" fill="#D7B897" stroke="#ECD2B5" strokeWidth="6"/><path d="M-25 -65H25" stroke="#FAE2BD" strokeWidth="4"/></g>
  </g>)}
- {old&&<g>
+ {(old||escape)&&<g>
  {/* Interior behind the doorway: warm practical light, actual wall recess, books and window. */}
  <RoomFace points={[W(-310,0,1002),W(355,0,1002),W(355,815,1002),W(-310,815,1002)]} camera={c} fill="#433A49" stroke="#8B777C"/>
  <RoomFace points={[W(-305,380,1000),W(-80,380,1000),W(-80,775,1000),W(-305,775,1000)]} camera={c} fill="#7D6570" stroke="#C3A08A"/>
@@ -86,11 +87,11 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  {Array.from({length:4},(_,i)=>slab(250+i*18,265+i*18,345,485,970,990,['#7B6671','#4D6876','#A1827C','#5B5168'][i],'#2C3040','#C0A593'))}
  <g transform={planeTransform(W(305,610,974),c)}><ellipse rx="180" ry="260" fill={url('light')} opacity=".55"/><path d="M-25 -30L-37 -115H37L25 -30Z" fill="#E2B98C" stroke="#F6D6AE" strokeWidth="6"/></g>
  </g>}
- {slab(-340,350,0,815,1020,1040,'#0C1320')}
+ {!escape&&slab(-340,350,0,815,1020,1040,'#0C1320')}
  {slab(-365,-318,0,840,920,1060,'#65505A')}
  {slab(350,395,0,840,920,1060,'#62505A')}
  {slab(-365,395,815,845,910,1070,'#67545D')}
- {!old&&<g> <RoomFace points={[doorPt(0,0),doorPt(width,0),doorPt(width,795),doorPt(0,795)]} camera={c} fill={url('wood')} stroke="#B19686"/>
+ {!old&&!(escape&&f>=43)&&<g> <RoomFace points={[doorPt(0,0),doorPt(width,0),doorPt(width,795),doorPt(0,795)]} camera={c} fill={url('wood')} stroke="#B19686"/>
  {[70,415].map(y=><RoomFace key={y} points={[doorPt(30,y),doorPt(width-30,y),doorPt(width-30,y+282),doorPt(30,y+282)]} camera={c} fill="none" stroke="#9D7E75"/>)}
  <g transform={planeTransform(doorPt(width-90,405),c)}><circle r="19" fill="#B79B74" stroke="#F0D1A4" strokeWidth="5"/><path d="M8 0h26" stroke="#E5CEAE" strokeWidth="8" strokeLinecap="round"/></g>
  <g transform={planeTransform(doorPt(250,690),c)}><rect x="-80" y="-35" width="160" height="65" rx="3" fill="#6E6060" stroke="#BAA189" strokeWidth="4"/><text textAnchor="middle" y="12" fontFamily="Arial" fontWeight="bold" fontSize="38" fill="#F1D5B0">213</text></g>
@@ -120,7 +121,15 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  </g>;})()}
  </g>}
  </g>}
- {shot>=7&&<g transform={planeTransform(W(shot===8?mix(-220,-35,smooth(f/65)):220,0,shot===8?mix(290,620,smooth(f/65)):550),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
+  {escape&&f>=43&&<g>
+ {/* The door now occludes Ethan after he crosses the threshold. The creature remains outside. */}
+ <RoomFace points={[doorPt(0,0),doorPt(width,0),doorPt(width,795),doorPt(0,795)]} camera={c} fill={url('wood')} stroke="#E0BCA1"/>
+ {[70,415].map(y=><RoomFace key={y} points={[doorPt(30,y),doorPt(width-30,y),doorPt(width-30,y+282),doorPt(30,y+282)]} camera={c} fill="none" stroke="#9D7E75"/>)}
+ <g transform={planeTransform(doorPt(width-90,405),c)}><circle r="19" fill="#B79B74" stroke="#F0D1A4" strokeWidth="5"/></g>
+ <g transform={planeTransform(doorPt(250,690),c)}><text y="0" textAnchor="middle" fontFamily="Arial" fontWeight="bold" fontSize="35" fill="#F1D5B0">213</text></g>
+ </g>}
+
+ {shot>=7&&<g transform={planeTransform(W(escape?mix(620,325,smooth(f/65)):220,0,escape?mix(110,515,smooth(f/65)):550),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
  <ellipse cy="-300" rx="325" ry="490" fill={url("threatGlow")} opacity=".96"/><ellipse cy="10" rx="110" ry="30" fill="#050914" opacity=".68"/>
  <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#768194" strokeWidth="4"/>
  <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#6A6F85" strokeWidth="4"/>
