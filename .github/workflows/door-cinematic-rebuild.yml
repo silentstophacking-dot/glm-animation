@@ -5,6 +5,7 @@ on:
     paths:
       - 'studio/src/door-knocked-back-entry.tsx'
       - 'studio/src/door-cinematic-hallway.tsx'
+      - 'studio/src/door-ifverse-visual-gate.tsx'
       - '.github/workflows/door-cinematic-rebuild.yml'
   workflow_dispatch:
 jobs:
@@ -23,6 +24,10 @@ jobs:
         run: npm ci
       - name: Typecheck
         run: npx tsc --noEmit
+      - name: Render mandatory approved-test style comparison
+        run: |
+          mkdir -p out/door-film
+          npx remotion still src/door-ifverse-visual-gate.tsx DoorIfverseVisualGate out/door-film/APPROVED-VS-CANDIDATE.png --scale=0.5
       - name: Render seven review checkpoints
         run: |
           mkdir -p out/door-film
