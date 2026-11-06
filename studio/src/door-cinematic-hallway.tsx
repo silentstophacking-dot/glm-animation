@@ -79,7 +79,9 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  <g transform={planeTransform(W(-990,390,892),c)}><rect x="-95" y="-260" width="190" height="300" fill="#38424F" stroke="#8E8B8C" strokeWidth="10"/><rect x="-75" y="-240" width="150" height="225" fill="#182A3E" stroke="#A9A29C" strokeWidth="3"/><path d="M-12 -160v86m-52 -44h100" stroke="#B69B88" strokeWidth="10"/><text x="0" y="-222" fontFamily="Arial" textAnchor="middle" fontSize="21" fill="#DAB59E">EMERGENCY</text></g>
  <HallwayPracticalDetails camera={c} id={id+'practical'}/>
  {old?<g transform={planeTransform(W(0,0,1160),c)}>
- <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset"/>
+ <CharacterTurnV5 id={id+'older'} x={0} y={0} scale={1.8} yaw={-.24} headYaw={-.3} outfit="puffer-black" lighting="sunset" mood="concerned"/>
+ <path d="M-56 -613Q-51 -649 -21 -654Q15 -662 46 -622" stroke="#929FA9" strokeWidth="10" opacity=".83" fill="none" strokeLinecap="round"/>
+ <path d="M-50 -620l-12 19m32 -40l-9 23m31 -30l12 19m19 -21l12 18" stroke="#C4CAD0" strokeWidth="5" opacity=".72" strokeLinecap="round"/>
  <path d="M-30 -590L-11 -605M17 -590L30 -604" stroke="#B3B8C0" strokeWidth="8"/>
  <path d="M19 -596L-21 -540" stroke="#B46D70" strokeWidth="8" strokeLinecap="round"/>
  </g>:null}
@@ -96,12 +98,13 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
  </g>}
  </g>}
  {shot>=7&&<g transform={planeTransform(W(shot===8?-550:220,0,-280),c)} opacity={shot===7?smooth((f-50)/30):smooth((f-12)/15)}>
+ <ellipse cy="-310" rx="250" ry="440" fill={url("light")} opacity=".38"/>
  <ellipse cy="-480" rx="40" ry="65" fill="#050913" stroke="#303A49" strokeWidth="3"/>
  <path d="M-55 0L-35 -380Q-85 -420 -55 -480H55Q85 -420 35 -380L55 0H15L0 -300L-15 0Z" fill="#060C17" stroke="#283140" strokeWidth="3"/>
  <path d="M-55 -440L-105 -140M55 -440L105 -140" stroke="#07101B" strokeWidth="29" strokeLinecap="round"/>
  </g>}
  <rect width="1920" height="1080" fill={url('vignette')}/>
  {old&&<path d="M0 0H1920V1080H0Z M960 540m-570 0a570 455 0 1 0 1140 0a570 455 0 1 0 -1140 0" fill="#02050B" fillRule="evenodd" opacity=".85"/>}
- {blackout&&<rect width="1920" height="1080" fill="#030710" opacity={.62+.23*Math.sin(f*.28)}/>}
+ {blackout&&<rect width="1920" height="1080" fill="#030710" opacity={.32+.12*Math.sin(f*.28)}/>}
  </svg>;
 };
