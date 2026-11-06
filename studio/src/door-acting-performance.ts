@@ -1,0 +1,42 @@
+import {characterV2At} from './episodes/probability-control/character-v2-motion';
+import type {CharacterV2Pose} from './episodes/probability-control/character-v2-motion';
+const ease=(n:number)=>{const t=Math.max(0,Math.min(1,n));return t*t*(3-2*t)};
+const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
+/** Story-specific acting based on the approved CharacterV2 joint/foot solver.
+ * Feet remain grounded while the right glove moves toward the actual door lock.
+ */
+export function doorEthanPerformance(shot:number,frame:number):CharacterV2Pose{
+ const f=Math.max(0,frame),base=characterV2At(135).pose;
+ if(shot===0){
+  const reach=ease(f/26)*(1-ease((f-48)/18));
+  return {...base,hand:{x:mix(25,91,reach),y:mix(-155,-258,reach)},
+   headTilt:mix(0,-8,ease((f-22)/35)),
+   gaze:mix(0,1,ease(f/42)),gazeY:-1.4*reach,blink:Math.max(0,1-Math.abs(f-49)/3),
+   lean:mix(0,-2.5,ease((f-49)/24))};
+ }
+ if(shot===1){
+  const stop=ease(f/34);
+  return {...base,hand:{x:mix(75,29,stop),y:mix(-225,-159,stop)},
+   headTilt:mix(-8,9,stop),lean:mix(0,-5,stop),
+   blink:Math.max(0,1-Math.abs(f-27)/3),gaze:1,gazeY:-2};
+ }
+ if(shot===2){
+  const look=ease(f/75);
+  return {...base,hand:{x:28,y:-159},headTilt:mix(7,-12,look),lean:mix(-2,3,look),
+   gaze:-1,gazeY:-3.5,blink:Math.max(0,1-Math.abs(f-93)/3)};
+ }
+ if(shot===6){
+  const turn=ease(f/95);
+  return {...base,hand:{x:mix(32,60,turn),y:mix(-165,-184,turn)},
+    headTilt:mix(-2,12,turn),lean:mix(0,-7,turn),
+    gaze:mix(1,-1,turn),gazeY:mix(-1,-4,turn),
+    blink:Math.max(0,1-Math.abs(f-105)/3)};
+ }
+ if(shot===7){
+  const fear=ease(f/42);
+  return {...base,hand:{x:mix(32,70,fear),y:mix(-160,-215,fear)},
+   headTilt:mix(0,13,fear),lean:mix(0,-7,fear),surprised:true,
+   gaze:-1,gazeY:-4};
+ }
+ return base;
+}
