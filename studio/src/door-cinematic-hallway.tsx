@@ -6,6 +6,7 @@ import {discoveryActorAt} from './episodes/probability-control/clock-discovery-m
 import {characterV2At,v2HandLocal} from './episodes/probability-control/character-v2-motion';
 import {doorEthanPerformance,olderEthanPerformance} from './door-acting-performance';
 import {HallwayPracticalDetails} from './door-hall-practicals';
+import {DoorReverseCorridor} from './door-reverse-corridor';
 const smooth=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t)};
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({id,shot,frame:f})=>{
@@ -46,13 +47,27 @@ export const CinematicHallway:React.FC<{id:string;shot:number;frame:number}>=({i
   7:[threatAnchor.x-565,threatHeadY-135,1130], // keep creature visible
   8:[520,120,1250],   // physical escape and door closure
  };
- const [cropX,cropY,cropW]=crops[shot]??crops[0];
+ // Intentional internal cuts add visual progression without replacing the original world rig.
+ let [cropX,cropY,cropW]=crops[shot]??crops[0];
+ const knob=projectWorld(doorPt(width-90,405),c),peephole=projectWorld(doorPt(250,510),c);
+ const near=(x:number,y:number,w:number)=>{cropX=x-w/2;cropY=y-w*9/32;cropW=w;};
+ if(shot===0&&f>=61&&f<113)near(knob.x-48,knob.y-80,495); // key & handle insert
+ if(shot===0&&f>=113){cropX=650;cropY=125;cropW=850;} // Ethan hears the knock
+ if(shot===1&&f>=105)near(actorAnchor.x,actorHeadY+75,620); // held reaction
+ if(shot===2&&f>=112)near(peephole.x,peephole.y,380); // actual spyglass insert
+ if(shot===3&&f<80)near(elderAnchor.x,elderHeadY+195,800); // first reveal of matching puffer
+ if(shot===3&&f>=188)near(elderAnchor.x,elderHeadY+40,430); // scar/eyeline
+ if(shot===5&&f>=93)near(elderAnchor.x,elderHeadY+195,750); // warning hand gesture
+ if(shot===8&&f>=47)near(knob.x-115,knob.y-75,950); // final slam
+ 
  const motionPush=shot===2?.04:shot===3?.06:shot===5?.075:shot===7?.08:.04;
  const zoom=1-motionPush*smooth(f/(shot===8?65:180));
  const viewWidth=cropW*zoom,viewHeight=viewWidth*9/16;
  const viewX=cropX+(cropW-viewWidth)*.5,viewY=cropY+(cropW*9/16-viewHeight)*.5;
  const reaction=doorEthanPerformance(shot,f);
  const walk=characterV2At(Math.min(140,Math.max(0,f+20)));
+ if(shot===6&&f>=105)return <DoorReverseCorridor id={id+'pov'} frame={f-105}/>;
+ if(shot===7)return <DoorReverseCorridor id={id+'threat'} frame={f} danger/>;
  return <svg viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`} width="100%" height="100%">
  <defs>
  <linearGradient id={id+'wall'} x2=".85" y2="1"><stop stopColor="#443544"/><stop offset=".6" stopColor="#302B40"/><stop offset="1" stopColor="#142133"/></linearGradient>
